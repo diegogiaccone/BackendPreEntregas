@@ -3,7 +3,6 @@ import ProductManager from "../Manager/ProductManager.js";
 
 const router = Express.Router();
 const productosManager = new ProductManager('./products.json')
-const readProducts = productosManager.getProducts();
 
 router.get('/' , async (req,res) => {
     const productos = await productosManager.getProducts()
@@ -12,10 +11,9 @@ router.get('/' , async (req,res) => {
  })
 
 router.get("/:pid", async (req, res) => {    
-    let id = parseInt (req.params.pid);
-    const allProducts = await readProducts;
-    const productById = allProducts.find(product => product.id === id);
-    productById ? res.send(productById) : res.send(`El producto no existe`)
+    let id = parseInt(req.params.pid);     
+    const productById = await productosManager.getProductsById(id);
+    productById ? res.send(productById) : res.send(`El producto no existe`) 
    }
 );
 
@@ -25,7 +23,7 @@ router.post('/', async (req, res) => {
     res.send({ status: 'succes'})
  });
 
-router.delete('/delete/:pid', async (req,res) => {
+router.delete('/:pid', async (req,res) => {
     let prodId = parseInt(req.params.pid)
     await productosManager.deleteProduct(prodId)
     res.send({ status: 'succes', mensage: 'usuario eliminado'})
@@ -34,8 +32,7 @@ router.delete('/delete/:pid', async (req,res) => {
 router.put(`/:pid`, async (req,res) =>{
     let id = parseInt(req.params.pid);
     let actualizarProd = req.body;
-    await productosManager.updateProduct(id, actualizarProd);
-    res.send({ status: 'Exitoso', mensage: 'Producto Actualizado'})
+    res.send (await productosManager.updateProduct(id, actualizarProd));
 });
 
 export default router;
