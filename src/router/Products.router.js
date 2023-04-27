@@ -7,20 +7,19 @@ const productosManager = new ProductManager('./products.json')
 router.get('/' , async (req,res) => {
     const productos = await productosManager.getProducts()
     const { limit } = req.query;
-    res.json(limit ? productos.slice(0, parseInt(limit)) : productos)     
+    res.send(limit ? productos.slice(0, parseInt(limit)) : productos)     
  })
 
 router.get("/:pid", async (req, res) => {    
-    let id = parseInt(req.params.pid);     
+    let id = req.params.pid;     
     const productById = await productosManager.getProductsById(id);
     productById ? res.send(productById) : res.send(`El producto no existe`) 
    }
 );
 
 router.post('/', async (req, res) => {  
-    const prod = req.body    
-    await productosManager.addProduct(prod.title, prod.description, prod.price, prod.thumbnail, prod.code, prod.stock, prod.category, prod.status)
-    res.send({ status: 'succes'})
+    let prod = req.body  
+    res.send(await productosManager.addProduct(prod))
  });
 
 router.delete('/:pid', async (req,res) => {

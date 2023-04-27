@@ -1,0 +1,113 @@
+<header class="container-fluid bg-dark position-sticky top-0">
+      <ul
+        class="nav nav-pills mb-3 py-3 container"
+        id="pills-tab"
+        role="tablist"
+      >
+        <h3 class="text-center m-0 text-mute text-primary texto">FUNKO POPS</h3>
+        <li class="nav-item" role="presentation">
+          <a
+            class="nav-link"
+            id="pills-home-tab"
+            data-bs-toggle="pill"
+            data-bs-target="#pills-home"
+            type="button"
+            role="tab"
+            aria-controls="pills-home"
+            aria-selected="true"
+            >Inicio</a
+          >
+        </li>
+      </ul>
+    </header>
+
+<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-x1-4" id="dataProd">
+{{#each products}}  
+      <div class="col d-flex justify-content-center mb-4">
+            <div class="card shadow mb-1 bg-dark rounded" style="width: 20rem">
+              <h5 class="card-title pt-2 text-center text-primary">{{this.title}}</h5>
+              <img
+                src={{this.thumbnail}}
+                class="card-img-top"               
+              />
+              <div class="card-body">
+                <p class="card-text text-white-50 description">
+                  {{this.description}}
+                </p>
+                <h5 class="text-primary">
+                  Precio: <span>$ {{this.price}}</span>
+                </h5>
+                <h5 class="text-primary">
+                  Stock: <span>{{this.stock}}</span>
+                </h5>
+                <h5 class="text-primary">
+                  Categoria: <span>{{this.category}}</span>
+                </h5>
+                <div class="d-grid gap-2">
+                  <button class="btn btn-primary button">
+                    Añadir al Carrito
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+{{/each}}
+</div>
+
+<form action="/RealTimeProducts" method="post" id="formulario">
+    <div class="post" id="addpost"><h2>Nuevo Producto</h2></div>
+  <div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+    <input name="title" type="text" class="form-control" id="title">    
+  </div>
+    <div class="mb-3">
+    <label for="imagen" class="form-label">Imagen</label>
+    <input name="thumbnail" type="url" class="form-control" id="imagen">    
+  </div>
+    <div class="mb-3">
+    <label for="descripcion" class="form-label">Description</label>
+    <input name="description" type="text" class="form-control" id="descripcion">
+  </div>
+  <div class="mb-3">
+    <label for="precio" class="form-label">Precio</label>
+    <input name="price" type="text" class="form-control" id="preico">
+  </div>
+      <div class="mb-3">
+    <label for="stock" class="form-label">Stock</label>
+    <input name="stock" type="text" class="form-control" id="stock">
+  </div>
+  <div class="mb-3">
+    <label for="categoria" class="form-label">Categoria</label>
+    <input name="category" type="text" class="form-control" id="categoria">
+  </div>
+  <button id="boton" type="submit" class="btn btn-primary">Agregar al stock</button>
+</form>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    
+
+    const ws = io('ws://localhost:9090');  
+
+    ws.on('connect', () => { 
+        ws.emit('event_cl01', 'Este es un mensaje de producto');
+})
+    
+
+
+   /* const postButton = document.getElementById("formulario")
+
+    postButton.addEventListener(`click` () => {
+      console.log("escuche elclick")
+    })
+
+    /*ws.on (`post_recived`, (data)=>{
+        dataProd.innerHTML = `${dataProd.innerHTML} ${data.dataProd}`       
+  })*/
+
+
+  
+</script>

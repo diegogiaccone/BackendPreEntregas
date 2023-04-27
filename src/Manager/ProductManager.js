@@ -1,10 +1,10 @@
 import fs from "fs";
+import { url } from "inspector";
+import { nanoid } from "nanoid";
 
-export default class ProductManager {
-    static id = 0
+export default class ProductManager {          
     constructor (){
-        this.path = `./products.json`;  
-        this.products = []      
+        this.path = `./products.json`;            
     }
 
     readProducts = async () => {
@@ -22,20 +22,13 @@ export default class ProductManager {
     }
 
 
-    addProduct = async (title, description, price, thumbnail, code, stock, category, status) => {
+    addProduct = async (products) => {
         let productOld = await this.readProducts();
-        ProductManager.id++ 
-        let productAll = [...productOld, this.products.push({
-            title, 
-            description, 
-            price, 
-            thumbnail, 
-            code, 
-            stock,                
-            category, 
-            status:true,
-            id:ProductManager.id})]
-            await fs.promises.writeFile(this.path, JSON.stringify(this.products));           
+        products.status = true         
+        products.id = nanoid(5) 
+        let productAll = [...productOld, products];
+        await this.writeProducts(productAll)
+        return "Producto Agregado"       
     }
     
     getProducts = async ()  => {

@@ -1,0 +1,91 @@
+<header class="container-fluid bg-dark position-sticky top-0">
+      <ul
+        class="nav nav-pills mb-3 py-3 container"
+        id="pills-tab"
+        role="tablist"
+      >
+        <h3 class="text-center m-0 text-mute text-primary texto">FUNKO POPS</h3>
+        <li class="nav-item" role="presentation">
+          <a
+            class="nav-link"
+            id="pills-home-tab"
+            data-bs-toggle="pill"
+            data-bs-target="#pills-home"
+            type="button"
+            role="tab"
+            aria-controls="pills-home"
+            aria-selected="true"
+            >Inicio</a
+          >
+        </li>
+      </ul>
+    </header>
+
+<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-x1-4">
+{{#each products}}  
+      <div class="col d-flex justify-content-center mb-4">
+            <div class="card shadow mb-1 bg-dark rounded" style="width: 20rem">
+              <h5 class="card-title pt-2 text-center text-primary">{{this.title}}</h5>
+              <img
+                src={{this.thumbnail}}
+                class="card-img-top"               
+              />
+              <div class="card-body">
+                <p class="card-text text-white-50 description">
+                  {{this.description}}
+                </p>
+                <h5 class="text-primary">
+                  Precio: <span>$ {{this.price}}</span>
+                </h5>
+                <h5 class="text-primary">
+                  Stock: <span>{{this.stock}}</span>
+                </h5>
+                <h5 class="text-primary">
+                  Categoria: <span>{{this.category}}</span>
+                </h5>
+                <div class="d-grid gap-2">
+                  <button class="btn btn-primary button">
+                    Añadir al Carrito
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+{{/each}}
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // Conectamos al websocket, en este caso en el mismo servidor donde corre este cliente, puerto 3050
+    const ws = io('ws://localhost:9090');
+
+    ws.on('connect', () => { // Escuchamos el evento connect para detectar cuándo logramos conectar al servidor
+        // Emitimos el evento event_cl01
+        ws.on('event_cl01', 'Este es el primer mensaje desde el cliente 01');
+
+        // Escuchamos por el evento server_confirm desde el servidor
+        ws.emit('server_confirm', (msg) => {
+            console.log(msg);
+        });
+    })
+
+/*const swalConfig = {
+        title: 'Identificación',
+        text: 'Indique usuario:',
+        input: 'text',
+        inputValidator: (val) => {
+            return !val && 'Por favor especificar usuario';
+        },
+        allowOutsideClick: false
+    };
+
+    Swal.fire(swalConfig).then((res) => {
+        user = res.value;
+        console.log(user);
+    }); */
+
+    
+</script>
