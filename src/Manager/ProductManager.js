@@ -1,6 +1,6 @@
 import fs from "fs";
-import { url } from "inspector";
 import { nanoid } from "nanoid";
+import userMdodel from "../router/products.model.js";
 
 export default class ProductManager {          
     constructor (){
@@ -27,12 +27,13 @@ export default class ProductManager {
         products.status = true         
         products.id = nanoid(5) 
         let productAll = [...productOld, products];
-        await this.writeProducts(productAll)
-        return "Producto Agregado"       
+        await this.writeProducts(productAll) 
+        return console.log(`producto agregado`)          
     }
     
     getProducts = async ()  => {
-        return await this.readProducts();
+        /* return await this.readProducts(); */
+        return await userMdodel.find();
     }
 
     getProductsById = async (id) => {        

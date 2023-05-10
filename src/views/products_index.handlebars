@@ -23,7 +23,7 @@
 
 <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-x1-4">
 {{#each products}}  
-      <div class="col d-flex justify-content-center mb-4">
+      <div class="col d-flex justify-content-center mb-4" id="dataProd">
             <div class="card shadow mb-1 bg-dark rounded" style="width: 20rem">
               <h5 class="card-title pt-2 text-center text-primary">{{this.title}}</h5>
               <img
@@ -54,38 +54,37 @@
 {{/each}}
 </div>
 
+<form action="/api/products_index" method="post" id="formulario">
+    <div class="post" id="addpost"><h2>Nuevo Producto</h2></div>
+  <div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+    <input name="title" type="text" class="form-control" id="title" required>    
+  </div>
+    <div class="mb-3">
+    <label for="imagen" class="form-label">Imagen</label>
+    <input name="thumbnail" type="url" class="form-control" id="imagen" required>    
+  </div>
+    <div class="mb-3">
+    <label for="descripcion" class="form-label">Description</label>
+    <input name="description" type="text" class="form-control" id="descripcion" required>
+  </div>
+  <div class="mb-3">
+    <label for="precio" class="form-label">Precio</label>
+    <input name="price" type="number" class="form-control" id="preico" required>
+  </div>
+      <div class="mb-3">
+    <label for="stock" class="form-label">Stock</label>
+    <input name="stock" type="number" class="form-control" id="stock" required>
+  </div>
+  <div class="mb-3">
+    <label for="categoria" class="form-label">Categoria</label>
+    <input name="category" type="text" class="form-control" id="categoria" required>
+  </div>
+  <div>
+  <button id="btn" type="submit" class="btn btn-primary">Agregar al stock</button>
+  </div>
+</form>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
-    // Conectamos al websocket, en este caso en el mismo servidor donde corre este cliente, puerto 3050
-    const ws = io('ws://localhost:9090');
-
-    ws.on('connect', () => { // Escuchamos el evento connect para detectar cuándo logramos conectar al servidor
-        // Emitimos el evento event_cl01
-        ws.on('event_cl01', 'Este es el primer mensaje desde el cliente 01');
-
-        // Escuchamos por el evento server_confirm desde el servidor
-        ws.emit('server_confirm', (msg) => {
-            console.log(msg);
-        });
-    })
-
-/*const swalConfig = {
-        title: 'Identificación',
-        text: 'Indique usuario:',
-        input: 'text',
-        inputValidator: (val) => {
-            return !val && 'Por favor especificar usuario';
-        },
-        allowOutsideClick: false
-    };
-
-    Swal.fire(swalConfig).then((res) => {
-        user = res.value;
-        console.log(user);
-    }); */
-
-    
-</script>
+<script src="../public/index.js"></script>

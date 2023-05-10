@@ -1,66 +1,55 @@
-import Express from 'express';
-import Router from './router/Products.router.js';
-import cartRouter from './router/Cart.router.js';
-import RealTimeRouter from './router/RealTime.router.js';
+import {} from 'dotenv/config'
+import express from 'express';
+import mongoose from 'mongoose';
+import productRoutes from './router/products.routes.js';
 import { __dirname } from './utils.js';
 import { engine } from 'express-handlebars';
+import Handlebars from 'handlebars';
 import { Server } from 'socket.io';
-import path from "path";
 
-
-const puerto = 8080;
+const PORT = parseInt(process.env.PORT) || 3000;
+const MONGOOSE_URL = process.env.MONGOOSE_URL;
 const wsPuerto = 9090; 
 
-const server = Express();
- const httpServer = server.listen(wsPuerto, () =>{
-    console.log(`Servidor socket io iniciando en puerto ${wsPuerto}`)
+const app = express();
+const httpServer = app.listen(wsPuerto, () =>{
+    console.log(`Servidor API/Socket.io iniciando en puerto ${wsPuerto}`)
 }) 
- 
-const io = new Server(httpServer, { cors: { origin: "http://localhost:8080" }});
 
-server.use(Express.json());
-server.use(Express.urlencoded({ extended: true })); 
+const io = new Server(httpServer, { cors: { origin: "*", methods: ["PUT", "GET", "POST", "DELETE", "OPTIONS"], credentials: false }});
 
-//endpoints
-server.use(`/realtimeproducts`, RealTimeRouter)
-server.use(`/api/products`, Router);
-server.use(`/api/carts`, cartRouter);
+// Parseo correcto de urls
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use('/api', productRoutes(io));
+app.use('/public', express.static(`${__dirname}/public`));
+// Motor de plantillas
+app.engine('handlebars', engine({
+    handlebars:Handlebars
+}));
+app.set('view engine', 'handlebars');
+app.set('views', `${__dirname}/views`);
 
-//contenidos estaticos
-server.use(`/public`, Express.static(`${__dirname}/public`))
 
+//socket io
+io.on('connection', (socket) => { // Escuchamos el evento connection por nuevas conexiones de clientes
+    console.log(`Cliente conectado (${socket.id})`); 
 
-//Motor de plantillas
-server.engine('handlebars', engine());
-server.set('view engine', 'handlebars');
-server.set('views', path.resolve(__dirname +'/views'));
-
-server.listen(puerto, () => {
-    console.log(`Servidor base API iniciado en el puerto ${puerto}`);
-
-});
-
-//eventos socket.io
-
-io.on('connect', (socket) => { 
-    console.log(`Cliente conectado (${socket.id})`);    
+    socket.emit('server_confirm', 'Conexión recibida');
     
-    socket.on('event_cl01', (msg) => {
-        console.log(msg);
-    }); 
+    socket.on('new_card', (data) => {;
+        io.emit('new_card', data); // io.emit realiza un broadcast (redistribución) a TODOS los clientes, incluyendo el que lo generó
+    });   
+
 });
 
-    //formulario 
+//mongodb
+try {    
+    await mongoose.connect(MONGOOSE_URL);
 
-    /* socket.on (`post`, (products)=>{
-        io.emit(`post_recived`, products);       
-    })  */    
-
-/* server.get(`/`, (req, res) => {
-    res.render(`index`, {
-        user: users[indiceransom],
-        isAdmin: users[indiceRandom].rol === `admin`
+    app.listen(PORT, () => {
+        console.log(`Servidor iniciado en puerto ${PORT}`);
     });
-}) */
-
-//{{#if isAdmin}} {{/if}}
+} catch(err) {
+    console.log('No se puede conectar con el servidor de bbdd');
+}
