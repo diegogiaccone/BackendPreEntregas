@@ -1,8 +1,10 @@
 import { Router } from "express";
 import Products from "./products.dbclass.js";
 
+
 const router = Router();
 const manager = new Products();
+
 
 const productRoutes = (io) => {   
 
@@ -25,7 +27,7 @@ const productRoutes = (io) => {
     router.post('/products_index', async (req, res) => {
         try {          
             await manager.addProduct(req.body)  
-            io.emit(`new_card`, (req.body))          
+            io.emit(`new_cards`, (req.body))          
         } catch (err) {
             res.status(500).send({ status: 'ERR', error: err });
         }
