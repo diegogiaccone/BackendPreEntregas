@@ -38,7 +38,7 @@
         {{/each}}
       </div>
 
-      <form action="/products_index" method="post" id="formulario">
+      <form action="/api/products_index" method="post" id="formulario">
         <div class="post" id="addpost">
           <h2>Nuevo Producto</h2>
         </div>
@@ -73,5 +73,16 @@
     </div>
 
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>  
-  <script src="../public/js/index.js"></script>
+{{!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>   --}}
+  
+{{!--   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+     
+{{#if alert}}
+<script>
+  Swal.fire({
+   // icon: `success`,
+   // title: `Excelente`,
+   // text: `Se agrego el producto`,                  
+  })
+</script>   
+{{/if}} --}}

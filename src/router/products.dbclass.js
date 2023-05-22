@@ -38,7 +38,7 @@ class Products {
     addProduct = async (product) => {
         try {
             if (!Products.#objEmpty(product) && Products.#verifyRequiredFields(product)) {
-                await productModel.create(product);
+                await productModel.create(product);           
                 this.status = 1;
                 this.statusMsg = "Producto registrado en bbdd";      
             } else {

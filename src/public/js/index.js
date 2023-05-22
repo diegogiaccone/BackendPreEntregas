@@ -1,3 +1,10 @@
+import { loadNotes, onNewNote } from "./socket.js";
+import { appendNote, onHandleSubmit, renderMessages } from "./ui.js";
 
-/* const socket = io('ws://localhost:9090'); */
+onNewNote(appendNote);
+loadNotes(renderMessages)
+
+const noteForm = document.getElementById("noteForm");
+noteForm.addEventListener(`submit`, onHandleSubmit);
+
 

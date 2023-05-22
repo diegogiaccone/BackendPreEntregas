@@ -8,6 +8,9 @@ import { engine } from 'express-handlebars';
 import Handlebars from 'handlebars';
 import { Server } from 'socket.io';
 import CartRouter from './router/Cart.router.js';
+import chatRoutes from './chat/chat.routes.js';
+import chatModel from './chat/chat.model.js';
+
 
 
 const PORT = parseInt(process.env.PORT) || 3000;
@@ -21,7 +24,7 @@ const httpServer = app.listen(wspuerto, () =>{
     console.log(`Servidor API/Socket.io iniciando en puerto ${wspuerto}`)
 }) 
 
-let users = [];
+/* let users = []; */
 const io = new Server(httpServer, { cors: { origin: "*", methods: ["PUT", "GET", "POST", "DELETE", "OPTIONS"], credentials: false }});
 
 // Parseo correcto de urls
@@ -32,6 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/', UserRoutes(io));
 app.use('/api', productRoutes(io));
 app.use(`/api/carts`, CartRouter);
+app.use(`/chat`, chatRoutes(io))
 
 app.use('/public', express.static(`${__dirname}/public`));
 
@@ -44,36 +48,19 @@ app.set('views', `${__dirname}/views`);
 
 
 //socket io
+// Abrimos el canal de comunicacion
+
 io.on('connection', (socket) => {
-    console.log(`Cliente conectado (${socket.id})`);
+   const emitNotes = async () =>{
+       const notes = await chatModel.find()  
+       io.emit(`loadnotes`, notes)     
+    }   
+    emitNotes()
 
-    //al recibir el msj recojemos los datos
-    socket.on(`enviar mensaje`, (datos) =>{
-        //console.log(datos)
-        io.emit(`nuevo mensaje`, {
-            msg:datos,
-            usuario: socket.nickName
-        })
-    })
-
-    socket.on(`nuevo usuario`, (datos, cback) =>{
-        if (users.indexOf(datos) != -1){
-            cback(false);
-        }else{
-            cback(true)
-            socket.nickName = datos;
-            users.push(socket.nickName)
-            io.emit(`nombre usuario`, users);
-        }        
-    })
-
-    socket.on(`disconnect`, (datos) =>{
-        if(!socket.nickName){
-            return;
-        }else{
-            users.splice(users.indexOf(socket.nickName), 1);
-            io.emit(`nombre usuario`, users)
-        }
+    socket.on(`newnote`, async data =>{
+        const newNote = new chatModel(data)
+        const saveNote = await newNote.save()
+        socket.emit(`serverNewnote`, saveNote)
     })
 });
 
