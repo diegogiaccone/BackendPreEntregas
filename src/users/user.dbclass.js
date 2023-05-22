@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 import userModel from './user.model.js';
 import bcrypt from 'bcryptjs';
-import Jwt  from "jsonwebtoken";
+import jwt  from "jsonwebtoken";
+
 
 class Users {
     constructor() {      
@@ -9,19 +10,14 @@ class Users {
         this.statusMsg = "inicializado";
     } 
 
-    exist = async (user) => {
-        let users = await this.getUsers(user);
-        return users.find(prod => prod.user === user)
-    }
-    
     addUser = async (req, res) => {
         try{
             const name = req.body.name
             const apellido = req.body.apellido
             const user = req.body.user
-            const pass = req.body.pass
+            const pass = req.body.pass                                 
             let passHash = await bcrypt.hash(pass.toString(), 8)   
-            userModel.create({name: name, apellido: apellido, user: user, pass: passHash})         
+            userModel.create({name: name, apellido: apellido, user: user, pass: passHash})     
             res.redirect('/login')         
         } catch (error) {
             console.log(error)
@@ -37,6 +33,17 @@ class Users {
         } catch (err) {
             this.status = -1;
             this.statusMsg = `getUsers: ${err}`;
+        }
+    }
+
+    getUsersById = async (id) => {
+        try {
+            this.status = 1;
+            const products = userModel.findById(id)
+            return products;
+        } catch (err) {
+            this.status = -1;
+            this.statusMsg = `getProductById: ${err}`;
         }
     }
 
@@ -58,8 +65,14 @@ class Users {
                 return
             }
             
+            if(check && isValid){
+                res.render(`login`,{
+                    alert2: true,                    
+                })    
+            }
+            
             const id = check.id
-            const token = Jwt.sign({id:id}, process.env.JWT_SECRETO, {
+            const token = jwt.sign({id:id}, process.env.SECRET, {
                 expiresIn: process.env.JWT_TIEMPO_EXPIRA
             })
             console.log("TOKEN: "+ token + "para el usuario: "+ user)
@@ -68,18 +81,24 @@ class Users {
                 expires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES *24 *60 * 60 * 1000),
                 httpOnly: true
             }
-            res.cookie(`Jwt`, token, cookieOptions)
-        
-            res.render(`login`,{
-                alert2: true
-            })            
+            res.cookie(`jwt`, token, cookieOptions)            
             
+        }    
+/* 
+    validateToken = async (req, res, next) => {   
+        const token = req.headers[`token`];           
+        if(!token){
+            return res.status(401).json({
+                message: `usuario no autenticado`
+            })
         }
-         
+        const decode = jwt.verify(token, process.env.SECRET);
+        console.log(decode)
+    } */
 
-    logOutUser = async (req, res) =>{
-        res.clearCookie(`Jwt`)
-        return res.redirect(`/login`)
+    logOutUser = async (req, res) =>{       
+        res.clearCookie(`jwt`)
+        res.redirect(`/login`)
     }
 
     updateUser = async (id, data) => {

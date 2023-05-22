@@ -4,11 +4,6 @@
       <div class="header2">
         <h1 class="title">FUNKOPOPS</h1>
         <a type="button" class="px-3 btn btn-danger" id="logout" href="/login">Cerrar Sesión</a>
-        <h2>
-          {{#if user}}
-             <span class="badge bg-success">{{user.name}}</span>
-          {{/if}}
-        </h2>
       </div>
     </div>
   </header>
@@ -43,7 +38,7 @@
         {{/each}}
       </div>
 
-      <form action="/api/products_index" method="post" id="formulario">
+      <form action="/products_index" method="post" id="formulario">
         <div class="post" id="addpost">
           <h2>Nuevo Producto</h2>
         </div>

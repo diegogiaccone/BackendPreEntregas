@@ -7,7 +7,8 @@ import { __dirname } from './utils.js';
 import { engine } from 'express-handlebars';
 import Handlebars from 'handlebars';
 import { Server } from 'socket.io';
-import cookieParser from 'cookie-parser';
+import CartRouter from './router/Cart.router.js';
+
 
 const PORT = parseInt(process.env.PORT) || 3000;
 const MONGOOSE_URL = process.env.MONGOOSE_URL;
@@ -27,15 +28,10 @@ const io = new Server(httpServer, { cors: { origin: "*", methods: ["PUT", "GET",
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* app.use(`/`, userRoutes) */
+// end points
 app.use('/', UserRoutes(io));
 app.use('/api', productRoutes(io));
-app.use (cookieParser())
-app.use (function(req, res, next){
-    if(!req.user)
-    res.header(`Cache-Control`, `private`, `no-cache`,`no-store`, `must-revalidate`);
-    next();
-})
+app.use(`/api/carts`, CartRouter);
 
 app.use('/public', express.static(`${__dirname}/public`));
 

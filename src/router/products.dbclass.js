@@ -25,6 +25,16 @@ class Products {
         return this.statusMsg;
     }
 
+    readProducts = async () => {
+        const carts = await productModel.find();
+        return carts;
+    }
+
+    exist = async (id) => {
+        let carts = await this.readProducts(id);
+        return carts.find(cart => cart.id === id)
+    }
+
     addProduct = async (product) => {
         try {
             if (!Products.#objEmpty(product) && Products.#verifyRequiredFields(product)) {

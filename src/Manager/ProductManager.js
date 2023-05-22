@@ -1,4 +1,4 @@
-import fs from "fs";
+/*import fs from "fs";
 import { nanoid } from "nanoid";
 import userMdodel from "../router/products.model.js";
 
@@ -32,7 +32,7 @@ export default class ProductManager {
     }
     
     getProducts = async ()  => {
-        /* return await this.readProducts(); */
+        return await this.readProducts(); 
         return await userMdodel.find();
     }
 
@@ -65,7 +65,7 @@ export default class ProductManager {
         return "Producto Actualizado"
     }
 
-}
+}*/
 
 
 

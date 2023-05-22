@@ -1,4 +1,4 @@
-import fs from 'fs';
+/* import fs from 'fs';
 import crypto from 'crypto';
 
 class Users {
@@ -157,4 +157,4 @@ class Users {
     }
 }
 
-export default Users;
+export default Users; */

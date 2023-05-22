@@ -1,4 +1,4 @@
-import fs from "fs";
+/* import fs from "fs";
 import ProductManager from "./ProductManager.js";
 
 const productAll = new ProductManager
@@ -22,6 +22,10 @@ export default class CartManager {
         let carts = await this.readCarts();
         return carts.find(cart => cart.id === id)
     }
+
+ 
+
+
 
     addCarts = async () => {        
         let OldCarts = await this.readCarts();   
@@ -55,4 +59,4 @@ export default class CartManager {
         await this.writeCarts(cartsConcat)
         return "Producto Agregado al carrito"
     }
-}
+} */

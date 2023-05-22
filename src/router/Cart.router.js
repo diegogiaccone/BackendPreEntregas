@@ -1,5 +1,7 @@
 import Express from "express";
-import CartManager from "../Manager/CartManager.js";
+import CartManager from "./Cart.dbclass.js";
+import productModel from "./products.model.js";
+import cartModel from './Cart.model.js';
 
 const CartRouter = Express.Router();
 const carts = new CartManager
@@ -18,11 +20,8 @@ CartRouter.get("/:cid", async (req, res) => {
     productById ? res.send(productById) : res.send(`El producto no existe`) 
 });
 
-CartRouter.post(`/:cid/products/:pid`, async (req, res) => {
-    let cartId = parseInt(req.params.cid)
-    let productId = parseInt(req.params.pid)
-    res.send(await carts.addProductInCart(cartId, productId))
-})
+
+CartRouter.post(`/:cid/products/:pid`, carts.addProductInCart)
  
 
 
