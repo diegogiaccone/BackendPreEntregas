@@ -1,11 +1,7 @@
 import mongoose from 'mongoose';
 import cartModel from './Cart.model.js';
-import Products from './products.dbclass.js';
 import productModel from './products.model.js';
 
-
-const productAll = new Products
-const ObjectId = new mongoose.Types.ObjectId() 
 
 export default class CartManager {
     static id = 0
