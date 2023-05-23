@@ -107,3 +107,8 @@ h4, h1, h2, p{
     margin: auto;
     margin-right: 15px;
 }
+
+#btn{
+    display: flex;
+    justify-content: center;
+}

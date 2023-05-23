@@ -10,6 +10,8 @@ import { Server } from 'socket.io';
 import CartRouter from './router/Cart.router.js';
 import chatRoutes from './chat/chat.routes.js';
 import chatModel from './chat/chat.model.js';
+import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
+/* import orderRouter from './router/prueba.routes.js'; */
 
 
 
@@ -37,11 +39,14 @@ app.use('/api', productRoutes(io));
 app.use(`/api/carts`, CartRouter);
 app.use(`/chat`, chatRoutes(io))
 
+/* app.use('/api', orderRouter); */
+
 app.use('/public', express.static(`${__dirname}/public`));
 
 // Motor de plantillas
 app.engine('handlebars', engine({
-    handlebars:Handlebars
+    handlebars:Handlebars,
+    handlebars: allowInsecurePrototypeAccess(Handlebars)
 }));
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/views`);

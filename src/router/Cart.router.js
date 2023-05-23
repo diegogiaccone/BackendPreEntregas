@@ -22,7 +22,42 @@ CartRouter.get("/:cid", async (req, res) => {
 
 
 CartRouter.post(`/:cid/products/:pid`, carts.addProductInCart)
+
+CartRouter.delete(`api/carts/:cid `, async (req,res) =>{
+    const cid = req.params
+    let cart = await cartModel.findById(cid).populate('products_prods')
+    let itemRemove = await cart.products.find(prod => prod.prods == cid)
+    await cart.products.pull(itemRemove)
+    await cart.save()
+})
+
+CartRouter.delete(`/:cid/products/:pid`, async (req, res) =>{
+    try {
+    const {cid, pid} = req.params
+
+    let cart = await cartModel.findById(cid).populate('products_prods')
+    console.log(cart.producto);
+
+    let itemRemove = await cart.products.find(prod => prod.prods == pid)
+    console.log(itemRemove);
+    
+    await cart.products.pull(itemRemove)
+    await cart.save()
+
+    res.send(cart)
+    } catch (error) {
+        console.error("No se pudo borrar el producto deseado " + error);
+        res.status(500).send({error: "No se pudo borrar el producto", message: error});
+    }    
+})
+
+CartRouter.put(`:cid`, async (req, res) => {
+
+})
  
+CartRouter.put(`:cid/products/:pid`, async (req,res) => {
+
+})
 
 
 export default CartRouter

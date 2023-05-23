@@ -51,6 +51,7 @@ class Products {
         }
     }
 
+
     getProducts = async () => {
         try {
             const products = await productModel.find()

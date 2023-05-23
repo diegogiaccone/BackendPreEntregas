@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { URL } from 'url';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 mongoose.pluralize(null); // Importante! para no tener problemas con Mongoose
 
@@ -12,8 +12,10 @@ const schema = new mongoose.Schema({
     thumbnail: String,
     code: String,    
     stock: Number, 
-    category: String
+    category: {type: String, index: true}
 });
+
+schema.plugin(mongoosePaginate)
 
 const productModel = mongoose.model(collection, schema);
 

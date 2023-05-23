@@ -1,0 +1,61 @@
+<body>
+  <header class="container-fluid bg-dark position-sticky top-0">
+    <div class="navbar-nav">
+      <div class="header2">
+        <h1 class="title">FUNKOPOPS</h1>
+        <a type="button" class="px-3 btn btn-danger" id="logout" href="/login">Cerrar Sesión</a>
+      </div>
+    </div>
+  </header>
+
+      <div class="row row-cols-sm-10 row-cols-md-2 row-cols-lg-4 row-cols-x1-4" id="card">
+        {{#each products}}
+        <div class="col d-flex justify-content-center mb-4" id="dataProd">
+          <div class="card shadow mb-1 bg-dark rounded" style="width: 20rem">
+            <h5 class="card-title pt-2 text-center text-primary">{{this.title}}</h5>
+            <img src={{this.thumbnail}} class="card-img-top" />
+            <div class="card-body">
+              <p class="card-text text-white-50 description">
+                {{this.description}}
+              </p>
+              <h5 class="text-primary">
+                Precio: <span>$ {{this.price}}</span>
+              </h5>
+              <h5 class="text-primary">
+                Stock: <span>{{this.stock}}</span>
+              </h5>
+              <h5 class="text-primary">
+                Categoria: <span>{{this.category}}</span>
+              </h5>
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary button">
+                  Añadir al Carrito
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+
+          <div class="d-grid gap-2" id="btn" action="/api/products" method="post">
+            <div>
+                <button type="submit" class="btn btn-primary button">
+                  Anterior
+                </button>
+                <button type="submit" class="btn btn-primary button"id="next"{{!-- href="/api/products/Marvel"{miFunc()} --}}>
+                  Siguiente
+                </button>
+            </div>
+              </div>
+
+
+{{!-- <button onclick="()">Haz click</button> --}}
+
+<script>   
+    let page =1;
+  function miFunc() {
+    page++
+    console.log(page)
+    }  
+</script>
