@@ -36,7 +36,7 @@ CartRouter.delete(`/:cid/products/:pid`, async (req, res) =>{
     const {cid, pid} = req.params
 
     let cart = await cartModel.findById(cid).populate('products_prods')
-    console.log(cart.producto);
+    console.log(cart.products);
 
     let itemRemove = await cart.products.find(prod => prod.prods == pid)
     console.log(itemRemove);
@@ -52,12 +52,21 @@ CartRouter.delete(`/:cid/products/:pid`, async (req, res) =>{
 })
 
 CartRouter.put(`:cid`, async (req, res) => {
-
+    try {        
+        await carts.updateCart(req.params.cid, req.body);
+    
+        if (carts.checkStatus() === 1) {
+            res.status(200).send({ status: 'OK', msg: carts.showStatusMsg() });
+        } else {
+            res.status(400).send({ status: 'ERR', error: carts.showStatusMsg() });
+        }
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', error: err });
+    }
 })
  
-CartRouter.put(`:cid/products/:pid`, async (req,res) => {
+CartRouter.put(`:cid/products/:pid`, carts.updateProductInCart)
 
-})
 
 
 export default CartRouter

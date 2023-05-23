@@ -10,6 +10,14 @@ export default class CartManager {
         this.statusMsg = "inicializado";
     }
 
+    checkStatus = () => {
+        return this.status;
+    }
+
+    showStatusMsg = () => {
+        return this.statusMsg;
+    }
+
     readCarts = async () => {
         const carts = await cartModel.find();
         return carts;
@@ -71,5 +79,53 @@ export default class CartManager {
             res.status(500).send({error: "No se pudo agregar producto al carrito", message: error});
         } 
     }
+
+    updateCart = async (id, data) => {
+        try {
+            if (data === undefined || Object.keys(data).length === 0) {
+                this.status = -1;
+                this.statusMsg = "Se requiere body con data";
+            } else {
+                const process = await cartModel.updateOne({ '_id': new mongoose.Types.ObjectId(id) }, data);
+                this.status = 1;
+                process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Producto actualizado";
+            }
+        } catch (err) {
+            this.status = -1;
+            this.statusMsg = `updateCart: ${err}`;
+        }
+    }
+
+    updateProductInCart = async (req, res) => {
+        try {
+            let cid = req.params.cid
+            let pid = req.params.pid                                            
+            let process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}).populate('products.prods');  
+            if(!process) return "Carrito no encontrado"            
+            let product = await productModel.findOne({'_id': new mongoose.Types.ObjectId(pid)});        
+            if(!product) return "Producto no encontrado"
+
+            let validarProd = process.products.find(prod => prod.prods == pid)
+                          
+        
+            if (validarProd) {
+                await productModel.updateOne({ '_id': new mongoose.Types.ObjectId(pid) }, req.body);             
+            }else{                
+                process.products.push({prods: product})}
+
+                console.log(JSON.stringify(process, null, '\t'));            
+                 
+            let result = await cartModel.updateOne(process)
+            console.log('resultado del carrito');
+            console.log(JSON.stringify(process, null, '\t'));
+        
+            res.send(result)
+        
+        } catch (error) {
+            console.error("No se pudo agregar producto al carrito " + error);
+            res.status(500).send({error: "No se pudo agregar producto al carrito", message: error});
+        } 
+    }
+    
 }
 
