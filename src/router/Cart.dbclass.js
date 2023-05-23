@@ -109,7 +109,8 @@ export default class CartManager {
                           
         
             if (validarProd) {
-                await productModel.updateOne({ '_id': new mongoose.Types.ObjectId(pid) }, req.body);             
+                let prod = await productModel.updateOne({ '_id': new mongoose.Types.ObjectId(pid)}, req.body); 
+                await prod.save()            
             }else{                
                 process.products.push({prods: product})}
 
