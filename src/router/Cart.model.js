@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { URL } from 'url';
-import productModel from './products.model.js';
+
 
 mongoose.pluralize(null); // Importante! para no tener problemas con Mongoose
 

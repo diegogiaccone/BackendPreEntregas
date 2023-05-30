@@ -11,16 +11,24 @@ import CartRouter from './router/Cart.router.js';
 import chatRoutes from './chat/chat.routes.js';
 import chatModel from './chat/chat.model.js';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
-/* import orderRouter from './router/prueba.routes.js'; */
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
+import mainRoutes from './public/js/main.routes.js';
+import createRol from './users/rol.dbclass.js';
 
 
 
 const PORT = parseInt(process.env.PORT) || 3000;
 const MONGOOSE_URL = process.env.MONGOOSE_URL;
+const SECRET = process.env.SECRET;
+const BASE_URL = `http://localhost:${PORT}`;
+const PRODUCTS_PER_PAGE = 4;
 
 const wspuerto = 9090;
 
 const app = express();
+createRol();
 
 const httpServer = app.listen(wspuerto, () =>{
     console.log(`Servidor API/Socket.io iniciando en puerto ${wspuerto}`)
@@ -33,13 +41,26 @@ const io = new Server(httpServer, { cors: { origin: "*", methods: ["PUT", "GET",
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//parseo de cookies
+
+app.use(cookieParser());
+
+//manejo de sesiones
+const store = MongoStore.create({ mongoUrl: MONGOOSE_URL, mongoOptions: {}, ttl: 3600});
+app.use(session({
+    store: store,
+    secret: SECRET,
+    resave: false,
+    saveUninitialized: false
+}))
+
 // end points
+app.use('/', mainRoutes(io, store, BASE_URL, PRODUCTS_PER_PAGE));
 app.use('/', UserRoutes(io));
 app.use('/api', productRoutes(io));
 app.use(`/api/carts`, CartRouter);
 app.use(`/chat`, chatRoutes(io))
-
-/* app.use('/api', orderRouter); */
+/* app.use(`/`, mainRoutes) */
 
 app.use('/public', express.static(`${__dirname}/public`));
 
@@ -67,6 +88,17 @@ io.on('connection', (socket) => {
         const saveNote = await newNote.save()
         socket.emit(`serverNewnote`, saveNote)
     })
+
+    socket.emit('server_confirm', 'Conexión recibida');
+
+    socket.on('new_product_in_cart', (data) => {;
+        // io.emit realiza un broadcast (redistribución) a TODOS los clientes, incluyendo el que lo generó
+        io.emit('product_added_to_cart', data);
+    });
+    
+    socket.on("disconnect", (reason) => {
+        console.log(`Cliente desconectado (${socket.id}): ${reason}`);
+    });
 });
 
 //mongodb

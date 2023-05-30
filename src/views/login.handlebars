@@ -1,5 +1,5 @@
 <main class="form-signin text-center shadow-lg p-3">
-  <form id="formLogin" action="/login" method="post"> 
+  <form id="formLogin" action="http://localhost:3030/login" method="post"> 
  <div>
 <h1>LOGIN</h1>       
  </div>   
@@ -12,34 +12,15 @@
       <label for="pass">Contraseña</label>
     </div>
     <button class="btn btn-success" type="submit">Ingresar</button>  
-    <a href="/registrar" type="button" class="btn btn-primary">Registrarse</a>    
+    <a href="/registrar" type="button" class="btn btn-primary">Registrarse</a> 
+    {{#if sessionInfo.errorMessage }}
+      <div class="alert alert-danger mt-4" role="alert">{{sessionInfo.errorMessage}}</div>
+    {{/if}}
   </form>
-</main>    
+</main> 
 
-      <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
      
-{{#if alert}}
-<script>
-  Swal.fire({
-    icon: `error`,
-    title: `Oops`,
-    text: `Usuario o Contraseña Incorrectos`,                  
-  }).then(()=>{
-    window.location =`login`
-  })
-</script>   
-{{/if}}
 
-{{#if alert2}}
-<script> 
-Swal.fire({
-  icon: 'success',
-  title: 'Conexión Exitosa',
-  showConfirmButton: true,
-  timer: 1500
-}).then(()=>{
-    window.location =`api/products_index`
-  })
-</script>   
-{{/if}}
 

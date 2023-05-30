@@ -1,12 +1,18 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+
+mongoose.pluralize(null);
 
 const collection = 'users';
 
 const schema = new mongoose.Schema({        
     name: String,
     apellido: String,
-    user: String,
-    pass: String,  
+    user: {type: String, unique: true},
+    pass: String, 
+    rol: [{
+        ref:"rol",
+        type: Schema.Types.ObjectId
+    }] 
 });
 
 const userModel = mongoose.model(collection, schema);

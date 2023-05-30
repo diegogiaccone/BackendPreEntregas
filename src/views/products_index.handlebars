@@ -3,10 +3,11 @@
     <div class="navbar-nav">
       <div class="header2">
         <h1 class="title">FUNKOPOPS</h1>
-        <a type="button" class="px-3 btn btn-danger" id="logout" href="/login">Cerrar Sesión</a>
+          <a href="{{baseUrl}}/logout" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Salir</a>
       </div>
     </div>
   </header>
+
 
       <div class="row row-cols-sm-10 row-cols-md-2 row-cols-lg-4 row-cols-x1-4" id="card">
         {{#each products}}
@@ -28,7 +29,7 @@
                 Categoria: <span>{{this.category}}</span>
               </h5>
               <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary button">
+                <button type="submit" class="btn btn-primary button" onclick="addToCart('{{this.id}}')">
                   Añadir al Carrito
                 </button>
               </div>
@@ -73,16 +74,9 @@
     </div>
 
 
-{{!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>   --}}
-  
-{{!--   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-     
-{{#if alert}}
 <script>
-  Swal.fire({
-   // icon: `success`,
-   // title: `Excelente`,
-   // text: `Se agrego el producto`,                  
-  })
-</script>   
-{{/if}} --}}
+    const addToCart = (product_id) => {
+        console.log('Agregar al carrito producto', product_id);
+        socket.emit('new_product_in_cart', product_id);
+    }
+</script>

@@ -1,14 +1,39 @@
 import mongoose from 'mongoose';
 import userModel from './user.model.js';
-import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import jwt  from "jsonwebtoken";
+import rolModel from './rol.model.js';
 
 
 class Users {
-    constructor() {      
+    constructor() {
+        this.users = [];
         this.status = 0;
         this.statusMsg = "inicializado";
-    } 
+    }
+
+    static requiredFields = ['firstName', 'lastName', 'userName', 'password'];
+
+    static #verifyRequiredFields = (obj) => {
+        return Users.requiredFields.every(field => Object.prototype.hasOwnProperty.call(obj, field) && obj[field] !== null);
+    }
+
+    static #generarSha256 = (pass) => {
+        return crypto.createHash('sha256').update(pass).digest('hex');
+    }
+
+    static #objEmpty (obj) {
+        return Object.keys(obj).length === 0;
+    }
+
+    checkStatus = () => {
+        return this.status;
+    }
+
+    showStatusMsg = () => {
+        return this.statusMsg;
+    }
+
 
     addUser = async (req, res) => {
         try{
@@ -16,9 +41,15 @@ class Users {
             const apellido = req.body.apellido
             const user = req.body.user
             const pass = req.body.pass                                 
-            let passHash = await bcrypt.hash(pass.toString(), 8)   
-            userModel.create({name: name, apellido: apellido, user: user, pass: passHash})     
-            res.redirect('/login')         
+            let passHash = Users.#generarSha256(pass)
+            const rol = await rolModel.findOne({name: "Usuario"})
+            const verify = await userModel.findOne({user: user})
+            if(!verify){
+                userModel.create({name: name, apellido: apellido, user: user, pass: passHash, rol: rol})     
+                res.redirect('/')      
+            }else{                 
+                res.send(`El usuario ya existe Por favor intente con otro nombre de usuario`)
+            }
         } catch (error) {
             console.log(error)
         }       
@@ -26,7 +57,8 @@ class Users {
 
     getUsers = async () => {
         try {
-            const users = await userModel.find();                   
+            const users = await userModel.find();
+            
             this.status = 1;
             this.statusMsg = 'Usuarios recuperados';
             return users;
@@ -36,69 +68,15 @@ class Users {
         }
     }
 
-    getUsersById = async (id) => {
+    getUserById = async (id) => {
         try {
             this.status = 1;
-            const products = userModel.findById(id)
-            return products;
+            const user = userModel.findById(id);
+            return user;
         } catch (err) {
             this.status = -1;
-            this.statusMsg = `getProductById: ${err}`;
+            this.statusMsg = `getUserById: ${err}`;
         }
-    }
-
-    logUser = async (req, res) => {        
-            const user = req.body.user
-            const pass = req.body.pass
-            const check = await userModel.findOne({user: user});   
-            if(!check) {
-                res.render(`login`, {
-                    alert:true               
-                })
-                return
-            }            
-            const isValid = await bcrypt.compare(pass, check.pass)
-            if (!isValid){
-                res.render(`login`,{
-                    alert:true
-                })
-                return
-            }
-            
-            if(check && isValid){
-                res.render(`login`,{
-                    alert2: true,                    
-                })    
-            }
-            
-            const id = check.id
-            const token = jwt.sign({id:id}, process.env.SECRET, {
-                expiresIn: process.env.JWT_TIEMPO_EXPIRA
-            })
-            console.log("TOKEN: "+ token + "para el usuario: "+ user)
-
-            const cookieOptions = {
-                expires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES *24 *60 * 60 * 1000),
-                httpOnly: true
-            }
-            res.cookie(`jwt`, token, cookieOptions)            
-            
-        }    
-/* 
-    validateToken = async (req, res, next) => {   
-        const token = req.headers[`token`];           
-        if(!token){
-            return res.status(401).json({
-                message: `usuario no autenticado`
-            })
-        }
-        const decode = jwt.verify(token, process.env.SECRET);
-        console.log(decode)
-    } */
-
-    logOutUser = async (req, res) =>{       
-        res.clearCookie(`jwt`)
-        res.redirect(`/login`)
     }
 
     updateUser = async (id, data) => {
@@ -128,6 +106,26 @@ class Users {
             this.statusMsg = `deleteUser: ${err}`;
         }
     }
+
+    validateUser = async (req, res, next) => {
+        const { user, pass } = req.body; // Desestructuramos el req.body
+        const logUser = await userModel.findOne({ user: user, pass: crypto.createHash('sha256').update(pass).digest('hex')}).populate(`rol`);
+        console.log(logUser)       
+
+        if (logUser === null) { // Datos no válidos
+            req.session.userValidated = req.sessionStore.userValidated = false;
+            req.session.errorMessage = req.sessionStore.errorMessage = 'Usuario o clave no válidos';
+        } else {
+            req.session.userValidated = req.sessionStore.userValidated = true;
+            req.session.errorMessage = req.sessionStore.errorMessage = '';
+        }
+
+        // Se recarga la página base en el browser
+        res.redirect(`http://localhost:3030`);
+    }
 }
 
 export default Users;
+
+
+
