@@ -6,66 +6,108 @@ import cartModel from './Cart.model.js';
 const CartRouter = Express.Router();
 const carts = new CartManager
 
-CartRouter.post("/", async (req, res) => {    
-    res.send(await carts.addCarts())
-})
 
-CartRouter.get(`/`, async (req, res) => {
-    res.send(await carts.readCarts())
-})
-
-CartRouter.get("/:cid", async (req, res) => {    
-    let id = parseInt(req.params.cid);     
-    const productById = await carts.getCartsById(id);
-    productById ? res.send(productById) : res.send(`El producto no existe`) 
-});
-
-
-CartRouter.post(`/:cid/products/:pid`, carts.addProductInCart)
-
-CartRouter.delete(`api/carts/:cid `, async (req,res) =>{
-    const cid = req.params
-    let cart = await cartModel.findById(cid).populate('products_prods')
-    let itemRemove = await cart.products.find(prod => prod.prods == cid)
-    await cart.products.pull(itemRemove)
-    await cart.save()
-})
-
-CartRouter.delete(`/:cid/products/:pid`, async (req, res) =>{
+CartRouter.get('/carts', async (req, res) => {
     try {
-    const {cid, pid} = req.params
-
-    let cart = await cartModel.findById(cid).populate('products_prods')
-    console.log(cart.products);
-
-    let itemRemove = await cart.products.find(prod => prod.prods == pid)
-    console.log(itemRemove);
-    
-    await cart.products.pull(itemRemove)
-    await cart.save()
-
-    res.send(cart)
-    } catch (error) {
-        console.error("No se pudo borrar el producto deseado " + error);
-        res.status(500).send({error: "No se pudo borrar el producto", message: error});
-    }    
-})
-
-CartRouter.put(`:cid`, async (req, res) => {
-    try {        
-        await carts.updateCart(req.params.cid, req.body);
-    
-        if (carts.checkStatus() === 1) {
-            res.status(200).send({ status: 'OK', msg: carts.showStatusMsg() });
-        } else {
-            res.status(400).send({ status: 'ERR', error: carts.showStatusMsg() });
-        }
+        const carts = await carts.getCarts();
+        res.status(200).send({ status: 'OK', data: carts });
     } catch (err) {
         res.status(500).send({ status: 'ERR', error: err });
     }
+});
+
+CartRouter.get('/carts/:id', async (req, res) => {
+    try {
+        const carts = await carts.getCartPopulated(req.params.id);
+        res.status(200).send({ status: 'OK', data: carts });
+    } catch (err) {
+        res.status(500).send({ status: 'err', error: err.message });
+    }
 })
- 
-CartRouter.put(`:cid/products/:pid`, carts.updateProductInCart)
+
+CartRouter.post('/carts', async (req, res) => {
+    try {
+        // Verificar que se reciba en el body un array con al menos un producto,
+        // recién ahí llamar al método addCart
+        const products_array = req.body;
+        if (!Array.isArray(products_array.products)) {
+            res.status(400).send({ status: 'ERR', message: 'El body debe contener un array products con al menos un producto' });
+        } else {
+            const process = await carts.addCart(products_array);
+            res.status(200).send({ status: 'OK', data: process });
+        }
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', error: err.message });
+    }
+});
+
+CartRouter.delete('/carts/:id/products/:pid', async (req, res) => {
+    try {
+        await carts.deleteCartProduct(req.params.id, req.params.pid);
+
+        if (carts.checkStatus() === 1) {
+            res.status(200).send({ status: 'OK', msg: 'Producto quitado del carrito' });
+        } else {
+            res.status(400).send({ status: 'ERR', error: 'No se pudo quitar el producto en el carrito.' });
+        }
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', error: err.message });
+    }
+});
+
+CartRouter.delete('/carts/:id', async (req, res) => {
+    try {
+        await carts.emptyCart(req.params.id);
+
+        if (carts.checkStatus() === 1) {
+            res.status(200).send({ status: 'OK', msg: 'Carrito Vaciado' });
+        } else {
+            res.status(400).send({ status: 'ERR', error: 'No se pudo vaciar el carrito.' });
+        }
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', error: err.message });
+    }
+});
+
+CartRouter.put('/carts/:id', async (req, res) => {
+    try {
+        // tiene que pasarse un id y un body con el objeto del nuevo producto, verificar eso
+        const product = req.body;
+        await carts.updateCart(req.params.id, product);
+
+        if (carts.checkStatus() === 1) {
+            res.status(200).send({ status: 'OK', msg: 'Producto agregado al carrito' });
+        } else {
+            res.status(400).send({ status: 'ERR', error: 'No se pudo agregar el producto al carrito.' });
+        }
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', error: err.message });
+    }
+})
+
+CartRouter.put('/carts/:id/products/:pid/:qty', async (req, res) => {
+    try {
+        await carts.updateProductQty(req.params.id, req.params.pid, req.params.qty);
+
+        if (carts.checkStatus() === 1) {
+            res.status(200).send({ status: 'OK', msg: 'Cantidad de producto actualizada' });
+        } else {
+            res.status(400).send({ status: 'ERR', error: 'No se pudo actualizar cantidad de producto.' });
+        }
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', error: err.message });
+    }
+    
+    
+    try {
+        const updateProductQty = await carts.updateProductQty(req.params.cid, req.params.pid, req.body)
+        res.status(200).send(updateProductQty)
+
+
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', error: err })
+    }
+})
 
 
 
