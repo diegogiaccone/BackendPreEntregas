@@ -16,6 +16,10 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import mainRoutes from './public/js/main.routes.js';
 import createRol from './users/rol.dbclass.js';
+import passport from 'passport';
+import initializePassport from './config/passport.config.js'
+//import viewsRoutes from './github/github.router.js';
+import sessionRoutes from './github/session.router.js'
 
 
 
@@ -54,13 +58,20 @@ app.use(session({
     saveUninitialized: false
 }))
 
+//sessiones de passport
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 // end points
 app.use('/', mainRoutes(io, store, BASE_URL, PRODUCTS_PER_PAGE));
 app.use('/', UserRoutes(io));
 app.use('/api', productRoutes(io));
 app.use(`/api/carts`, CartRouter);
 app.use(`/chat`, chatRoutes(io))
-/* app.use(`/`, mainRoutes) */
+//app.use('/', viewsRoutes());
+app.use('/', sessionRoutes(io, store, BASE_URL, PRODUCTS_PER_PAGE));
+
 
 app.use('/public', express.static(`${__dirname}/public`));
 

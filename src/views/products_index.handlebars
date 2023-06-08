@@ -2,8 +2,18 @@
   <header class="container-fluid bg-dark position-sticky top-0">
     <div class="navbar-nav">
       <div class="header2">
-        <h1 class="title">FUNKOPOPS</h1>
-          <a href="{{baseUrl}}/logout" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Salir</a>
+        <div class="title">
+        <h1>FUNKOPOPS</h1>
+        </div>
+        <div class="saludo">
+          <h4 class="card-title pt-2 text-center text-primary">Bienvenido:({{name}})</h4>
+        </div>
+        <div class="rol">
+          <h4 class="card-title pt-2 text-center text-success">Rol:({{rol}})</h4>
+        </div>
+        <div class="logout">
+          <a href="{{baseUrl}}/logout" class="btn btn-danger "><i class="fas fa-sign-out-alt"></i>Salir</a>
+        </div>
       </div>
     </div>
   </header>
@@ -39,6 +49,7 @@
         {{/each}}
       </div>
 
+     {{!-- {{#if isAdmin}} --}}        
       <form action="/api/products_index" method="post" id="formulario">
         <div class="post" id="addpost">
           <h2>Nuevo Producto</h2>
@@ -70,8 +81,10 @@
         <div>
           <button id="btn" type="submit" class="btn btn-primary">Agregar al stock</button>
         </div>
-      </form>
-    </div>
+      </form> 
+     {{!-- {{/if}} --}}
+    
+     
 
 
 <script>
@@ -79,4 +92,5 @@
         console.log('Agregar al carrito producto', product_id);
         socket.emit('new_product_in_cart', product_id);
     }
+  
 </script>

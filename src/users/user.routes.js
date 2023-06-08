@@ -15,7 +15,6 @@ const userRoutes = (io) => {
             res.status(401).send({ status: 'ERR', error: 'No tiene autorización para realizar esta solicitud' });
         }
     }
-
        
     router.get('/users/:id?', validate, async (req, res) => { // ? indica que el parámetro es opcional
         try {
@@ -35,8 +34,8 @@ const userRoutes = (io) => {
         res.render('registrar');
     });   
    
-    router.post('/registrar', manager.addUser); 
     
+    router.post(`/registrar`, manager.addUser)
 
     router.put('/users/:id', validate, async (req, res) => {
         try {

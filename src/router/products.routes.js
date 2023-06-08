@@ -1,11 +1,12 @@
 import { Router } from "express";
 import Products from "./products.dbclass.js";
-//import Rol from "../users/isAdmin.dbclass.js";
+import Rol from "../users/isAdmin.dbclass.js";
+import userModel from "../users/user.model.js";
 
 
 const router = Router();
 const manager = new Products();
-//const rol = new Rol();
+const rol = new Rol();
 
 
 const productRoutes = (io) => {
@@ -19,9 +20,11 @@ const productRoutes = (io) => {
 
     router.get('/products_index', validate, async (req, res) => {
         const products = await manager.getProducts();
+        const userObjet = await userModel.findOne({user: req.session.user}).populate(`rol`)
+        const name = userObjet.name 
+        const rol = userObjet.rol[0].name                
         res.render('products_index', {
-            products: products
-        });
+            products: products, name: name, rol: rol});
     });
 
     router.get('/products', validate, async (req, res) => {
@@ -33,7 +36,7 @@ const productRoutes = (io) => {
         }
     });
     
-    router.post('/products_index', [validate, /* rol.isAdmin */], async (req, res) => {
+    router.post('/products_index', [validate,  rol.isAdmin ], async (req, res) => {
         try {
             await manager.addProduct(req.body);
     

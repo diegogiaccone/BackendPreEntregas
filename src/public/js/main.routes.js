@@ -2,9 +2,6 @@ import { Router } from "express";
 import Users from '../../users/user.dbclass.js';
 import Products from '../../router/products.dbclass.js';
 import userModel from "../../users/user.model.js";
-import crypto from 'crypto';
-import rolModel from "../../users/rol.model.js";
-
 
 const users = new Users();
 const manager = new Products();
@@ -36,16 +33,21 @@ const mainRoutes = (io, store, baseUrl, productsPerPage) => {
                     hasPrevPage: result.hasPrevPage,
                     hasNextPage: result.hasNextPage,
                     pagesArray: pagesArray
-                }                
-                res.render('products', { products: result.docs, pagination: pagination });
+                }               
+              
+                const userObjet = await userModel.findOne({user: req.session.user}).populate(`rol`)                
+                const name = userObjet.name 
+                const rol = userObjet.rol[0].name            
+                 
+                res.render('products',{ products: result.docs, pagination: pagination, name:name, rol: rol});
             } else {            
                 res.render('login', {
                     sessionInfo: req.session.userValidated !== undefined ? req.session : req.sessionStore
                 });
-            }
+            }                    
         }); 
     });
-
+    
     router.get('/logout', async (req, res) => {
         req.session.userValidated = req.sessionStore.userValidated = false;
 
@@ -57,7 +59,7 @@ const mainRoutes = (io, store, baseUrl, productsPerPage) => {
             });
         })
     });
-
+    
 
     router.post('/login', users.validateUser); 
 

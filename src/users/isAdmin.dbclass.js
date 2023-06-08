@@ -1,4 +1,4 @@
-/* import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import userModel from './user.model.js';
 import rolModel from './rol.model.js';
 import Users from './user.dbclass.js';
@@ -12,20 +12,16 @@ class Rol {
     }
 
     isAdmin = async (req, res, next) => {        
-        const userAd = await user.validateUser(req.body) 
-        console.log("este es user")
-        console.log(userAd)
-        const rol = await rolModel.find({_id: {$in: user.rol}})
-        console.log("esto es rol")
-        console.log(rol)
+        const userAd = await userModel.findOne({user: req.session.user}).populate(`rol`)        
+        const rol = await rolModel.find({_id: {$in: userAd.rol}})    
         for (let i = 0; i < rol.length; i++) {
             if(rol[i].name === "Admin"){
                 next()
-            }
-            return;       
+            }else{
+                return res.status(403).json({message: "Necesita ser Admin para ejecutar esta acción"})
+            }            
         }
-        return res.status(403).json({message: "Necesita ser Admin para ejecutar esta acción"})
     }
 }
 
-export default Rol; */
+export default Rol;

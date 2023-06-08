@@ -1,8 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose, { isValidObjectId } from 'mongoose';
 import userModel from './user.model.js';
-import crypto from 'crypto';
 import jwt  from "jsonwebtoken";
 import rolModel from './rol.model.js';
+import bcrypt from 'bcryptjs'
+import { isValidPassword, createHash } from '../utils.js';
 
 
 class Users {
@@ -41,7 +42,7 @@ class Users {
             const apellido = req.body.apellido
             const user = req.body.user
             const pass = req.body.pass                                 
-            let passHash = Users.#generarSha256(pass)
+            let passHash = await bcrypt.hash(pass, 8)
             const rol = await rolModel.findOne({name: "Usuario"})
             const verify = await userModel.findOne({user: user})
             if(!verify){
@@ -109,21 +110,27 @@ class Users {
 
     validateUser = async (req, res, next) => {
         const { user, pass } = req.body; // Desestructuramos el req.body
-        const logUser = await userModel.findOne({ user: user, pass: crypto.createHash('sha256').update(pass).digest('hex')}).populate(`rol`);
-        console.log(logUser)       
+        const findUser = await userModel.findOne({user:user})
+        if (!findUser) {
+            req.sessionStore.errorMessage = 'No se encuentra el usuario';
+            res.redirect('http://localhost:3030');           
+        }else{
+            const passHash = await bcrypt.compareSync(pass, findUser.pass)    
+            if (passHash === false) {                
+                    req.sessionStore.errorMessage = 'Clave incorrecta'; 
+                    res.redirect('http://localhost:3030');  
+                } else{
+                    req.session.userValidated = req.sessionStore.userValidated = true;
+                    req.session.errorMessage = req.sessionStore.errorMessage = '';
+                    req.session.user = req.sessionStore.user = user;
+                    console.log(req.session)
+                    res.redirect('http://localhost:3030') 
+                }      
+            }
+        } 
+    }        
 
-        if (logUser === null) { // Datos no válidos
-            req.session.userValidated = req.sessionStore.userValidated = false;
-            req.session.errorMessage = req.sessionStore.errorMessage = 'Usuario o clave no válidos';
-        } else {
-            req.session.userValidated = req.sessionStore.userValidated = true;
-            req.session.errorMessage = req.sessionStore.errorMessage = '';
-        }
 
-        // Se recarga la página base en el browser
-        res.redirect(`http://localhost:3030`);
-    }
-}
 
 export default Users;
 

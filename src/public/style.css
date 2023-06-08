@@ -34,8 +34,7 @@ header{
 .title{
     color: white;
     text-align: center;
-    margin: auto;
-    margin-right: 30px;
+
 }
 
 
@@ -83,8 +82,19 @@ h3{
     display: none;
 } */
 
-h4, h1, h2, p{
+
+h1, h2, p{
     color: white;
+}
+
+h4{
+    display: flex;
+    padding: 10px;
+    justify-content: end;
+}
+
+h1{
+    padding-right: 15px;  
 }
 
 .form-control{
@@ -97,9 +107,22 @@ h4, h1, h2, p{
     margin-top: 10%;    
 }
 
+
 .header2{
-    display: flex;
-    justify-content: center;
+    display: flex;   
+}
+
+.logout{       
+    padding-top: 5px; 
+    margin-left: 5px ; 
+}
+
+.saludo{
+    margin-left: 1150px;
+}
+
+.rol{
+    padding-right: 5px;
 }
 
 #logout{
