@@ -69,3 +69,4 @@ const userRoutes = (io) => {
 }
 
 export default userRoutes;
+

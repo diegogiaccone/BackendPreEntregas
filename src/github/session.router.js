@@ -1,8 +1,10 @@
 import { Router } from "express";
 import passport from "passport";
-import initializePassport from '../config/passport.config.js';
+import Products from "../router/products.dbclass.js";
+import userModel from "../users/user.model.js";
 
-initializePassport();
+
+const manager = new Products();
 
 const sessionRoutes = () => {    
     const router = Router();   
@@ -13,10 +15,15 @@ const sessionRoutes = () => {
         if (req.user === undefined) {            
             res.render('login', { sessionInfo: req.session });
         } else {
-            req.session.user = req.sessionStore.user = req.user;
+            req.session.user = req.sessionStore.user = req.user         
             console.log(req.session.user)
-            res.redirect(`/`)
-        }
+            const products = await manager.getProducts();
+            const user = await userModel.findOne({user: req.session.user.user}).populate(`rol`)                                        
+            const name = user.name 
+            const rol = user.rol[0].name                           
+            res.render('products_index', {
+            products: products,  name: name,  rol: rol});       
+            }
     });      
    
     return router;
