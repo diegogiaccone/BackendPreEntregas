@@ -3,7 +3,10 @@ import Products from "./products.dbclass.js";
 import Rol from "../users/isAdmin.dbclass.js";
 import userModel from "../users/user.model.js";
 import { authentication } from "../config/passport.jwt.js";
+import { authorization } from "../config/passport.jwt.js";
+import {} from 'dotenv/config'
 
+const Admin = process.env.ADMIN
 
 const router = Router();
 const manager = new Products();
@@ -37,7 +40,7 @@ const productRoutes = (io) => {
         }
     });
     
-    router.post('/products_index', [validate, rol.isAdmin ], async (req, res) => {
+    router.post('/products_index', [validate, authentication('jwtAuth'), rol.isAdmin ], async (req, res) => {
         try {
             await manager.addProduct(req.body);
     
@@ -51,7 +54,7 @@ const productRoutes = (io) => {
         }
     });
     
-    router.put('/products_index', [validate, authentication('jwtAuth')], async (req, res) => {
+    router.put('/products_index', [validate, authentication('jwtAuth'), authorization(Admin)], async (req, res) => {
         try {
             const { id, field, data } = req.body;
             await manager.updateProduct(id, field, data);
@@ -66,7 +69,7 @@ const productRoutes = (io) => {
         }
     });
     
-    router.delete('/products_index', [validate, authentication('jwtAuth')], async(req, res) => {
+    router.delete('/products_index', [validate, authentication('jwtAuth'), authorization(Admin)], async(req, res) => {
         try {
             await manager.deleteProduct(req.body.id);
         

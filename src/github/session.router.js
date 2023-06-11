@@ -22,6 +22,7 @@ const sessionRoutes = () => {
             req.session.userValidated = req.sessionStore.userValidated = true;
             const date = new Date();
             const token = generateToken({ user: req.user.user, name: req.user.name, apellido: req.user.apellido, rol: req.user.rol})
+            console.log(req.user)
             res.cookie('token', token, {
                 maxAge: date.setDate(date.getDate() + 1),
                 secure: false, // true para operar solo sobre HTTPS
