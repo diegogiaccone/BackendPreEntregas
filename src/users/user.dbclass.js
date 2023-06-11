@@ -122,7 +122,7 @@ class Users {
                 } else{
                     req.session.userValidated = req.sessionStore.userValidated = true;
                     req.session.errorMessage = req.sessionStore.errorMessage = '';
-                    req.session.user = req.sessionStore.user = user;
+                    req.session.user = req.sessionStore.user = {user: user};
                     console.log(req.session)
                     res.redirect('http://localhost:3030') 
                 }      

@@ -20,7 +20,7 @@ const productRoutes = (io) => {
 
     router.get('/products_index', validate, async (req, res) => {
         const products = await manager.getProducts();
-        const userObjet = await userModel.findOne({user: req.session.user}).populate(`rol`)
+        const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)
         const name = userObjet.name 
         const rol = userObjet.rol[0].name                
         res.render('products_index', {

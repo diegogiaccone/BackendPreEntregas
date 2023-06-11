@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
+import {} from 'dotenv/config'
 
-const PRIVATE_KEY = 'abcdef123456';
+const PRIVATE_KEY = process.env.SECRET;
 
 const generateToken = (user) => {
     // sign: payload (contenido), clave de cifrado, tiempo de validez

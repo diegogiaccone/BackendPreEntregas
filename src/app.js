@@ -18,9 +18,7 @@ import mainRoutes from './public/js/main.routes.js';
 import createRol from './users/rol.dbclass.js';
 import passport from 'passport';
 import initializePassport from './config/passport.config.js'
-//import viewsRoutes from './github/github.router.js';
 import sessionRoutes from './github/session.router.js'
-
 
 
 const PORT = parseInt(process.env.PORT) || 3000;
@@ -69,8 +67,7 @@ app.use('/', UserRoutes(io));
 app.use('/api', productRoutes(io));
 app.use(`/api/carts`, CartRouter);
 app.use(`/chat`, chatRoutes(io))
-//app.use('/', viewsRoutes());
-app.use('/', sessionRoutes(io, store, BASE_URL, PRODUCTS_PER_PAGE));
+app.use('/', sessionRoutes());
 
 
 app.use('/public', express.static(`${__dirname}/public`));

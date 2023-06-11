@@ -35,7 +35,7 @@ const mainRoutes = (io, store, baseUrl, productsPerPage) => {
                     pagesArray: pagesArray
                 }               
               
-                const userObjet = await userModel.findOne({user: req.session.user}).populate(`rol`)                
+                const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)                
                 const name = userObjet.name 
                 const rol = userObjet.rol[0].name            
                  
@@ -50,7 +50,7 @@ const mainRoutes = (io, store, baseUrl, productsPerPage) => {
     
     router.get('/logout', async (req, res) => {
         req.session.userValidated = req.sessionStore.userValidated = false;
-
+        res.clearCookie('connect.sid', {domain:".localhost"});
         req.session.destroy((err) => {
             req.sessionStore.destroy(req.sessionID, (err) => {
                 if (err) console.log(`Error al destruir sesión (${err})`);
