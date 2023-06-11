@@ -1,6 +1,7 @@
 import { Router } from "express";
 import Users from "./user.dbclass.js";
 import { __dirname } from '../utils.js';
+import { authentication } from "../config/passport.jwt.js";
 
 
 const userRoutes = (io) => {
@@ -16,7 +17,7 @@ const userRoutes = (io) => {
         }
     }
        
-    router.get('/users/:id?', validate, async (req, res) => { // ? indica que el parámetro es opcional
+    router.get('/users/:id?', [validate, authentication('jwtAuth')], async (req, res) => { // ? indica que el parámetro es opcional
         try {
             if (req.params.id === undefined) {
                 const users = await manager.getUsers();
@@ -36,7 +37,7 @@ const userRoutes = (io) => {
     
     router.post(`/registrar`, manager.addUser)
 
-    router.put('/users/:id', validate, async (req, res) => {
+    router.put('/users/:id', [validate, authentication('jwtAuth')], async (req, res) => {
         try {
             await manager.updateUser(req.params.id, req.body);
         
@@ -50,7 +51,7 @@ const userRoutes = (io) => {
         }
     });
     
-    router.delete('/users/:id', validate, async(req, res) => {
+    router.delete('/users/:id', [validate, authentication('jwtAuth')], async(req, res) => {
         try {
             await manager.deleteUser(req.params.id);
         

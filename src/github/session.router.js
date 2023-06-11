@@ -3,6 +3,7 @@ import passport from "passport";
 import Products from "../router/products.dbclass.js";
 import initializePassport from "../config/passport.config.js";
 import { generateToken, authToken } from '../config/jwt.config.js'
+import { authentication } from "../config/passport.jwt.js";
 
 initializePassport();
 
@@ -43,7 +44,7 @@ const sessionRoutes = () => {
         })
     });
 
-    router.get('/current', passport.authenticate('jwtAuth', { session: false }), async (req, res) => {
+    router.get('/current', authentication('jwtAuth', { session: false }), async (req, res) => {
         res.send({ status: 'OK', data: req.user });
     });
    

@@ -2,8 +2,7 @@ import { Router } from "express";
 import Products from "./products.dbclass.js";
 import Rol from "../users/isAdmin.dbclass.js";
 import userModel from "../users/user.model.js";
-import { authToken } from "../config/jwt.config.js";
-import passport from "passport";
+import { authentication } from "../config/passport.jwt.js";
 
 
 const router = Router();
@@ -20,7 +19,7 @@ const productRoutes = (io) => {
         }
     }
 
-    router.get('/products_index',passport.authenticate('jwtAuth', { session: false }) , async (req, res) => {
+    router.get('/products_index', [validate, authentication('jwtAuth')] , async (req, res) => {
         const products = await manager.getProducts();
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)
         const name = userObjet.name 
@@ -29,7 +28,7 @@ const productRoutes = (io) => {
             products: products, name: name, rol: rol});
     });
 
-    router.get('/products', validate, async (req, res) => {
+    router.get('/products', [validate, authentication('jwtAuth')], async (req, res) => {
         try {
             const products = await manager.getProducts();
             res.status(200).send({ status: 'OK', data: products });
@@ -38,7 +37,7 @@ const productRoutes = (io) => {
         }
     });
     
-    router.post('/products_index', [validate,  rol.isAdmin ], async (req, res) => {
+    router.post('/products_index', [validate, rol.isAdmin ], async (req, res) => {
         try {
             await manager.addProduct(req.body);
     
@@ -52,7 +51,7 @@ const productRoutes = (io) => {
         }
     });
     
-    router.put('/products_index', validate, async (req, res) => {
+    router.put('/products_index', [validate, authentication('jwtAuth')], async (req, res) => {
         try {
             const { id, field, data } = req.body;
             await manager.updateProduct(id, field, data);
@@ -67,7 +66,7 @@ const productRoutes = (io) => {
         }
     });
     
-    router.delete('/products_index', validate, async(req, res) => {
+    router.delete('/products_index', [validate, authentication('jwtAuth')], async(req, res) => {
         try {
             await manager.deleteProduct(req.body.id);
         
