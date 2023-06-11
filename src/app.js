@@ -19,6 +19,7 @@ import createRol from './users/rol.dbclass.js';
 import passport from 'passport';
 import initializePassport from './config/passport.config.js'
 import sessionRoutes from './github/session.router.js'
+import { initPassport } from './config/passport.jwt.js';
 
 
 const PORT = parseInt(process.env.PORT) || 3000;
@@ -58,6 +59,7 @@ app.use(session({
 
 //sessiones de passport
 initializePassport();
+initPassport();
 app.use(passport.initialize());
 app.use(passport.session());
 

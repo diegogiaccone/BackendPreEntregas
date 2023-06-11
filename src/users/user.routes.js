@@ -33,7 +33,6 @@ const userRoutes = (io) => {
     router.get('/registrar', async (req, res) => {        
         res.render('registrar');
     });   
-   
     
     router.post(`/registrar`, manager.addUser)
 

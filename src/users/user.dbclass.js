@@ -1,10 +1,8 @@
 import mongoose, { isValidObjectId } from 'mongoose';
 import userModel from './user.model.js';
-import jwt  from "jsonwebtoken";
 import rolModel from './rol.model.js';
 import bcrypt from 'bcryptjs'
-import { isValidPassword, createHash } from '../utils.js';
-
+import { generateToken, authToken } from '../config/jwt.config.js'
 
 class Users {
     constructor() {
@@ -123,6 +121,18 @@ class Users {
                     req.session.userValidated = req.sessionStore.userValidated = true;
                     req.session.errorMessage = req.sessionStore.errorMessage = '';
                     req.session.user = req.sessionStore.user = {user: user};
+                    const date = new Date();
+                    const token = generateToken({ user: user, name : findUser.name, apellido: findUser.apellido, rol: findUser.rol})
+                    /* const headers = new Headers({
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                      })
+                    req.header(headers) */
+                    res.cookie('token', token, {
+                        maxAge: date.setDate(date.getDate() + 1),
+                        secure: false, // true para operar solo sobre HTTPS
+                        httpOnly: true
+                    })
                     console.log(req.session)
                     res.redirect('http://localhost:3030') 
                 }      

@@ -2,6 +2,8 @@ import { Router } from "express";
 import Products from "./products.dbclass.js";
 import Rol from "../users/isAdmin.dbclass.js";
 import userModel from "../users/user.model.js";
+import { authToken } from "../config/jwt.config.js";
+import passport from "passport";
 
 
 const router = Router();
@@ -18,7 +20,7 @@ const productRoutes = (io) => {
         }
     }
 
-    router.get('/products_index', validate, async (req, res) => {
+    router.get('/products_index',passport.authenticate('jwtAuth', { session: false }) , async (req, res) => {
         const products = await manager.getProducts();
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)
         const name = userObjet.name 

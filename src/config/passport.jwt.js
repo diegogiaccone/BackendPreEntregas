@@ -1,5 +1,8 @@
 import passport from 'passport';
 import jwt from 'passport-jwt';
+import {} from 'dotenv/config'
+
+const PRIVATE_KEY = process.env.SECRET;
 
 // Estrategia JWT
 const JWTStrategy = jwt.Strategy;
@@ -7,7 +10,7 @@ const JWTExtractor = jwt.ExtractJwt;
 
 const cookieExtractor = (req) => {
     if (req && req.cookies) { // hay cookies
-        return req.cookies['coder_login_token'];
+        return req.cookies['token'];
     }
 
     return null;
@@ -16,7 +19,7 @@ const cookieExtractor = (req) => {
 const jwtData = {
     // El token se recupera desde las cookies
     jwtFromRequest: JWTExtractor.fromExtractors([cookieExtractor]),
-    secretOrKey: 'abcdefgh12345678' // misma que en app.js
+    secretOrKey: PRIVATE_KEY // misma que en app.js
 }
 
 const verify = async (jwt_payload, done) => {
