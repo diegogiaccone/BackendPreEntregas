@@ -53,9 +53,9 @@ const authentication = (strategy) => {
 const authorization = (rol) => {
     return async(req, res, next) => {
         if (!req.user) return res.status(401).send({ error: 'Unauthorized' });
-        console.log(req.user.rol[0])
-        if (req.user.rol[0] !== "64763072a12b834dd6259fc6" && req.user.rol != rol) return res.status(403).send({ error: 'No permissions' });
-        next();
+        console.log(req.user)        
+        if (req.user.rol[0].name !== "Admin" && req.user.rol[0].name !== rol) return res.status(403).send({ error: 'No permissions' });
+        next();       
     }
 }
 

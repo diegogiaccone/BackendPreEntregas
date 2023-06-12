@@ -6,7 +6,6 @@ import { authentication } from "../config/passport.jwt.js";
 import { authorization } from "../config/passport.jwt.js";
 import {} from 'dotenv/config'
 
-const Admin = process.env.ADMIN
 
 const router = Router();
 const manager = new Products();
@@ -26,7 +25,7 @@ const productRoutes = (io) => {
         const products = await manager.getProducts();
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)
         const name = userObjet.name 
-        const rol = userObjet.rol[0].name                
+        const rol = userObjet.rol[0].name                   
         res.render('products_index', {
             products: products, name: name, rol: rol});
     });
@@ -54,7 +53,7 @@ const productRoutes = (io) => {
         }
     });
     
-    router.put('/products_index', [validate, authentication('jwtAuth'), authorization(Admin)], async (req, res) => {
+    router.put('/products_index', [validate, authentication('jwtAuth'), authorization("Admin")], async (req, res) => {
         try {
             const { id, field, data } = req.body;
             await manager.updateProduct(id, field, data);
@@ -69,7 +68,7 @@ const productRoutes = (io) => {
         }
     });
     
-    router.delete('/products_index', [validate, authentication('jwtAuth'), authorization(Admin)], async(req, res) => {
+    router.delete('/products_index', [validate, authentication('jwtAuth'), authorization("Admin")], async(req, res) => {
         try {
             await manager.deleteProduct(req.body.id);
         

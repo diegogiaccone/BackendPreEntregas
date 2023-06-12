@@ -108,7 +108,9 @@ class Users {
 
     validateUser = async (req, res, next) => {
         const { user, pass } = req.body; // Desestructuramos el req.body
-        const findUser = await userModel.findOne({user:user})
+        const findUser = await userModel.findOne({user:user}).populate(`rol`)
+        console.log("esto es user comun")
+        console.log(findUser)
         if (!findUser) {
             req.sessionStore.errorMessage = 'No se encuentra el usuario';
             res.redirect('http://localhost:3030');           
@@ -121,13 +123,8 @@ class Users {
                     req.session.userValidated = req.sessionStore.userValidated = true;
                     req.session.errorMessage = req.sessionStore.errorMessage = '';
                     req.session.user = req.sessionStore.user = {user: user};
-                    const date = new Date();
-                    const token = generateToken({ user: user, name : findUser.name, apellido: findUser.apellido, rol: findUser.rol})
-                    /* const headers = new Headers({
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                      })
-                    req.header(headers) */
+                    const date = new Date();                
+                    const token = generateToken({ user: user, name : findUser.name, apellido: findUser.apellido, rol: findUser.rol})        
                     res.cookie('token', token, {
                         maxAge: date.setDate(date.getDate() + 1),
                         secure: false, // true para operar solo sobre HTTPS

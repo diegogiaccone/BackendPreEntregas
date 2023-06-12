@@ -12,8 +12,8 @@ class Rol {
     }
 
     isAdmin = async (req, res, next) => {        
-        const userAd = await userModel.findOne({user: req.session.user}).populate(`rol`)        
-        const rol = await rolModel.find({_id: {$in: userAd.rol}})    
+        const userAd = await userModel.findOne({user: req.session.user.user}).populate(`rol`)              
+        const rol = await rolModel.find({_id: {$in: userAd.rol}})       
         for (let i = 0; i < rol.length; i++) {
             if(rol[i].name === "Admin"){
                 next()
