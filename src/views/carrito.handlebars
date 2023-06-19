@@ -1,0 +1,72 @@
+      <body>
+  <header class="container-fluid bg-dark position-sticky top-0">
+    <div class="navbar-nav">
+      <div class="header2">
+        <div class="title">
+        <h1>FUNKOPOPS</h1>
+        </div>
+        <div>
+        <a href="/" class="btn btn-success cart">Inicio</a>
+        </div>
+        <div class="saludo">
+          <h4 class="card-title pt-2 text-center text-primary">Bienvenido:({{name}})</h4>
+        </div>
+        <div class="rol">
+          <h4 class="card-title pt-2 text-center text-success">Rol:({{rol}})</h4>
+        </div>
+        <div class="logout">
+          <a href="{{baseUrl}}/logout" class="btn btn-danger "><i class="fas fa-sign-out-alt"></i>Salir</a>
+        </div>
+      </div>
+    </div>
+  </header>
+      
+      <div
+        class="carrito"                    
+      >
+        <table class="table table-dark table-hover">
+          <thead>
+            <tr class="text-primary">
+              <th scope="col">#</th>
+              <th scope="col">Productos</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Cantidad</th>
+            </tr>
+          </thead>
+          {{#each products}}             
+          <tbody class="tbody">
+            <th scope="row" style="padding-top: 50px;">♠️ ♥️ ♦️ ♣️</th>
+            <td class="table__productos">
+              <img src={{prods.[0].thumbnail}} alt="">
+              <h6 class="title2">{{prods.[0].title}}</h6>
+            </td>
+            <td><p class="table__precio">$ {{math prods.[0].price "*" quantity}}</p></td>
+            <td class="table__cantidad">
+              <input type="number" min="1" value={{quantity}} class="input__elemento">
+              <button class="btn btn-danger delete">X</button>
+            </td>
+          </tbody>
+          {{/each}}
+        </table>
+        {{#if products}}
+        <div class="row mx-4">
+          <div class="col">
+            <h3 class="itemCartTotal text-white">Total: 0</h3>
+            <div class="col d-flex justify-content-end">
+              <button class="btn btn-success" id="btncomprar" onclick="total('{{prods.[0].price}}')">COMPRAR</button>
+            </div>
+          </div>
+        </div>
+      </div>           
+        {{/if}}
+    </div>
+
+
+    <script>
+    const total = (prods) => {      
+        console.log(prods);       
+        //socket.emit('new_product_in_cart', product_id);
+    }
+
+
+</script>

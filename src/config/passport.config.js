@@ -1,8 +1,9 @@
 import passport from "passport";
+import {} from 'dotenv/config'
 import GithubStrategy from 'passport-github2';
 import userModel from '../users/user.model.js';
 import rolModel from "../users/rol.model.js";
-import {} from 'dotenv/config'
+import cartModel from "../router/Cart.model.js";
 
 const initializePassport = () => {
     // Estrategia Github
@@ -15,11 +16,16 @@ const initializePassport = () => {
             let users = await userModel.findOne({user: profile._json.email})
             if(!users){
                 const rol = await rolModel.findOne({name: "Usuario"})
+                const cart = await cartModel.create({
+                    name: "cart",
+                    products: []
+                })
                 let newUser = {
                     name: profile._json.name,
                     user: profile._json.email,
-                    rol: rol
-                }
+                    rol: rol,
+                    cart: cart
+                }                
                 let result = await userModel.create(newUser)
                 done(null, result)
             }else{

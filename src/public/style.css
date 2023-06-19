@@ -139,3 +139,51 @@ h1{
 .git{
     margin-top: 5px;
 }
+
+.carrito{
+    min-height: 70vh;
+    max-width: 1000vh;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.table__productos{
+    display: flex;    
+}
+
+.title2 {
+    margin: 0;
+    width: 120px;
+    padding-top: 50px;
+}
+
+.table__precio{
+    padding-top: 45px;
+}
+
+.table__productos > img{
+    width: 7rem;
+    object-fit: contain;
+    border-radius: 6px;
+    margin-right: 20px;
+}
+
+.table__cantidad > input{
+    width: 40px;
+    border: none;
+    outline: 0;
+    font-size: 16px;
+    font-weight: 700;
+    margin-right: 15px;
+    margin-bottom: 20px;
+    margin-top: 45px;
+}
+
+.cart{
+    padding: 10px;
+    margin-top: 5px;
+}
+
+.triangulo{
+    padding-top: 50px;
+}

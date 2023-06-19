@@ -7,7 +7,7 @@ import { __dirname } from './utils.js';
 import { engine } from 'express-handlebars';
 import Handlebars from 'handlebars';
 import { Server } from 'socket.io';
-import CartRouter from './router/Cart.router.js';
+import cartRoutes from './router/Cart.router.js';
 import chatRoutes from './chat/chat.routes.js';
 import chatModel from './chat/chat.model.js';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
@@ -67,7 +67,7 @@ app.use(passport.session());
 app.use('/', mainRoutes(io, store, BASE_URL, PRODUCTS_PER_PAGE));
 app.use('/', UserRoutes(io));
 app.use('/api', productRoutes(io));
-app.use(`/api/carts`, CartRouter);
+app.use(`/api`, cartRoutes(io));
 app.use(`/chat`, chatRoutes(io))
 app.use('/', sessionRoutes());
 
@@ -77,7 +77,20 @@ app.use('/public', express.static(`${__dirname}/public`));
 // Motor de plantillas
 app.engine('handlebars', engine({
     handlebars:Handlebars,
-    handlebars: allowInsecurePrototypeAccess(Handlebars)
+    handlebars: allowInsecurePrototypeAccess(Handlebars),
+    helpers:{
+        math: function(lvalue, operator, rvalue) {
+            lvalue = parseFloat(lvalue);
+            rvalue = parseFloat(rvalue);
+            return {
+                "+": lvalue + rvalue,
+                "-": lvalue - rvalue,
+                "*": lvalue * rvalue,
+                "/": lvalue / rvalue,
+                "%": lvalue % rvalue
+            }[operator];
+        }
+    }
 }));
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/views`);
@@ -97,12 +110,21 @@ io.on('connection', (socket) => {
         const newNote = new chatModel(data)
         const saveNote = await newNote.save()
         socket.emit(`serverNewnote`, saveNote)
-    })
+    })   
+  
+    socket.on("disconnect", (reason) => {
+        console.log(`Cliente desconectado (${socket.id}): ${reason}`);
+    }); 
 
+});
+
+io.on('connection', (socket) => { // Escuchamos el evento connection por nuevas conexiones de clientes
+    console.log(`Cliente conectado (${socket.id})`);
+    
+    // Emitimos el evento server_confirm
     socket.emit('server_confirm', 'Conexión recibida');
-
-    socket.on('new_product_in_cart', (data) => {;
-        // io.emit realiza un broadcast (redistribución) a TODOS los clientes, incluyendo el que lo generó
+    
+    socket.on('new_product_in_cart', (data) => {        
         io.emit('product_added_to_cart', data);
     });
     

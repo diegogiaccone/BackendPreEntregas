@@ -3,6 +3,7 @@ import userModel from './user.model.js';
 import rolModel from './rol.model.js';
 import bcrypt from 'bcryptjs'
 import { generateToken, authToken } from '../config/jwt.config.js'
+import cartModel from '../router/Cart.model.js';
 
 class Users {
     constructor() {
@@ -13,17 +14,6 @@ class Users {
 
     static requiredFields = ['firstName', 'lastName', 'userName', 'password'];
 
-    static #verifyRequiredFields = (obj) => {
-        return Users.requiredFields.every(field => Object.prototype.hasOwnProperty.call(obj, field) && obj[field] !== null);
-    }
-
-    static #generarSha256 = (pass) => {
-        return crypto.createHash('sha256').update(pass).digest('hex');
-    }
-
-    static #objEmpty (obj) {
-        return Object.keys(obj).length === 0;
-    }
 
     checkStatus = () => {
         return this.status;
@@ -42,9 +32,13 @@ class Users {
             const pass = req.body.pass                                 
             let passHash = await bcrypt.hash(pass, 8)
             const rol = await rolModel.findOne({name: "Usuario"})
+            const cart = await cartModel.create({
+                name: "cart",
+                products: []
+            })
             const verify = await userModel.findOne({user: user})
             if(!verify){
-                userModel.create({name: name, apellido: apellido, user: user, pass: passHash, rol: rol})     
+                userModel.create({name: name, apellido: apellido, user: user, pass: passHash, rol: rol, cart: cart})     
                 res.redirect('/')      
             }else{                 
                 res.send(`El usuario ya existe Por favor intente con otro nombre de usuario`)
@@ -109,7 +103,6 @@ class Users {
     validateUser = async (req, res, next) => {
         const { user, pass } = req.body; // Desestructuramos el req.body
         const findUser = await userModel.findOne({user:user}).populate(`rol`)
-        console.log("esto es user comun")
         console.log(findUser)
         if (!findUser) {
             req.sessionStore.errorMessage = 'No se encuentra el usuario';
@@ -129,8 +122,7 @@ class Users {
                         maxAge: date.setDate(date.getDate() + 1),
                         secure: false, // true para operar solo sobre HTTPS
                         httpOnly: true
-                    })
-                    console.log(req.session)
+                    })                    
                     res.redirect('http://localhost:3030') 
                 }      
             }

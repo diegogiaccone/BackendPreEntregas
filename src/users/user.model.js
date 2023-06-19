@@ -12,6 +12,10 @@ const schema = new mongoose.Schema({
     rol: [{
         ref:"rol",
         type: Schema.Types.ObjectId
+    }],
+    cart: [{
+        ref:"carts",
+        type: Schema.Types.ObjectId
     }] 
 });
 

@@ -1,20 +1,17 @@
 import mongoose from 'mongoose';
-import { URL } from 'url';
-
 
 mongoose.pluralize(null); // Importante! para no tener problemas con Mongoose
 
 const collection = 'carts';
 
-const schema = ({
-    nombre: String,
+const schema = ({    
     products: {
         type: [
             {
-                prods:{
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: 'products'
-                },
+                prods:[{
+                    ref: 'products',
+                    type: mongoose.Schema.Types.ObjectId
+                }],
                 quantity: {
                 type: Number,
                 default: 1
@@ -24,10 +21,6 @@ const schema = ({
         default: []
     }
 });
-
-/* schema.pre('findOne', function() {
-    this.populate({ path: 'product', model: productModel });
-}); */
 
 const cartModel = mongoose.model(collection, schema);
 
