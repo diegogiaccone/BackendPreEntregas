@@ -40,20 +40,20 @@
               <img src={{prods.[0].thumbnail}} alt="">
               <h6 class="title2">{{prods.[0].title}}</h6>
             </td>
-            <td><p class="table__precio">$ {{math prods.[0].price "*" quantity}}</p></td>
+            <td><p id="price" class="table__precio">$ {{math prods.[0].price "*" quantity}}</p></td>
             <td class="table__cantidad">
-              <input type="number" min="1" value={{quantity}} class="input__elemento">
-              <button class="btn btn-danger delete">X</button>
+              <input type="number" min="1" value={{quantity}} class="input__elemento">                             
+              <button class="btn btn-danger delete">X</button>                 
             </td>
           </tbody>
           {{/each}}
         </table>
         {{#if products}}
         <div class="row mx-4">
-          <div class="col">
-            <h3 class="itemCartTotal text-white">Total: 0</h3>
+          <div class="col">           
+            <h3 class="itemCartTotal text-white">Total: 0</h3>            
             <div class="col d-flex justify-content-end">
-              <button class="btn btn-success" id="btncomprar" onclick="total('{{prods.[0].price}}')">COMPRAR</button>
+              <button class="btn btn-success" id="btncomprar">COMPRAR</button>
             </div>
           </div>
         </div>
@@ -62,11 +62,19 @@
     </div>
 
 
-    <script>
-    const total = (prods) => {      
-        console.log(prods);       
-        //socket.emit('new_product_in_cart', product_id);
-    }
+<script>
+
+    function CarritoTotal(){
+    let Total = 0;
+    const itemCartTotal = document.getElementById("price")
+    carrito.forEach((item) => {
+        const precio = Number(item.value.replace("$", ""))
+        Total = Total + precio
+    })
+
+    itemCartTotal.innerHTML = `Total $ ${Total}`    
+}
+    
 
 
 </script>

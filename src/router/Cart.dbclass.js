@@ -63,27 +63,26 @@ export default class CartManager {
         if(!cartById) return "Carrito no encontrado"
         return cartById 
     }
+ 
 
     addProductInCart = async (req, res) => {
-        try {
-            const cid = req.params.cid
-            const pid = req.params.pid                                                        
-            const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}).populate(`products.prods`)                          
+        try {                        
+            const cid = req.session.user.cart[0]            
+            const pid = req.body                                                                 
+            const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)})                          
             if(!process) return "Carrito no encontrado"            
             const product = await productModel.findOne({'_id': new mongoose.Types.ObjectId(pid)});                   
             if(!product) return "Producto no encontrado"
-            const validarProd = process.products.find(prod => prod.prods[0]._id == pid)                   
+            const validarProd = process.products.find(prod => prod.prods[0]._id == pid.id)                   
             if (validarProd) {
                 validarProd.quantity +=1               
             }else{                
-                process.products.push({prods: product})
-                console.log("esto es stringify")
-                console.log(JSON.stringify(process, null, '\t'));            
+                process.products.push({prods: product})                          
             }
                  
             const result = await cartModel.updateOne(process)
              
-            res.send(result)
+            res.redirect(`/api/carts`)
         
         } catch (error) {
             console.error("No se pudo agregar producto al carrito " + error);

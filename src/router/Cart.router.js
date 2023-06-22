@@ -24,15 +24,17 @@ CartRouter.get('/carts/:id', async (req, res) => {
     }
 })
 
-CartRouter.get(`/:pid`, async (req, res) => {
-    const cart = req.user.cart[0]._id
-    const cartfind = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cart)}).populate(`products.prods`)
-})
+CartRouter.post('/carts', async (cid, pid) => {
+    try {
+        await manager.addProductInCart(cid, pid);        
+    } catch (err) {
+       console.log(err)
+    }})
 
+    
 CartRouter.post('/carts/:cid/products/:pid', async (cid, pid) => {
     try {
         await manager.addProductInCart(cid, pid);        
-        
     } catch (err) {
        console.log(err)
     }})
@@ -55,7 +57,7 @@ CartRouter.post('/carts', async (req, res) => {
 });
 
 CartRouter.delete('/carts/:cid/products/:pid', async (req, res) => {
-    try {
+    try {        
         await manager.deleteCartProduct(req.params.cid, req.params.pid);
 
         if (manager.checkStatus() === 1) {

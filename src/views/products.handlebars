@@ -46,9 +46,10 @@
               <h5 class="text-primary">
                 Categoria: <span>{{this.category}}</span>
               </h5>
-              <form action="/" method="post">
+              <form action="/api/carts/:cid/products/:pid" method="post">
               <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary button" onclick="addToCart('{{this.id}}')">
+                <input type="hidden" name="id" value="{{this.id}}">                
+                <button type="submit" class="btn btn-primary button">
                   Añadir al Carrito
                 </button>
               </div>             
@@ -82,25 +83,5 @@
 
 
 
-<script>
 
-    const socket = io('ws://localhost:9090');
-
-    socket.on('connect', () => { 
-        socket.on('server_confirm', (data) => {
-            console.log("El servidor ha confirmado la conexión");
-           
-        });       
-      
-        socket.on('product_added_to_cart', (data) => {
-           console.log('Se disparó el evento product_added_to_cart con el id', data);
-        });
-    })
-
-    const addToCart = (product_id) => {  
-        console.log(product_id)          
-        //socket.emit('new_product_in_cart', product_id);
-    }
-  
-</script>
 
