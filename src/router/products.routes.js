@@ -30,7 +30,7 @@ const productRoutes = (io) => {
             products: products, name: name, rol: rol});
     });
 
-    router.get('/products', [validate, authentication('jwtAuth')], async (req, res) => {
+    router.get('/products', [validate, authentication('jwtAuth')], async (req, res) => {        
         try {
             const products = await manager.getProducts();
             res.status(200).send({ status: 'OK', data: products });

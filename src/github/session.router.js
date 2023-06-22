@@ -15,10 +15,11 @@ const sessionRoutes = () => {
     router.get('/github', passport.authenticate('github', { scope: ['user:email']}))
 
     router.get('/githubcallback', passport.authenticate('github', { scope: ['user:email']}), async (req, res) => {
-        if (req.user === undefined) {            
+        if (req.user === undefined) {                       
             res.render('login', { sessionInfo: req.session });
         } else {
-            req.session.user = req.sessionStore.user = req.user            
+            req.session.user = req.sessionStore.user = req.user  
+            console.log(req.session)           
             req.session.userValidated = req.sessionStore.userValidated = true;
             const date = new Date();
             const user = await (req.user).populate(`rol`)

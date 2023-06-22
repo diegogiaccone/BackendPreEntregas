@@ -92,7 +92,8 @@ export default class CartManager {
 
     productsInCart = async (req, res) => {
         try {           
-                let cartUser = await (req.user.cart[0])                       
+                let cartUser = await (req.session.user.cart[0])   
+                console.log(req.session)             
                 let process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cartUser)}).populate(`products.prods`)                                                   
                 let products = process.products                              
                 const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)                
