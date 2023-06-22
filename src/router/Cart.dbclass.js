@@ -67,22 +67,30 @@ export default class CartManager {
 
     addProductInCart = async (req, res) => {
         try {                        
-            const cid = req.session.user.cart[0]            
-            const pid = req.body                                                                 
-            const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)})                          
+            const cid = req.session.user.cart[0]                           
+            const pid = req.body                                                                               
+            const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)})                                 
             if(!process) return "Carrito no encontrado"            
-            const product = await productModel.findOne({'_id': new mongoose.Types.ObjectId(pid)});                   
+            const product = await productModel.findOne({'_id': new mongoose.Types.ObjectId(pid)});                          
             if(!product) return "Producto no encontrado"
-            const validarProd = process.products.find(prod => prod.prods[0]._id == pid.id)                   
+            const validarProd = process.products.find(prod => prod.prods[0]._id == pid.id)
+            console.log(validarProd)                   
             if (validarProd) {
                 validarProd.quantity +=1               
             }else{                
-                process.products.push({prods: product})                          
+                process.products.push({prods: product}) 
+                console.log(process)                        
             }
                  
-            const result = await cartModel.updateOne(process)
+            const result = await cartModel.findOneAndUpdate(
+                { _id: cid,},
+                { $set: process},
+                { new: true }
+            )
+            
              
             res.redirect(`/api/carts`)
+            
         
         } catch (error) {
             console.error("No se pudo agregar producto al carrito " + error);
@@ -92,8 +100,7 @@ export default class CartManager {
 
     productsInCart = async (req, res) => {
         try {           
-                let cartUser = await (req.session.user.cart[0])   
-                console.log(req.session)             
+                let cartUser = await (req.session.user.cart[0])                            
                 let process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cartUser)}).populate(`products.prods`)                                                   
                 let products = process.products                              
                 const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)                

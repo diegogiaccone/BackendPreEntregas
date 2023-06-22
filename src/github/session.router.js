@@ -18,8 +18,7 @@ const sessionRoutes = () => {
         if (req.user === undefined) {                       
             res.render('login', { sessionInfo: req.session });
         } else {
-            req.session.user = req.sessionStore.user = req.user  
-            console.log(req.session)           
+            req.session.user = req.sessionStore.user = req.user                       
             req.session.userValidated = req.sessionStore.userValidated = true;
             const date = new Date();
             const user = await (req.user).populate(`rol`)

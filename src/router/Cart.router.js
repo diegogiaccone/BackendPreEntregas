@@ -24,14 +24,7 @@ CartRouter.get('/carts/:id', async (req, res) => {
     }
 })
 
-CartRouter.post('/carts', async (cid, pid) => {
-    try {
-        await manager.addProductInCart(cid, pid);        
-    } catch (err) {
-       console.log(err)
-    }})
-
-    
+   
 CartRouter.post('/carts/:cid/products/:pid', async (cid, pid) => {
     try {
         await manager.addProductInCart(cid, pid);        
