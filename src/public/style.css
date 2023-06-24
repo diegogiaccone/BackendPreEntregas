@@ -118,7 +118,7 @@ h1{
 }
 
 .saludo{
-    margin-left: 1100px;
+    margin-left: 900px;
 }
 
 .rol{
@@ -174,16 +174,44 @@ h1{
     outline: 0;
     font-size: 16px;
     font-weight: 700;
-    margin-right: 15px;
+    margin-left: 10px;
     margin-bottom: 20px;
     margin-top: 45px;
 }
 
 .cart{
+    width: 50px;
     padding: 10px;
     margin-top: 5px;
+    margin-left: 5px;   
 }
 
 .triangulo{
     padding-top: 50px;
+}
+
+.delete{
+    width: 40px;
+    border: none;
+    outline: 0;
+    font-size: 16px;
+    font-weight: 700;   
+    margin-bottom: 20px;
+    margin-top: 40px;
+    margin-left: 10px;
+}
+
+.productall{
+    width: 200px;
+    margin-left: 10px;   
+}
+
+.product{
+    width: 100px;
+    margin-left: 20px;
+}
+
+.cart2{
+    padding: 10px;
+    margin-top: 5px;   
 }

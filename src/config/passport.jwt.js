@@ -59,4 +59,4 @@ const authorization = (rol) => {
     }
 }
 
-export { initPassport, authentication, authorization };
+export { initPassport, authentication, authorization};

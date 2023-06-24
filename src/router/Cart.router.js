@@ -31,7 +31,7 @@ CartRouter.post('/carts/:cid/products/:pid', async (cid, pid) => {
     } catch (err) {
        console.log(err)
     }})
-    
+
 
 CartRouter.post('/carts', async (req, res) => {
     try {        
@@ -49,23 +49,24 @@ CartRouter.post('/carts', async (req, res) => {
     }
 });
 
-CartRouter.delete('/carts/:cid/products/:pid', async (req, res) => {
+CartRouter.delete('/carts/:cid/products/:pid', async (cid, pid) => {
     try {        
-        await manager.deleteCartProduct(req.params.cid, req.params.pid);
+        await manager.deleteCartProduct(cid, pid)
 
         if (manager.checkStatus() === 1) {
-            res.status(200).send({ status: 'OK', msg: 'Producto quitado del carrito' });
+            console.log({ status: 'OK', msg: 'Producto quitado del carrito' });
         } else {
-            res.status(400).send({ status: 'ERR', error: 'No se pudo quitar el producto en el carrito.' });
+            console.log({ status: 'ERR', error: 'No se pudo quitar el producto en el carrito.' });
         }
     } catch (err) {
-        res.status(500).send({ status: 'ERR', error: err.message });
+        console.log({ status: 'ERR', error: err.message });
     }
 });
 
-CartRouter.delete('/carts/:id', async (req, res) => {
+ 
+CartRouter.delete('/carts/:cid', async (cid) => {
     try {
-        await manager.emptyCart(req.params.id);
+        await manager.emptyCart(cid);
 
         if (manager.checkStatus() === 1) {
             res.status(200).send({ status: 'OK', msg: 'Carrito Vaciado' });

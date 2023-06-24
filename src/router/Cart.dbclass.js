@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import cartModel from './Cart.model.js';
 import productModel from './products.model.js';
 import userModel from '../users/user.model.js';
+import passport from 'passport';
 
 
 export default class CartManager {
@@ -66,15 +67,15 @@ export default class CartManager {
  
 
     addProductInCart = async (req, res) => {
-        try {                        
+        try {
+            console.log("esto es req.session", req.session)                             
             const cid = req.session.user.cart[0]                           
-            const pid = req.body                                                                               
+            const pid = req.body                                                                                      
             const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)})                                 
             if(!process) return "Carrito no encontrado"            
             const product = await productModel.findOne({'_id': new mongoose.Types.ObjectId(pid)});                          
             if(!product) return "Producto no encontrado"
-            const validarProd = process.products.find(prod => prod.prods[0]._id == pid.id)
-            console.log(validarProd)                   
+            const validarProd = process.products.find(prod => prod.prods[0]._id == pid.id)                         
             if (validarProd) {
                 validarProd.quantity +=1               
             }else{                
@@ -109,7 +110,9 @@ export default class CartManager {
                 res.render(`carrito`, {
                     products: products,
                     quantity: products.quantity,                 
-                    name:name, rol: rol                 
+                    name:name, 
+                    rol: rol, 
+                    cart: req.session.user.cart[0]                
                 })
             } catch (err) {
                 res.status(500).send({ status: 'ERR', error: err });            
@@ -167,11 +170,11 @@ export default class CartManager {
         }
     }
 
-    emptyCart = async (id) => {
+    emptyCart = async (req, res) => {
         try {
-            // Simplemente seteamos el array products a vacío []
+            const cid = await (req.session.user.cart[0])
             const process = await cartModel.findOneAndUpdate(
-                new mongoose.Types.ObjectId(id),
+                new mongoose.Types.ObjectId(cid),
                 { $set: { products: [] }
             });
             // Agregar lógica para verificar process y chequear si realmente hubo rows afectados
@@ -182,15 +185,27 @@ export default class CartManager {
             return false;
         }
     }
-
-    deleteCartProduct = async (id, pid) => {
-        try {
-            const process = await cartModel.findByIdAndUpdate(
-                new mongoose.Types.ObjectId(id),
-                { $pull: { products: { pid: new mongoose.Types.ObjectId(pid) }}},
-                { new: true }
-            )
-            // Agregar lógica para verificar process y chequear si realmente hubo rows afectados            
+    
+    deleteCartProduct = async (req, res) => {   
+        try {                       
+            const cid = await (req.session.user.cart[0]) 
+            const pid = req.body                    
+            const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)})           
+            if(!process) return "Carrito no encontrado"          
+            const validarProd = process.products.find(prod => prod.prods[0]._id == pid.id)                                   
+            if (validarProd) {
+                const result = await cartModel.findOneAndUpdate(
+                    { _id: cid,},
+                    { $pull: { products: { prods: new mongoose.Types.ObjectId(pid.id)}}},
+                    { new: true }
+                )           
+                console.log(result)               
+            }else{               
+                console.log(process)                        
+            }                
+            
+            res.redirect(`/api/carts`)           
+            //res.send(this.statusMsg = 'Producto quitado del carrito')                        
             this.status = 1;
             this.statusMsg = 'Producto quitado del carrito';
             return process;
@@ -198,7 +213,7 @@ export default class CartManager {
             this.status = -1;
             this.statusMsg = `deleteCartProduct: ${err}`;
         }
-    }
+    }  
 }
     
 

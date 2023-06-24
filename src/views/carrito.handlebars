@@ -6,13 +6,16 @@
         <h1>FUNKOPOPS</h1>
         </div>
         <div>
-        <a href="/" class="btn btn-success cart">Inicio</a>
+        <a href="/" class="btn btn-primary cart2">Inicio</a>
         </div>
+        <div>
+        <button type="submit" class="btn btn-success button cart productall"><a class="page-link" href="/api/products_index">Todos los Productos</a></button>
+        </div>       
         <div class="saludo">
           <h4 class="card-title pt-2 text-center text-primary">Bienvenido:({{name}})</h4>
         </div>
         <div class="rol">
-          <h4 class="card-title pt-2 text-center text-success">Rol:({{rol}})</h4>
+          <h4 class="card-title pt-2 text-center text-success">Rol:({{rol}})</h4>         
         </div>
         <div class="logout">
           <a href="{{baseUrl}}/logout" class="btn btn-danger "><i class="fas fa-sign-out-alt"></i>Salir</a>
@@ -31,9 +34,10 @@
               <th scope="col">Productos</th>
               <th scope="col">Precio</th>
               <th scope="col">Cantidad</th>
+              <th scope="col">Eliminar</th>
             </tr>
-          </thead>
-          {{#each products}}             
+          </thead>                      
+          {{#each products}}                     
           <tbody class="tbody">
             <th scope="row" style="padding-top: 50px;">♠️ ♥️ ♦️ ♣️</th>
             <td class="table__productos">
@@ -42,11 +46,16 @@
             </td>
             <td><p id="price" class="table__precio">$ {{math prods.[0].price "*" quantity}}</p></td>
             <td class="table__cantidad">
-              <input type="number" min="1" value={{quantity}} class="input__elemento">                             
-              <button class="btn btn-danger delete">X</button>                 
+              <input type="number" min="1" value={{quantity}} class="input__elemento">      
             </td>
-          </tbody>
-          {{/each}}
+            <td class="table__cantidad">
+              <form action="/api/carts/:cid/products/:pid?_method=DELETE" method="post">
+              <input type="hidden" name="id" value="{{prods.[0].id}}">
+              <button type="submit", value="delete" class="btn btn-danger delete">X</button>                 
+              </form>
+            </td>
+          </tbody>         
+          {{/each}}       
         </table>
         {{#if products}}
         <div class="row mx-4">
@@ -63,6 +72,12 @@
 
 
 <script>
+
+    const cartID = document.getElementById("cartId")
+    function cart () => {
+     const id = cartID.value
+    }
+    
 
     function CarritoTotal(){
     let Total = 0;

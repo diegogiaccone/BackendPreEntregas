@@ -20,6 +20,7 @@ import passport from 'passport';
 import initializePassport from './config/passport.config.js'
 import sessionRoutes from './github/session.router.js'
 import { initPassport } from './config/passport.jwt.js';
+import methodOverride from 'method-override';
 
 
 const PORT = parseInt(process.env.PORT) || 3000;
@@ -43,6 +44,10 @@ const io = new Server(httpServer, { cors: { origin: "*", methods: ["PUT", "GET",
 // Parseo correcto de urls
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'))
+
+//metodo overRide
+
 
 //parseo de cookies
 
