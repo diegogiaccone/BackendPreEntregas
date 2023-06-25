@@ -102,17 +102,24 @@ export default class CartManager {
     productsInCart = async (req, res) => {
         try {           
                 let cartUser = await (req.session.user.cart[0])                            
-                let process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cartUser)}).populate(`products.prods`)                                                   
-                let products = process.products                              
+                let process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cartUser)}).populate(`products.prods`)                                                  
+                let products = process.products                                         
                 const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)                
                 const name = userObjet.name 
-                const rol = userObjet.rol[0].name                                        
+                const rol = userObjet.rol[0].name  
+                const Total = products.reduce(function Total(accumulator, item){
+                    const toNumber = parseFloat(item.prods[0].price * item.quantity);  
+                    console.log(toNumber + accumulator)                                     
+                    return accumulator + toNumber;                             
+                  },0);                         
+                                                     
                 res.render(`carrito`, {
                     products: products,
-                    quantity: products.quantity,                 
+                    quantity: products.quantity,                                     
                     name:name, 
                     rol: rol, 
-                    cart: req.session.user.cart[0]                
+                    cart: req.session.user.cart[0],  
+                    total: Total              
                 })
             } catch (err) {
                 res.status(500).send({ status: 'ERR', error: err });            

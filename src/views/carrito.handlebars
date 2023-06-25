@@ -56,33 +56,25 @@
             </td>
           </tbody>         
           {{/each}}       
-        </table>
-        {{#if products}}
+        </table>        
         <div class="row mx-4">
           <div class="col">           
-            <h3 class="itemCartTotal text-white">Total: 0</h3>            
+            <h3 class="itemCartTotal text-white">Total: {{total}}</h3>            
             <div class="col d-flex justify-content-end">
               <button class="btn btn-success" id="btncomprar">COMPRAR</button>
             </div>
           </div>
         </div>
-      </div>           
-        {{/if}}
+      </div>       
     </div>
 
 
-<script>
-
-    const cartID = document.getElementById("cartId")
-    function cart () => {
-     const id = cartID.value
-    }
-    
+<script>     
 
     function CarritoTotal(){
     let Total = 0;
     const itemCartTotal = document.getElementById("price")
-    carrito.forEach((item) => {
+    products.forEach((item) => {
         const precio = Number(item.value.replace("$", ""))
         Total = Total + precio
     })

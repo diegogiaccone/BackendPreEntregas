@@ -1,19 +1,26 @@
 import { Router } from "express";
 import CartManager from "./Cart.dbclass.js";
-import cartModel from "./Cart.model.js";
-import mongoose from "mongoose";
-import productModel from "./products.model.js";
-
-
 
 const cartRoutes = (io) => {
 const CartRouter = Router();
 const manager = new CartManager();
 
-//CartRouter.get('/carts', async);    
+CartRouter.get('/carts', manager.productsInCart); 
 
-
-CartRouter.get('/carts', manager.productsInCart);   
+/* CartRouter.get("/request", async (req, res, next) => {
+    const query = await manager.productsInCart();
+    query.exec(function (err, po){
+      if(err) return next(err);
+      po.reduce(function(accumulator, item){
+        const toNumber = parseFloat(item.cost);
+        console.log(accumulator + toNumber);
+        return accumulator + toNumber;        
+      },0);
+      res.render("carrito", {       
+        Total: toNumber + accumulator  
+      })      
+    })    
+  }); */
 
 CartRouter.get('/carts/:id', async (req, res) => {
     try {
@@ -23,7 +30,6 @@ CartRouter.get('/carts/:id', async (req, res) => {
         res.status(500).send({ status: 'err', error: err.message });
     }
 })
-
    
 CartRouter.post('/carts/:cid/products/:pid', async (cid, pid) => {
     try {
