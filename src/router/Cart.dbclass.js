@@ -108,8 +108,7 @@ export default class CartManager {
                 const name = userObjet.name 
                 const rol = userObjet.rol[0].name  
                 const Total = products.reduce(function Total(accumulator, item){
-                    const toNumber = parseFloat(item.prods[0].price * item.quantity);  
-                    console.log(toNumber + accumulator)                                     
+                    const toNumber = parseFloat(item.prods[0].price * item.quantity);                                                         
                     return accumulator + toNumber;                             
                   },0);                         
                                                      
