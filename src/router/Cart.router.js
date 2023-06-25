@@ -7,21 +7,6 @@ const manager = new CartManager();
 
 CartRouter.get('/carts', manager.productsInCart); 
 
-/* CartRouter.get("/request", async (req, res, next) => {
-    const query = await manager.productsInCart();
-    query.exec(function (err, po){
-      if(err) return next(err);
-      po.reduce(function(accumulator, item){
-        const toNumber = parseFloat(item.cost);
-        console.log(accumulator + toNumber);
-        return accumulator + toNumber;        
-      },0);
-      res.render("carrito", {       
-        Total: toNumber + accumulator  
-      })      
-    })    
-  }); */
-
 CartRouter.get('/carts/:id', async (req, res) => {
     try {
         const carts = await manager.getCartPopulated(req.params.id);
@@ -40,9 +25,7 @@ CartRouter.post('/carts/:cid/products/:pid', async (cid, pid) => {
 
 
 CartRouter.post('/carts', async (req, res) => {
-    try {        
-        // Verificar que se reciba en el body un array con al menos un producto,
-        // recién ahí llamar al método addCart
+    try {       
         const products_array = req.body;
         if (!Array.isArray(products_array.products)) {
             res.status(400).send({ status: 'ERR', message: 'El body debe contener un array products con al menos un producto' });
