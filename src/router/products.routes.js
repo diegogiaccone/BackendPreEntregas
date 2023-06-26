@@ -25,9 +25,10 @@ const productRoutes = (io) => {
         const products = await manager.getProducts();
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)
         const name = userObjet.name 
-        const rol = userObjet.rol[0].name                   
+        const rol = userObjet.rol[0].name
+        const isAdmin = rol === "Admin" ? true : false;                           
         res.render('products_index', {
-            products: products, name: name, rol: rol});
+            products: products, name: name, rol: rol, isAdmin: isAdmin});
     });
 
     router.get('/products', [validate, authentication('jwtAuth')], async (req, res) => {        
@@ -68,17 +69,12 @@ const productRoutes = (io) => {
         }
     });
     
-    router.delete('/products_index', [validate, authentication('jwtAuth'), authorization("Admin")], async(req, res) => {
+    router.delete('/products_index:id', [validate, authentication('jwtAuth'), rol.isAdmin], async(id, res) => {
         try {
-            await manager.deleteProduct(req.body.id);
-        
-            if (manager.checkStatus() === 1) {
-                res.status(200).send({ status: 'OK', msg: manager.showStatusMsg() });
-            } else {
-                res.status(400).send({ status: 'ERR', error: manager.showStatusMsg() });
-            }
+            await manager.deleteProduct(id); 
+            res.redirect(`/api/products_index`)
         } catch (err) {
-            res.status(500).send({ status: 'ERR', error: err });
+            console.log({ status: 'ERR', error: err });
         }
     });
 

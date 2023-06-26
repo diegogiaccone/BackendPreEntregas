@@ -3,6 +3,7 @@ import cartModel from './Cart.model.js';
 import productModel from './products.model.js';
 import userModel from '../users/user.model.js';
 
+
 export default class CartManager {
     static id = 0
     constructor(){       

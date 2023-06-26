@@ -109,15 +109,14 @@ class Products {
         }
     }
 
-    deleteProduct = async (id) => {
+    deleteProduct = async (req, res) => {
         try {
-            const process = await productModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id) });
-            this.status = 1;
-            process.deletedCount === 0 ? this.statusMsg = "El ID no existe": this.statusMsg = "Producto borrado";
+            const id = req.body            
+            const process = await productModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id.id)});
+            console.log(process)                                            
         } catch (err) {
-            this.status = -1;
-            this.statusMsg = `deleteProduct: ${err}`;
-        }
+            console.log(err)
+        }        
     }
 }
 

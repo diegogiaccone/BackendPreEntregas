@@ -37,9 +37,10 @@ const mainRoutes = (io, store, baseUrl, productsPerPage) => {
               
                 const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)                
                 const name = userObjet.name 
-                const rol = userObjet.rol[0].name            
+                const rol = userObjet.rol[0].name
+                const isAdmin = rol === "Admin" ? true : false            
                  
-                res.render('products',{ products: result.docs, pagination: pagination, name:name, rol: rol});
+                res.render('products',{ products: result.docs, pagination: pagination, name:name, rol: rol, isAdmin: isAdmin});
             } else {            
                 res.render('login', {
                     sessionInfo: req.session.userValidated !== undefined ? req.session : req.sessionStore
