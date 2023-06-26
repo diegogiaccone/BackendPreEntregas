@@ -1,7 +1,7 @@
 import { Router } from "express";
-import Users from '../../users/user.dbclass.js';
-import Products from '../../router/products.dbclass.js';
-import userModel from "../../users/user.model.js";
+import Users from '../users/user.dbclass.js';
+import Products from './products.dbclass.js';
+import userModel from "../users/user.model.js";
 
 const users = new Users();
 const manager = new Products();

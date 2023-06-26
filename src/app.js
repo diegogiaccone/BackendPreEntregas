@@ -1,4 +1,3 @@
-import {} from 'dotenv/config'
 import express from 'express';
 import mongoose from 'mongoose';
 import productRoutes from './router/products.routes.js';
@@ -14,28 +13,28 @@ import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
-import mainRoutes from './public/js/main.routes.js';
+import mainRoutes from './router/main.routes.js';
 import createRol from './users/rol.dbclass.js';
 import passport from 'passport';
-import initializePassport from './config/passport.config.js'
+import initializePassport from './Passport.config/passport.config.js'
 import sessionRoutes from './github/session.router.js'
-import { initPassport } from './config/passport.jwt.js';
+import { initPassport } from './Passport.config/passport.jwt.js';
 import methodOverride from 'method-override';
+import config from './config.env.js';
 
 
-const PORT = parseInt(process.env.PORT) || 3000;
-const MONGOOSE_URL = process.env.MONGOOSE_URL;
-const SECRET = process.env.SECRET;
-const BASE_URL = `http://localhost:${PORT}`;
-const PRODUCTS_PER_PAGE = 4;
-
-const wspuerto = 9090;
+const PORT = config.PORT;
+const MONGOOSE_URL = config.MONGOOSE_URL;
+const SECRET = config.SECRET;
+const BASE_URL = config.BASE_URL;
+const PRODUCTS_PER_PAGE = config.PRODUCTS_PER_PAGE;
+const wspuerto = config.WSPORT;
 
 const app = express();
 createRol();
 
 const httpServer = app.listen(wspuerto, () =>{
-    console.log(`Servidor API/Socket.io iniciando en puerto ${wspuerto}`)
+    console.log(`Servidor API/Socket.io iniciando en puerto ${wspuerto}`)    
 }) 
 
 /* let users = []; */
@@ -44,13 +43,11 @@ const io = new Server(httpServer, { cors: { origin: "*", methods: ["PUT", "GET",
 // Parseo correcto de urls
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride('_method'))
 
 //metodo overRide
-
+app.use(methodOverride('_method'))
 
 //parseo de cookies
-
 app.use(cookieParser());
 
 //manejo de sesiones
@@ -76,7 +73,7 @@ app.use(`/api`, cartRoutes(io));
 app.use(`/chat`, chatRoutes(io))
 app.use('/', sessionRoutes());
 
-
+// Plantillas estaticas
 app.use('/public', express.static(`${__dirname}/public`));
 
 // Motor de plantillas

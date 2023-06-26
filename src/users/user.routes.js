@@ -1,7 +1,7 @@
 import { Router } from "express";
 import Users from "./user.dbclass.js";
 import { __dirname } from '../utils.js';
-import { authentication } from "../config/passport.jwt.js";
+import { authentication } from "../Passport.config/passport.jwt.js";
 
 
 const userRoutes = (io) => {

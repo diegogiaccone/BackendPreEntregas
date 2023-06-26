@@ -2,8 +2,8 @@ import { Router } from "express";
 import Products from "./products.dbclass.js";
 import Rol from "../users/isAdmin.dbclass.js";
 import userModel from "../users/user.model.js";
-import { authentication } from "../config/passport.jwt.js";
-import { authorization } from "../config/passport.jwt.js";
+import { authentication } from "../Passport.config/passport.jwt.js";
+import { authorization } from "../Passport.config/passport.jwt.js";
 import {} from 'dotenv/config'
 
 

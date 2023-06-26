@@ -2,7 +2,7 @@ import mongoose, { isValidObjectId } from 'mongoose';
 import userModel from './user.model.js';
 import rolModel from './rol.model.js';
 import bcrypt from 'bcryptjs'
-import { generateToken, authToken } from '../config/jwt.config.js'
+import { generateToken, authToken } from '../Passport.config/jwt.config.js'
 import cartModel from '../router/Cart.model.js';
 
 class Users {

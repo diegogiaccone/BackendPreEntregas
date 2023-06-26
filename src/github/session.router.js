@@ -1,9 +1,9 @@
 import { Router } from "express";
 import passport from "passport";
 import Products from "../router/products.dbclass.js";
-import initializePassport from "../config/passport.config.js";
-import { generateToken, authToken } from '../config/jwt.config.js'
-import { authentication } from "../config/passport.jwt.js";
+import initializePassport from "../Passport.config/passport.config.js";
+import { generateToken, authToken } from '../Passport.config/jwt.config.js'
+import { authentication } from "../Passport.config/passport.jwt.js";
 
 initializePassport();
 

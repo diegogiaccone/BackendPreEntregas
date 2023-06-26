@@ -2,8 +2,6 @@ import mongoose from 'mongoose';
 import cartModel from './Cart.model.js';
 import productModel from './products.model.js';
 import userModel from '../users/user.model.js';
-import passport from 'passport';
-
 
 export default class CartManager {
     static id = 0
