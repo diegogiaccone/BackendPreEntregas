@@ -7,8 +7,7 @@ import { authentication } from "../Passport.config/passport.jwt.js";
 const userRoutes = (io) => {
     const router = Router();
     const manager = new Users();
-    // const manager = new Users(`${__dirname}/data/users.json`);
-
+    
     const validate = async (req, res, next) => {
         if (req.session.userValidated) {
             next();

@@ -21,6 +21,17 @@ const productRoutes = (io) => {
         }
     }
 
+    router.get(`/update`, [validate, authentication('jwtAuth'), rol.isAdmin ], async (req, res) => {
+        const prod = req.body        
+        const products = await manager.getProductById(prod.id);        
+        const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)
+        const name = userObjet.name 
+        const rol = userObjet.rol[0].name
+        const isAdmin = rol === "Admin" ? true : false;                                
+        res.render('update', {
+            products: products, name: name, rol: rol, isAdmin: isAdmin});
+    })
+
     router.get('/products_index', [validate, authentication('jwtAuth')] , async (req, res) => {
         const products = await manager.getProducts();
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)
@@ -54,18 +65,18 @@ const productRoutes = (io) => {
         }
     });
     
-    router.put('/products_index', [validate, authentication('jwtAuth'), authorization("Admin")], async (req, res) => {
-        try {
-            const { id, field, data } = req.body;
-            await manager.updateProduct(id, field, data);
+    router.put('/products_index:pid', [validate, authentication('jwtAuth'), authorization("Admin")], async (pid, res) => {
+        try {            
+            await manager.updateProduct(pid);
+            res.redirect(`/`)
         
             if (manager.checkStatus() === 1) {
-                res.status(200).send({ status: 'OK', msg: manager.showStatusMsg() });
+                console.log({ status: 'OK', msg: manager.showStatusMsg() });
             } else {
-                res.status(400).send({ status: 'ERR', error: manager.showStatusMsg() });
+                console.log({ status: 'ERR', error: manager.showStatusMsg() });
             }
         } catch (err) {
-            res.status(500).send({ status: 'ERR', error: err });
+            console.log({ status: 'ERR', error: err });
         }
     });
     

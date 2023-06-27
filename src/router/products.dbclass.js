@@ -93,17 +93,17 @@ class Products {
         }
     }
 
-    updateProduct = async (id, data) => {
+    updateProduct = async (req, res) => {
         try {
-            if (data === undefined || Object.keys(data).length === 0) {
-                this.status = -1;
-                this.statusMsg = "Se requiere body con data";
-            } else {
-                const process = await productModel.updateOne({ '_id': new mongoose.Types.ObjectId(id) }, data);
+                const pid = req.params.pid
+                const data = req.body
+                console.log("esti es data", data)
+                console.log(pid)
+                const process = await productModel.updateOne({ '_id': new mongoose.Types.ObjectId(pid) }, data);
                 this.status = 1;
-                process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Producto actualizado";
-            }
-        } catch (err) {
+                process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Producto actualizado";                
+            }            
+        catch (err) {
             this.status = -1;
             this.statusMsg = `updateProduct: ${err}`;
         }
