@@ -46,7 +46,7 @@
             </td>
             <td><p id="price" class="table__precio">$ {{math prods.[0].price "*" quantity}}</p></td>
             <td class="table__cantidad">
-              <input type="number" min="1" value={{quantity}} class="input__elemento">      
+              <h6 style="padding-top: 45px; padding-left: 25px;">{{quantity}}</h6>                   
             </td>
             <td class="table__cantidad">
               <form action="/api/carts/:cid/products/:pid?_method=DELETE" method="post">
