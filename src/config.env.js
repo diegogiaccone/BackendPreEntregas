@@ -24,7 +24,7 @@ program
     .option(`-d`, `Variable para debug`, false)
     .option(`-p --port <port>`, `Puerto del servidor`, 3030)
     .option(`-wsp --wsport <wsport>`, `Puerto WS`, 9090)
-program.parse();
+program.parse(process.argv);
 
 const args = program.opts()
 

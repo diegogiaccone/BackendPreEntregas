@@ -11,7 +11,7 @@
         <div>
         <a href="/" class="btn btn-success cart product">Inicio</a>
         </div>
-        <div class="saludo">
+        <div class="saludo2">
           <h4 class="card-title pt-2 text-center text-primary">Bienvenido:({{name}})</h4>
         </div>
         <div class="rol">
@@ -27,7 +27,7 @@
 
       <div class="row row-cols-sm-10 row-cols-md-2 row-cols-lg-4 row-cols-x1-4" id="card">
         {{#each products}}
-        <div class="col d-flex justify-content-center mb-4" id="dataProd">
+        <div class="col d-flex justify-content-center mb-4 divCard" id="dataProd">
           <div class="card shadow mb-1 bg-dark rounded" style="width: 20rem">
             <h5 class="card-title pt-2 text-center text-primary">{{this.title}}</h5>
             <img src={{this.thumbnail}} class="card-img-top" />
@@ -103,6 +103,5 @@
       </form> 
     {{/if}}  
    
-    
 
 
