@@ -61,9 +61,14 @@
                 </button>
               </div>
               </form>
+              <form action="/api/update?_method=GET" method="post">
               <div class="d-grid gap-2 eliminar">
-                <a href="/api/update" type="button" class="btn btn-warning button"><i class="fas fa-sign-out-alt"></i>Actualizar</a>
+                <input type="hidden" name="id" value="{{this.id}}">                
+                <button type="submit" class="btn btn-warning button" href="/api/update">
+                  Actualizar
+                </button>
               </div>
+              </form>
               {{/if}}  
             </div>
           </div>
@@ -73,7 +78,7 @@
 
     {{#if isAdmin}}       
       <form action="/api/products_index" method="post" id="formulario">
-        <div class="post" id="addpost">
+        <div class="d-flex justify-content-center post" id="addpost">
           <h2>Nuevo Producto</h2>
         </div>
         <div class="mb-3">
@@ -100,7 +105,7 @@
           <label for="categoria" class="form-label">Categoria</label>
           <input name="category" type="text" class="form-control" id="categoria" required>
         </div>
-        <div>
+        <div class="d-flex justify-content-center">
           <button id="btn" type="submit" class="btn btn-primary">Agregar al stock</button>
         </div>
       </form> 
