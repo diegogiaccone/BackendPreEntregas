@@ -1,4 +1,4 @@
-import rolModel from "./rol.model.js"
+import rolModel from "../model/rol.model.js"
 
 const createRol = async () => {
     try{

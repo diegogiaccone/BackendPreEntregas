@@ -1,9 +1,9 @@
 import mongoose, { isValidObjectId } from 'mongoose';
-import userModel from './user.model.js';
-import rolModel from './rol.model.js';
+import userModel from '../model/user.model.js';
+import rolModel from '../model/rol.model.js';
 import bcrypt from 'bcryptjs'
-import { generateToken, authToken } from '../Passport.config/jwt.config.js'
-import cartModel from '../router/Cart.model.js';
+import { generateToken, authToken } from '../auth/jwt.config.js'
+import cartModel from '../model/Cart.model.js';
 
 class Users {
     constructor() {

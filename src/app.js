@@ -1,33 +1,33 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import productRoutes from './router/products.routes.js';
-import UserRoutes from './users/user.routes.js';
+import UserRoutes from './router/user.router.js';
 import { __dirname } from './utils.js';
 import { engine } from 'express-handlebars';
 import Handlebars from 'handlebars';
 import { Server } from 'socket.io';
 import cartRoutes from './router/Cart.router.js';
-import chatRoutes from './chat/chat.routes.js';
-import chatModel from './chat/chat.model.js';
+import chatRoutes from './router/chat.router.js';
+import chatModel from './model/chat.model.js';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
-import mainRoutes from './router/main.routes.js';
-import createRol from './users/rol.dbclass.js';
+import mainRoutes from './router/main.router.js';
+import createRol from './services/rol.dbclass.js';
 import passport from 'passport';
-import initializePassport from './Passport.config/passport.config.js'
-import sessionRoutes from './github/session.router.js'
-import { initPassport } from './Passport.config/passport.jwt.js';
+import initializePassport from './auth/passport.config.js'
+import sessionRoutes from './router/session.router.js'
+import { initPassport } from './auth/passport.jwt.js';
 import methodOverride from 'method-override';
-import config from './config.env.js';
+import config from './config/config.env.js';
 
 
 const PORT = config.PORT;
 const MONGOOSE_URL = config.MONGOOSE_URL;
 const SECRET = config.SECRET;
-const BASE_URL = config.BASE_URL;
-const PRODUCTS_PER_PAGE = config.PRODUCTS_PER_PAGE;
+export const BASE_URL = config.BASE_URL;
+export const PRODUCTS_PER_PAGE = config.PRODUCTS_PER_PAGE;
 const wspuerto = config.WSPORT;
 
 const app = express();
@@ -51,7 +51,7 @@ app.use(methodOverride('_method'))
 app.use(cookieParser());
 
 //manejo de sesiones
-const store = MongoStore.create({ mongoUrl: MONGOOSE_URL, mongoOptions: {}, ttl: 3600});
+export const store = MongoStore.create({ mongoUrl: MONGOOSE_URL, mongoOptions: {}, ttl: 3600});
 app.use(session({
     store: store,
     secret: SECRET,

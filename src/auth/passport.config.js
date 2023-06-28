@@ -1,9 +1,9 @@
 import passport from "passport";
 import {} from 'dotenv/config'
 import GithubStrategy from 'passport-github2';
-import userModel from '../users/user.model.js';
-import rolModel from "../users/rol.model.js";
-import cartModel from "../router/Cart.model.js";
+import userModel from '../model/user.model.js';
+import rolModel from "../model/rol.model.js";
+import cartModel from "../model/Cart.model.js";
 
 const initializePassport = () => {
     // Estrategia Github

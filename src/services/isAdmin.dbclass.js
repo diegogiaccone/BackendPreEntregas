@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import userModel from './user.model.js';
-import rolModel from './rol.model.js';
+import userModel from '../model/user.model.js';
+import rolModel from '../model/rol.model.js';
 import Users from './user.dbclass.js';
 
 const user = new Users()

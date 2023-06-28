@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import productModel from './products.model.js';
+import productModel from '../model/products.model.js';
 
 class Products {
     constructor() {     

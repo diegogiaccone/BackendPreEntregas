@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import cartModel from './Cart.model.js';
-import productModel from './products.model.js';
-import userModel from '../users/user.model.js';
+import cartModel from '../model/Cart.model.js';
+import productModel from '../model/products.model.js';
+import userModel from '../model/user.model.js';
 
 
 export default class CartManager {
