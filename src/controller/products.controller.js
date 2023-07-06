@@ -1,7 +1,7 @@
-import Products from "../services/products.dbclass.js";
 import userModel from "../model/user.model.js";
+import factoryProduct from "../services/factory.js";
 
-const manager = new Products();
+const manager = new factoryProduct();
 
 export const validate = async (req, res, next) => {
     if (req.session.userValidated) {
@@ -18,9 +18,10 @@ export const getUpdate = async (req, res) => {
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)
         const name = userObjet.name 
         const rol = userObjet.rol[0].name
-        const isAdmin = rol === "Admin" ? true : false;                                
+        const isAdmin = rol === "Admin" ? true : false; 
+        const avatar = userObjet.avatar                               
         res.render('update', {
-            products: products, name: name, rol: rol, isAdmin: isAdmin});
+            products: products, name: name, rol: rol, isAdmin: isAdmin, avatar: avatar});
     }
 
 export const getProductsIndex = async (req, res) => {
@@ -28,14 +29,15 @@ export const getProductsIndex = async (req, res) => {
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)
         const name = userObjet.name 
         const rol = userObjet.rol[0].name
-        const isAdmin = rol === "Admin" ? true : false;                           
+        const isAdmin = rol === "Admin" ? true : false; 
+        const avatar = userObjet.avatar                          
         res.render('products_index', {
-            products: products, name: name, rol: rol, isAdmin: isAdmin});
+            products: products, name: name, rol: rol, isAdmin: isAdmin, avatar: avatar});
     };
 
 export const getProducts = async (req, res) => {        
         try {
-            const products = await manager.getProducts();
+            const products = await manager.getProducts();            
             res.status(200).send({ status: 'OK', data: products });
         } catch (err) {
             res.status(500).send({ status: 'ERR', error: err });
@@ -56,12 +58,12 @@ export const addProduct = async (req, res) => {
         }
     };
     
-export const updateProduc = async (pid, res) => {
+export const updateProduct = async (pid, res) => {
         try {            
             await manager.updateProduct(pid);
-            res.redirect(`products_index`)
-        
+            
             if (manager.checkStatus() === 1) {
+                res.redirect(`products_index`)
                 console.log({ status: 'OK', msg: manager.showStatusMsg() });
             } else {
                 console.log({ status: 'ERR', error: manager.showStatusMsg() });
@@ -70,7 +72,7 @@ export const updateProduc = async (pid, res) => {
             console.log({ status: 'ERR', error: err });
         }
     };
-    
+
 export const deleteProduct = async(id, res) => {
         try {
             await manager.deleteProduct(id); 

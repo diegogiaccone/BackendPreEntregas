@@ -4,16 +4,17 @@ import GithubStrategy from 'passport-github2';
 import userModel from '../model/user.model.js';
 import rolModel from "../model/rol.model.js";
 import cartModel from "../model/Cart.model.js";
+import config from "../config/config.env.js";
 
 const initializePassport = () => {
     // Estrategia Github
     passport.use('github', new GithubStrategy({
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.GITHUB_SECRET,
-        callbackUrl: 'http://localhost:3030/githubcallback'
+        callbackUrl: `${config.BASE_URL}/girhubcallback`,  
     }, async (accessToken, refreshToken, profile, done) => {
         try{
-            let users = await userModel.findOne({user: profile._json.email})
+            let users = await userModel.findOne({user: profile._json.email})            
             if(!users){
                 const rol = await rolModel.findOne({name: "Usuario"})
                 const cart = await cartModel.create({
@@ -22,10 +23,11 @@ const initializePassport = () => {
                 })
                 let newUser = {
                     name: profile._json.name,
-                    user: profile._json.email,
+                    user: profile._json.email, 
+                    avatar: profile._json.avatar_url,                   
                     rol: rol,
                     cart: cart
-                }                
+                }                               
                 let result = await userModel.create(newUser)
                 done(null, result)
             }else{

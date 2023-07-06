@@ -3,25 +3,28 @@
     <div class="navbar-nav">
       <div class="header2">
         <div class="title">
+          <img class="avatar" src="https://i.postimg.cc/65D2wVCC/imagen.png" alt="">
         <h1>FUNKOPOPS</h1>
-        </div>
-        <div>
-        <a href="/" class="btn btn-primary cart2">Inicio</a>
-        </div>
-        <div>
+        <a href="/" class="btn btn-primary cart">Inicio</a>
         <button type="submit" class="btn btn-success button cart productall"><a class="page-link" href="/api/products_index">Todos los Productos</a></button>
-        </div>       
-        <div class="saludo">
+        </div>     
+        <div class="navbartotal">
+        <div >
           <h4 class="card-title pt-2 text-center text-primary">Bienvenido:({{name}})</h4>
         </div>
-        <div class="rol">
+        <div>
           <h4 class="card-title pt-2 text-center text-success">Rol:({{rol}})</h4>         
         </div>
-        <div class="logout">
-          <a href="{{baseUrl}}/logout" class="btn btn-danger "><i class="fas fa-sign-out-alt"></i>Salir</a>
-        </div>
-      </div>
+        <div class="btn-group">
+      <img src={{avatar}} class="btn dropdown-toggle avatar" data-bs-toggle="dropdown" aria-expanded="false" />
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="/updateavatar">Cambiar Avatar</a></li>
+    <li><a class="dropdown-item" href="/updatepass">Cambiar Contraseña</a></li>    
+    <li><hr class="dropdown-divider"></li>
+    <li><a href="{{baseUrl}}/logout" class="dropdown-item"><i class="fas fa-sign-out-alt"></i>Cerrar Sesión</a></li>    
+  </ul>
     </div>
+        </div>    
   </header>
       
       <div

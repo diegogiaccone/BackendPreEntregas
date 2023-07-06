@@ -3,7 +3,6 @@ import cartModel from '../model/Cart.model.js';
 import productModel from '../model/products.model.js';
 import userModel from '../model/user.model.js';
 
-
 export default class CartManager {
     static id = 0
     constructor(){       
@@ -34,16 +33,8 @@ export default class CartManager {
     }
 
     createCart = async (req,res) => {
-        let newCart = await cartModel.create(req.body)
-        console.log("esto es newCart")
+        let newCart = await cartModel.create(req.body)       
         return console.log(newCart)
-    }
-
-    addCarts = async () => {        
-        let OldCarts = await cartModel.find();             
-        let cartsConcat = [{id:CartManager.id, products : []}, ...OldCarts]
-        await cartModel.create(cartsConcat)
-        return "Producto Agregado"
     }
 
     getCarts = async () => {
@@ -66,13 +57,12 @@ export default class CartManager {
  
 
     addProductInCart = async (req, res) => {
-        try {
-            console.log("esto es req.session", req.session)                             
+        try {                                        
             const cid = req.session.user.cart[0]                           
             const pid = req.body                                                                                      
             const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)})                                 
             if(!process) return "Carrito no encontrado"            
-            const product = await productModel.findOne({'_id': new mongoose.Types.ObjectId(pid)});                          
+            const product = await productModel.findOne({'_id': new mongoose.Types.ObjectId(pid)});                                   
             if(!product) return "Producto no encontrado"
             const validarProd = process.products.find(prod => prod.prods[0]._id == pid.id)                         
             if (validarProd) {
@@ -86,11 +76,9 @@ export default class CartManager {
                 { _id: cid,},
                 { $set: process},
                 { new: true }
-            )
-            
+            )           
              
-            res.redirect(`/api/carts`)
-            
+            res.redirect(`/api/carts`)            
         
         } catch (error) {
             console.error("No se pudo agregar producto al carrito " + error);
@@ -103,7 +91,8 @@ export default class CartManager {
                 let cartUser = await (req.session.user.cart[0])                            
                 let process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cartUser)}).populate(`products.prods`)                                                  
                 let products = process.products                                         
-                const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)                
+                const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`) 
+                const avatar= userObjet.avatar               
                 const name = userObjet.name 
                 const rol = userObjet.rol[0].name  
                 const Total = products.reduce(function Total(accumulator, item){
@@ -117,7 +106,8 @@ export default class CartManager {
                     name:name, 
                     rol: rol, 
                     cart: req.session.user.cart[0],  
-                    total: Total              
+                    total: Total,
+                    avatar: avatar              
                 })
             } catch (err) {
                 res.status(500).send({ status: 'ERR', error: err });            

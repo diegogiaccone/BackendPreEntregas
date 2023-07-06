@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import productModel from '../model/products.model.js';
 
-class Products {
+export default class Products {
     constructor() {     
         this.status = 0;
         this.statusMsg = "inicializado";
@@ -75,18 +75,27 @@ class Products {
         }
     }
 
-    getProductsPaginated = async (offset, itemsPerPage) => {
+    getProductsPaginated = async (offset, itemsPerPage, req) => {
         try {
             const queryOptions = {
                 offset: offset,
                 limit: itemsPerPage,
                 lean: true // habilitamos esta opción para evitar problemas con Handlebars
             }
-            const products = await productModel.paginate({}, queryOptions);
             
-            this.status = 1;
-            this.statusMsg = 'Productos recuperados';
-            return products;
+            const filter = undefined                         
+             if(filter == undefined){
+                const products = await productModel.paginate({}, queryOptions);
+                this.status = 1;
+                this.statusMsg = 'Productos recuperados';                
+                return products
+            }else{
+                const products = await productModel.paginate({category: filter}, queryOptions);
+                this.status = 1;
+                this.statusMsg = 'Productos recuperados';
+                return products
+            }            
+           
         } catch (err) {
             this.status = -1;
             this.statusMsg = `getProducts: ${err}`;
@@ -95,11 +104,9 @@ class Products {
 
     updateProduct = async (req, res) => {
         try {
-                const pid = req.params.pid
-                const data = req.body
-                console.log("esti es data", data)
-                console.log(pid)
-                const process = await productModel.updateOne({ '_id': new mongoose.Types.ObjectId(pid) }, data);
+                const pid = req.params.pid               
+                const data = req.body                
+                const process = await productModel.updateOne({ '_id': new mongoose.Types.ObjectId(pid) }, data);               
                 this.status = 1;
                 process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Producto actualizado";                
             }            
@@ -120,4 +127,3 @@ class Products {
     }
 }
 
-export default Products;

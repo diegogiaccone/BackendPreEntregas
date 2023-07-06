@@ -1,0 +1,61 @@
+<body>
+  <header class="container-fluid bg-dark position-sticky top-0">
+    <div class="navbar-nav">
+      <div class="header2">
+        <div class="title">
+        <img class="avatar" src="https://i.postimg.cc/65D2wVCC/imagen.png" alt="">
+        <h1>FUNKOPOPS</h1>
+        <a href="/api/carts" class="btn btn-warning cart">🛒</a>
+        <a href="/" class="btn btn-success cart product">Inicio</a>
+        </div>  
+        <div class="navbartotal">
+        <div >
+          <h4 class="card-title pt-2 text-center text-primary">Bienvenido:({{name}})</h4>
+        </div>
+        <div>
+          <h4 class="card-title pt-2 text-center text-success">Rol:({{rol}})</h4>         
+        </div>
+        <div class="btn-group">
+      <img src={{avatar}} class="btn dropdown-toggle avatar" data-bs-toggle="dropdown" aria-expanded="false" />
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="/updateavatar">Cambiar Avatar</a></li>
+    <li><a class="dropdown-item" href="/updatepass">Cambiar Contraseña</a></li>    
+    <li><hr class="dropdown-divider"></li>
+    <li><a href="{{baseUrl}}/logout" class="dropdown-item"><i class="fas fa-sign-out-alt"></i>Cerrar Sesión</a></li>    
+  </ul>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+        <div class="col-lg-12 shadow-lg p-3 mb-5">
+            <div class="card border-primary">
+                <div class="card-header bg-primary tect-white">Cambiar contraseña</div>
+                <div class="card-body text-primary">
+                    <form action="/updatepass" method="post">                    
+                      <div class="mb-3">
+                        <label for="user" class="form-label">Email</label>
+                        <input type="email" id="user" name="user" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña Anterior</label>
+                        <input type="password" id="pass" name="pass" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña Nueva</label>
+                        <input type="password" id="newpass" name="newpass" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Repetir Contraseña</label>
+                        <input type="password" id="newpass2" name="newpass2" class="form-control">
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-primary">
+                    <a href="/" type="button" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Actualizar</button>
+                </div>                
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

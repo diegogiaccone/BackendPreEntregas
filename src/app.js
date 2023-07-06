@@ -1,6 +1,6 @@
 import express from 'express';
-import mongoose from 'mongoose';
-import productRoutes from './router/products.routes.js';
+import MongoSingleton from './services/mongo.dbclass.js';
+import productRoutes from './router/products.router.js';
 import UserRoutes from './router/user.router.js';
 import { __dirname } from './utils.js';
 import { engine } from 'express-handlebars';
@@ -97,7 +97,6 @@ app.engine('handlebars', engine({
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/views`);
 
-
 //socket io
 // Abrimos el canal de comunicacion
 
@@ -136,9 +135,8 @@ io.on('connection', (socket) => { // Escuchamos el evento connection por nuevas 
 });
 
 //mongodb
-try {    
-    await mongoose.connect(MONGOOSE_URL);
-
+try {   
+    //MongoSingleton.getInstance()
     app.listen(PORT, () => {
         console.log(`Servidor iniciado en puerto ${PORT}`);
     });

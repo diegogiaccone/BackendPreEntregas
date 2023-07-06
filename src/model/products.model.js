@@ -13,7 +13,7 @@ const schema = new mongoose.Schema({
     code: String,    
     stock: Number, 
     category: {type: String, index: true}
-});
+}); 
 
 schema.plugin(mongoosePaginate)
 

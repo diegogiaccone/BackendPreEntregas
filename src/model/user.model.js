@@ -8,7 +8,8 @@ const schema = new mongoose.Schema({
     name: String,
     apellido: String,
     user: {type: String, unique: true},
-    pass: String, 
+    pass: String,
+    avatar: String, 
     rol: [{
         ref:"rol",
         type: Schema.Types.ObjectId

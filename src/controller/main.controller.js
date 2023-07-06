@@ -1,17 +1,17 @@
 import Users from '../services/user.dbclass.js';
-import Products from '../services/products.dbclass.js';
 import userModel from "../model/user.model.js";
 import { store, BASE_URL, PRODUCTS_PER_PAGE } from "../app.js";
+import factoryProduct from '../services/factory.js';
 
 const users = new Users();
-const manager = new Products(); 
+const manager = new factoryProduct(); 
    
 export const getProductsPaginated = async (req, res) => {
     store.get(req.sessionID, async (err, data) => {
         if (err) console.log(`Error al recuperar datos de sesión (${err})`);
         if (data !== null && (req.session.userValidated || req.sessionStore.userValidated)) {           
             if (req.query.page === undefined) req.query.page = 0;    
-            const result = await manager.getProductsPaginated(req.query.page * PRODUCTS_PER_PAGE, PRODUCTS_PER_PAGE);    
+            const result = await manager.getProductsPaginated(req.query.page * PRODUCTS_PER_PAGE, PRODUCTS_PER_PAGE);                                   
             const pagesArray = [];
             for (let i = 0; i < result.totalPages; i++) pagesArray.push({ index: i, indexPgBar: i});                
             const pagination = {                    
@@ -26,17 +26,19 @@ export const getProductsPaginated = async (req, res) => {
                 hasPrevPage: result.hasPrevPage,
                 hasNextPage: result.hasNextPage,
                 pagesArray: pagesArray
-            }               
+            }     
               
             const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)                
             const name = userObjet.name 
             const rol = userObjet.rol[0].name
-            const isAdmin = rol === "Admin" ? true : false            
+            const isAdmin = rol === "Admin" ? true : false
+            const avatar = userObjet.avatar            
                  
-            res.render('products',{ products: result.docs, pagination: pagination, name:name, rol: rol, isAdmin: isAdmin});
+            res.render('products',{ products: result.docs, pagination: pagination, name:name, rol: rol, isAdmin: isAdmin, avatar: avatar});
         } else {            
             res.render('login', {
-                sessionInfo: req.session.userValidated !== undefined ? req.session : req.sessionStore
+                sessionInfo: req.session.userValidated !== undefined ? req.session : req.sessionStore,
+                baseUrl: BASE_URL
             });
         }                    
     }); 

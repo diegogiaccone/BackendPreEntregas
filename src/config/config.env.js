@@ -3,11 +3,21 @@ import dotenv from 'dotenv';
 
 const program = new Command();
 
-dotenv.config({path: "./.env"})
+program
+.version ("2.0.1")
+    .option('-d', 'Variable para debug', false)
+    .option('-p <port>', 'Puerto del servidor', 3030)
+    .option('-wsp <wsport>', 'Puerto ws', 9090)
+    .option('-m <mode>', 'Execution mode (PRODUCTION / DEVELOPMENT)', 'DEVELOPMENT')
+    .parse(process.argv);
+const args = program.opts()
+console.log(args.m)
+
+dotenv.config({path: args.m == 'PROD' ? './.env.production' : './.env.development'})
 
 const config = {
-PORT: parseInt(process.env.PORT),
-WSPORT: parseInt(process.env.WSPORT),
+PORT: args.p,
+WSPORT: args.Wsp,
 MONGOOSE_URL: process.env.MONGOOSE_URL,
 SECRET: process.env.SECRET,
 JWT_TIEMPO_EXPIRA: process.env.JWT_TIEMPO_EXPIRA,
@@ -15,17 +25,10 @@ JWT_COOKIE_EXPIRES: process.env.JWT_COOKIE_EXPIRES,
 GITHUB_SECRET: process.env.GITHUB_SECRET,
 CLIENT_ID: process.env.CLIENT_ID,
 PRODUCTS_PER_PAGE: parseInt(process.env.PRODUCTS_PER_PAGE),
-BASE_URL: `http://localhost:${process.env.PORT}`
+BASE_URL: `http://localhost:${args.p}`,
+PERSISTENCE: process.env.PERSISTENCE
 }
 
-//console.log(config)
-
-program
-    .option(`-d`, `Variable para debug`, false)
-    .option(`-p --port <port>`, `Puerto del servidor`, 3030)
-    .option(`-wsp --wsport <wsport>`, `Puerto WS`, 9090)
-program.parse(process.argv);
-
-const args = program.opts()
+console.log(config)
 
 export default config
