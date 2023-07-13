@@ -21,8 +21,6 @@ import sessionRoutes from './router/session.router.js'
 import { initPassport } from './auth/passport.jwt.js';
 import methodOverride from 'method-override';
 import config from './config/config.env.js';
-import { orderRoutes } from './router/order.router.js';
-import { businessRoutes } from './router/business.router.js';
 
 
 const PORT = config.PORT;
@@ -74,8 +72,7 @@ app.use('/api', productRoutes(io));
 app.use(`/api`, cartRoutes(io));
 app.use(`/chat`, chatRoutes(io))
 app.use('/', sessionRoutes());
-app.use('/api/orders', orderRoutes());
-app.use('/api/businesses', businessRoutes());
+
 
 // Plantillas estaticas
 app.use('/public', express.static(`${__dirname}/public`));
