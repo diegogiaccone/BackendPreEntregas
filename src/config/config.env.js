@@ -26,7 +26,11 @@ GITHUB_SECRET: process.env.GITHUB_SECRET,
 CLIENT_ID: process.env.CLIENT_ID,
 PRODUCTS_PER_PAGE: parseInt(process.env.PRODUCTS_PER_PAGE),
 BASE_URL: `http://localhost:${args.p}`,
-PERSISTENCE: process.env.PERSISTENCE
+PERSISTENCE: process.env.PERSISTENCE,
+GOOGLE_ID: process.env.GOOGLE_ID,
+GOOGLE_SECRET: process.env.GOOGLE_SECRET,
+FACEBOOK_ID: process.env.FACEBOOK_ID,
+FACEBOOK_SECRET: process.env.FACEBOOK_SECRET
 }
 
 console.log(config)

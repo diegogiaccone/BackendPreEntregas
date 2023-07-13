@@ -52,8 +52,7 @@ class Users {
 
     getUsers = async () => {
         try {
-            const users = await userModel.find();
-            
+            const users = await userModel.find();            
             this.status = 1;
             this.statusMsg = 'Usuarios recuperados';
             return users;

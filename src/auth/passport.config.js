@@ -5,13 +5,15 @@ import userModel from '../model/user.model.js';
 import rolModel from "../model/rol.model.js";
 import cartModel from "../model/Cart.model.js";
 import config from "../config/config.env.js";
+import GoogleStrategy from "passport-google-oauth20"
+import FacebookStrategy from "passport-facebook"
 
 const initializePassport = () => {
     // Estrategia Github
     passport.use('github', new GithubStrategy({
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.GITHUB_SECRET,
-        callbackUrl: `${config.BASE_URL}/girhubcallback`,  
+        callbackUrl: `${config.BASE_URL}/githubcallback`,  
     }, async (accessToken, refreshToken, profile, done) => {
         try{
             let users = await userModel.findOne({user: profile._json.email})            
@@ -37,7 +39,70 @@ const initializePassport = () => {
             return done(error)
         }
     }));
-      
+
+    passport.use(`google`, new GoogleStrategy({
+        clientID: config.GOOGLE_ID,
+        clientSecret: config.GOOGLE_SECRET,
+        callbackURL: `${config.BASE_URL}/auth/google/callback`
+      },
+      async(accessToken, refreshToken, profile, cb) => {       
+        try{
+            let users = await userModel.findOne({ user: profile.id })
+            if(!users){
+                const rol = await rolModel.findOne({name: "Usuario"})
+                const cart = await cartModel.create({
+                    name: "cart",
+                    products: []
+                })
+                let newUser = {
+                    name: profile._json.given_name,
+                    apellido: profile._json.family_name,
+                    user: profile.id, 
+                    avatar: profile._json.picture,                   
+                    rol: rol,
+                    cart: cart
+                }                               
+                let result = await userModel.create(newUser)
+                cb(null, result)
+            }else{
+                cb(null, users)
+            }}catch(err){
+                cb(err)
+            }
+        }
+    ))     
+
+    passport.use('facebook', new FacebookStrategy({
+        clientID: config.FACEBOOK_ID,
+        clientSecret: config.FACEBOOK_SECRET,
+        callbackURL: `${config.BASE_URL}/auth/facebook/callback`
+      },
+      async(accessToken, refreshToken, profile, cb) => {
+        console.log(profile)
+        try{
+            let users = await userModel.findOne({ user: profile.id })
+            if(!users){
+                const rol = await rolModel.findOne({name: "Usuario"})
+                const cart = await cartModel.create({
+                    name: "cart",
+                    products: []
+                })
+                let newUser = {
+                    name: profile._json.name,                    
+                    user: profile.id, 
+                    avatar: "https://i.postimg.cc/PxSQJ80s/avatardefinitivo.png",                   
+                    rol: rol,
+                    cart: cart
+                }                               
+                let result = await userModel.create(newUser)
+                cb(null, result)
+            }else{
+                cb(null, users)
+            }}catch(err){
+                cb(err)
+            }
+        }
+    ))     
 
     passport.serializeUser((user, done) => {
         done(null, user._id);

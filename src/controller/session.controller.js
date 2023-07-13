@@ -1,6 +1,6 @@
 import { generateToken } from '../auth/jwt.config.js'
    
-export const loginGithub = async (req, res) => {
+export const login = async (req, res) => {
     if (req.user === undefined) {                       
         res.render('login', { sessionInfo: req.session });
     } else {
@@ -16,9 +16,9 @@ export const loginGithub = async (req, res) => {
         }) 
         res.redirect(`/`)
     }
-};   
+};
 
-export const logoutGitHub = async (req, res) => {
+export const logout = async (req, res) => {
     req.session.userValidated = req.sessionStore.userValidated = false;
     res.clearCookie('connect.sid',{domain:".localhost"});
     res.clearCookie('token', {domain: ".localhost"})

@@ -12,6 +12,11 @@ export const validate = async (req, res, next) => {
         }
     }
 
+export const getUsers = async () => {
+    const users = await manager.getUsers()
+    console.log(users)
+}
+
 export const getUpdate = async (req, res) => {                  
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)      
         const name = userObjet.name 

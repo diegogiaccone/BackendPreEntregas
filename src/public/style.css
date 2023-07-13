@@ -124,6 +124,7 @@ h1{
 
 .git{
     margin-top: 5px;
+    width: 5,5rem;
 }
 
 .carrito{
@@ -220,4 +221,45 @@ h1{
 
 .title{
     display: flex;
+}
+
+.text{
+    text-align: justify
+}
+
+.footerstyle{
+    display: flex;
+    justify-content: space-between;
+}
+
+.divider {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.divider-left {
+    margin-left: 2rem;
+    margin-right: 1rem;
+    width: 100%;
+    border-bottom: 0.5px solid white;
+}
+
+.divider-center {
+    color: #fff;
+    font-size: 16px;
+}
+
+.divider-right {
+    margin-left: 1rem;
+    margin-right: 2rem;
+    width: 100%;
+    border-bottom: 0.5px solid white;
+}
+
+.strategy{
+    display: flex;
+    justify-content: space-evenly;
 }
