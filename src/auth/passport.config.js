@@ -90,7 +90,7 @@ const initializePassport = () => {
                 let newUser = {
                     name: profile._json.name,                    
                     user: profile.id, 
-                    avatar: "https://i.postimg.cc/PxSQJ80s/avatardefinitivo.png",                   
+                    avatar: config.AVATAR,                   
                     rol: rol,
                     cart: cart
                 }                               
