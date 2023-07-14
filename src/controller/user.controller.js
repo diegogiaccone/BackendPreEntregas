@@ -19,22 +19,26 @@ export const getUsers = async () => {
 
 export const getUpdate = async (req, res) => {                  
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)      
-        const name = userObjet.name 
+        const name = userObjet.name
+        const pass = userObjet.pass
+        const existPass = pass === undefined ? false : true 
         const rol = userObjet.rol[0].name        
         const isAdmin = rol === "Admin" ? true : false; 
         const avatar = userObjet.avatar                               
         res.render('updatepass', {
-            name: name, rol: rol, isAdmin: isAdmin, avatar: avatar});
+            name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass});
     }
 
 export const getAvatarUpdate = async (req, res) => {                  
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)      
         const name = userObjet.name 
+        const pass = userObjet.pass
+        const existPass = pass === undefined ? false : true
         const rol = userObjet.rol[0].name        
         const isAdmin = rol === "Admin" ? true : false; 
         const avatar = userObjet.avatar                               
         res.render('updateavatar', {
-            name: name, rol: rol, isAdmin: isAdmin, avatar: avatar});
+            name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass});
     }    
        
 export const getUserById = async (req, res) => { // ? indica que el parámetro es opcional

@@ -14,7 +14,7 @@ const initializePassport = () => {
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.GITHUB_SECRET,
         callbackUrl: `${config.BASE_URL}/githubcallback`,  
-    }, async (accessToken, refreshToken, profile, done) => {
+    }, async (accessToken, refreshToken, profile, done) => {        
         try{
             let users = await userModel.findOne({user: profile._json.email})            
             if(!users){
@@ -45,7 +45,7 @@ const initializePassport = () => {
         clientSecret: config.GOOGLE_SECRET,
         callbackURL: `${config.BASE_URL}/auth/google/callback`
       },
-      async(accessToken, refreshToken, profile, cb) => {       
+      async(accessToken, refreshToken, profile, cb) => {        
         try{
             let users = await userModel.findOne({ user: profile.id })
             if(!users){
@@ -77,8 +77,7 @@ const initializePassport = () => {
         clientSecret: config.FACEBOOK_SECRET,
         callbackURL: `${config.BASE_URL}/auth/facebook/callback`
       },
-      async(accessToken, refreshToken, profile, cb) => {
-        console.log(profile)
+      async(accessToken, refreshToken, profile, cb) => {        
         try{
             let users = await userModel.findOne({ user: profile.id })
             if(!users){

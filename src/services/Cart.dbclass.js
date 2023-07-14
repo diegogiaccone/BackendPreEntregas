@@ -93,7 +93,9 @@ export default class CartManager {
                 let products = process.products                                         
                 const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`) 
                 const avatar= userObjet.avatar               
-                const name = userObjet.name 
+                const name = userObjet.name
+                const pass = userObjet.pass
+                const existPass = pass === undefined ? false : true
                 const rol = userObjet.rol[0].name  
                 const Total = products.reduce(function Total(accumulator, item){
                     const toNumber = parseFloat(item.prods[0].price * item.quantity);                                                         
@@ -107,7 +109,8 @@ export default class CartManager {
                     rol: rol, 
                     cart: req.session.user.cart[0],  
                     total: Total,
-                    avatar: avatar              
+                    avatar: avatar,
+                    pass: existPass
                 })
             } catch (err) {
                 res.status(500).send({ status: 'ERR', error: err });            

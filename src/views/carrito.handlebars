@@ -19,7 +19,9 @@
       <img src={{avatar}} class="btn dropdown-toggle avatar" data-bs-toggle="dropdown" aria-expanded="false" />
   <ul class="dropdown-menu">
     <li><a class="dropdown-item" href="/updateavatar">Cambiar Avatar</a></li>
-    <li><a class="dropdown-item" href="/updatepass">Cambiar Contraseña</a></li>    
+    {{#if pass}}
+    <li><a class="dropdown-item" href="/updatepass">Cambiar Contraseña</a></li>       
+    {{/if}}
     <li><hr class="dropdown-divider"></li>
     <li><a href="{{baseUrl}}/logout" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>    
   </ul>

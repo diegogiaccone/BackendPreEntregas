@@ -30,11 +30,12 @@ export const getProductsPaginated = async (req, res) => {
               
             const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)                
             const name = userObjet.name 
+            const pass = userObjet.pass            
             const rol = userObjet.rol[0].name
             const isAdmin = rol === "Admin" ? true : false
             const avatar = userObjet.avatar            
-                 
-            res.render('products',{ products: result.docs, pagination: pagination, name:name, rol: rol, isAdmin: isAdmin, avatar: avatar});
+            const existPass = pass === undefined ? false : true     
+            res.render('products',{ products: result.docs, pagination: pagination, name:name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass});
         } else {            
             res.render('login', {
                 sessionInfo: req.session.userValidated !== undefined ? req.session : req.sessionStore,
