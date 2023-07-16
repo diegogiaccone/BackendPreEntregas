@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs'
 import { generateToken, authToken } from '../auth/jwt.config.js'
 import cartModel from '../model/Cart.model.js';
 import config from '../config/config.env.js';
+import ticketModel from '../model/ticket.model.js';
 
 class Users {
     constructor() {
@@ -31,16 +32,20 @@ class Users {
             const apellido = req.body.apellido
             const user = req.body.user
             const pass = req.body.pass 
-            const avatar = req.body.avatar                                            
+            const avatar = req.body.avatar                                                        
             let passHash = await bcrypt.hash(pass, 8)
             const rol = await rolModel.findOne({name: "Usuario"})
             const cart = await cartModel.create({
                 name: "cart",
                 products: []
             })
+            const ticket = await ticketModel.create({
+                name: "ticket",
+                purchase: []
+            })
             const verify = await userModel.findOne({user: user})
             if(!verify){
-                userModel.create({name: name, apellido: apellido, user: user, pass: passHash, rol: rol, cart: cart, avatar: avatar})     
+                userModel.create({name: name, apellido: apellido, user: user, pass: passHash, rol: rol, cart: cart, avatar: avatar, ticket: ticket})     
                 res.redirect('/')      
             }else{                 
                 res.send(`El usuario ya existe Por favor intente con otro nombre de usuario`)
@@ -138,9 +143,9 @@ class Users {
                 } else{
                     req.session.userValidated = req.sessionStore.userValidated = true;
                     req.session.errorMessage = req.sessionStore.errorMessage = '';
-                    req.session.user = req.sessionStore.user = {user: user, name: findUser.name, apellido: findUser.apellido, rol: findUser.rol, cart: findUser.cart, avatar: findUser.avatar};                    
+                    req.session.user = req.sessionStore.user = {user: user, name: findUser.name, apellido: findUser.apellido, rol: findUser.rol, cart: findUser.cart, avatar: findUser.avatar, ticket: findUser.ticket};                    
                     const date = new Date();                
-                    const token = generateToken({ user: user, name : findUser.name, apellido: findUser.apellido, rol: findUser.rol, cart: findUser.cart, avatar: findUser.avatar})        
+                    const token = generateToken({ user: user, name : findUser.name, apellido: findUser.apellido, rol: findUser.rol, avatar: findUser.avatar})                           
                     res.cookie('token', token, {
                         maxAge: date.setDate(date.getDate() + 1),
                         secure: false, // true para operar solo sobre HTTPS

@@ -21,6 +21,7 @@ import sessionRoutes from './router/session.router.js'
 import { initPassport } from './auth/passport.jwt.js';
 import methodOverride from 'method-override';
 import config from './config/config.env.js';
+import ticketRoutes from './router/ticket.router.js';
 
 
 const PORT = config.PORT;
@@ -71,6 +72,7 @@ app.use('/', UserRoutes(io));
 app.use('/api', productRoutes(io));
 app.use(`/api`, cartRoutes(io));
 app.use(`/chat`, chatRoutes(io))
+app.use(`/api`, ticketRoutes());
 app.use('/', sessionRoutes());
 
 

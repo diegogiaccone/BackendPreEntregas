@@ -66,7 +66,10 @@
           <div class="col">           
             <h3 class="itemCartTotal text-white">Total: ${{total}}</h3>            
             <div class="col d-flex justify-content-end">
+              <form action="/api/carts/:cid/purchase" method="post">
+              <input type="hidden" name="cid" value="{{cart}}">
               <button class="btn btn-success" id="btncomprar">COMPRAR</button>
+              </form>
             </div>
           </div>
         </div>

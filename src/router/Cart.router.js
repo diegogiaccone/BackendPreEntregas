@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addProductInCart, deleteCartProduct, emptyCart, getCartPopulated, productsInCart, updateCart, updateProductQty } from "../controller/Cart.controller.js";
+import { addProductInCart, deleteCartProduct, emptyCart, getCartPopulated, productsInCart, purchase, updateCart, updateProductQty } from "../controller/Cart.controller.js";
 import { validate } from "../controller/user.controller.js";
 import { authentication } from "../auth/passport.jwt.js";
 
@@ -10,6 +10,8 @@ const cartRoutes = (io) => {
     CartRouter.get('/carts', productsInCart, [validate, authentication('jwtAuth')]); 
 
     CartRouter.get('/carts/:id', getCartPopulated, [validate, authentication('jwtAuth')])
+   
+    CartRouter.post('/carts/:cid/purchase', purchase, [validate, authentication('jwtAuth')])
    
     CartRouter.post('/carts/:cid/products/:pid', addProductInCart, [validate, authentication('jwtAuth')])
 

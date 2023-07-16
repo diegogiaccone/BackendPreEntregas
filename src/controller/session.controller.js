@@ -5,9 +5,9 @@ export const login = async (req, res) => {
         res.render('login', { sessionInfo: req.session });
     } else {
         req.session.user = req.sessionStore.user = req.user                       
-        req.session.userValidated = req.sessionStore.userValidated = true;
+        req.session.userValidated = req.sessionStore.userValidated = true;     
         const date = new Date();
-        const user = await (req.user).populate(`rol`)
+        const user = await (req.user).populate(`rol`)       
         const token = generateToken({ user: req.user.user, name: req.user.name, apellido: req.user.apellido, rol: req.user.rol})   
         res.cookie('token', token, {
             maxAge: date.setDate(date.getDate() + 1),

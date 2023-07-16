@@ -7,6 +7,7 @@ import cartModel from "../model/Cart.model.js";
 import config from "../config/config.env.js";
 import GoogleStrategy from "passport-google-oauth20"
 import FacebookStrategy from "passport-facebook"
+import ticketModel from "../model/ticket.model.js";
 
 const initializePassport = () => {
     // Estrategia Github
@@ -23,12 +24,18 @@ const initializePassport = () => {
                     name: "cart",
                     products: []
                 })
+                const ticket = await ticketModel.create({
+                    name: "ticket",
+                    purchase: []
+                })
+
                 let newUser = {
                     name: profile._json.name,
                     user: profile._json.email, 
                     avatar: profile._json.avatar_url,                   
                     rol: rol,
-                    cart: cart
+                    cart: cart,
+                    ticket: ticket
                 }                               
                 let result = await userModel.create(newUser)
                 done(null, result)
@@ -54,13 +61,18 @@ const initializePassport = () => {
                     name: "cart",
                     products: []
                 })
+                const ticket = await ticketModel.create({
+                    name: "ticket",
+                    purchase: []
+                })
                 let newUser = {
                     name: profile._json.given_name,
                     apellido: profile._json.family_name,
                     user: profile.id, 
                     avatar: profile._json.picture,                   
                     rol: rol,
-                    cart: cart
+                    cart: cart,
+                    ticket: ticket
                 }                               
                 let result = await userModel.create(newUser)
                 cb(null, result)
@@ -86,12 +98,17 @@ const initializePassport = () => {
                     name: "cart",
                     products: []
                 })
+                const ticket = await ticketModel.create({
+                    name: "ticket",
+                    purchase: []
+                })
                 let newUser = {
                     name: profile._json.name,                    
                     user: profile.id, 
                     avatar: config.AVATAR,                   
                     rol: rol,
-                    cart: cart
+                    cart: cart,
+                    ticket: ticket
                 }                               
                 let result = await userModel.create(newUser)
                 cb(null, result)

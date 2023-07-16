@@ -1,8 +1,18 @@
 import CartManager from "../services/Cart.dbclass.js";
+import TicketManager from "../services/tickets.dbclass.js";
 
 const manager = new CartManager();
+const ticket = new TicketManager();
 
 export const productsInCart = manager.productsInCart
+
+export const purchase = async (cid, res) => {
+    await ticket.creatTicket(cid);
+    res.redirect(`/`) 
+}
+
+export const getTickets = ticket.ticketsInCart   
+
 
 export const getCartPopulated = async (req, res) => {
     try {

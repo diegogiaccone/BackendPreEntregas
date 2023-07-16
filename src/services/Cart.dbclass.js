@@ -88,7 +88,7 @@ export default class CartManager {
 
     productsInCart = async (req, res) => {
         try {           
-                let cartUser = await (req.session.user.cart[0])                            
+                let cartUser = await (req.session.user.cart[0])                                          
                 let process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cartUser)}).populate(`products.prods`)                                                  
                 let products = process.products                                         
                 const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`) 
@@ -107,10 +107,10 @@ export default class CartManager {
                     quantity: products.quantity,                                     
                     name:name, 
                     rol: rol, 
-                    cart: req.session.user.cart[0],  
+                    cart: cartUser,  
                     total: Total,
                     avatar: avatar,
-                    pass: existPass
+                    pass: existPass                   
                 })
             } catch (err) {
                 res.status(500).send({ status: 'ERR', error: err });            
@@ -211,7 +211,37 @@ export default class CartManager {
             this.status = -1;
             this.statusMsg = `deleteCartProduct: ${err}`;
         }
-    }  
+    } 
+
+    ticketPurchase = async (req, res) => {   
+        try {                       
+            const cid = await (req.session.user.cart[0]) 
+            const pid = req.body                    
+            const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)})           
+            if(!process) return "Carrito no encontrado"          
+            const validarProd = process.products.find(prod => prod.prods[0]._id == pid.id)                                   
+            if (validarProd) {
+                const result = await cartModel.findOneAndUpdate(
+                    { _id: cid,},
+                    { $pull: { products: { prods: new mongoose.Types.ObjectId(pid.id)}}},
+                    { new: true }
+                )           
+                console.log(result)               
+            }else{               
+                console.log(process)                        
+            }                
+            
+            res.redirect(`/api/carts`)           
+            //res.send(this.statusMsg = 'Producto quitado del carrito')                        
+            this.status = 1;
+            this.statusMsg = 'Producto quitado del carrito';
+            return process;
+        } catch (err) {
+            this.status = -1;
+            this.statusMsg = `deleteCartProduct: ${err}`;
+        }
+    }
+    
 }
     
 

@@ -17,6 +17,10 @@ const schema = new mongoose.Schema({
     cart: [{
         ref:"carts",
         type: Schema.Types.ObjectId
+    }],
+    ticket: [{
+        ref:"tickets",
+        type: Schema.Types.ObjectId
     }] 
 });
 
