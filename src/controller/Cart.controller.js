@@ -9,10 +9,9 @@ export const productsInCart = manager.productsInCart
 export const purchase = async (cid, res) => {
     await ticket.creatTicket(cid);
     res.redirect(`/`) 
-}
+    }
 
-export const getTickets = ticket.ticketsInCart   
-
+export const getTickets = ticket.ticketsInCart
 
 export const getCartPopulated = async (req, res) => {
     try {
@@ -21,7 +20,7 @@ export const getCartPopulated = async (req, res) => {
     } catch (err) {
         res.status(500).send({ status: 'err', error: err.message });
     }
-}
+    }
   
 export const addProductInCart = async (cid, pid) => {
     try {
@@ -29,7 +28,6 @@ export const addProductInCart = async (cid, pid) => {
     } catch (err) {
        console.log(err)
     }}
-
 
 export const deleteCartProduct = async (cid, pid) => {
     try {        
@@ -43,8 +41,7 @@ export const deleteCartProduct = async (cid, pid) => {
     } catch (err) {
         console.log({ status: 'ERR', error: err.message });
     }
-};
-
+    };
  
 export const emptyCart = async (cid) => {
     try {
@@ -58,8 +55,7 @@ export const emptyCart = async (cid) => {
     } catch (err) {
         res.status(500).send({ status: 'ERR', error: err.message });
     }
-};
-
+    };
 
 export const updateCart = async (req, res) => {
     try {
@@ -75,7 +71,7 @@ export const updateCart = async (req, res) => {
     } catch (err) {
         res.status(500).send({ status: 'ERR', error: err.message });
     }
-}
+    }
 
 export const updateProductQty = async (req, res) => {
     try {
@@ -100,5 +96,5 @@ export const updateProductQty = async (req, res) => {
         res.status(500).send({ status: 'ERR', error: err })
     }
 
-}
+    }
  

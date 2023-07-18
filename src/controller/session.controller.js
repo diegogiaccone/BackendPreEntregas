@@ -16,7 +16,7 @@ export const login = async (req, res) => {
         }) 
         res.redirect(`/`)
     }
-};
+    };
 
 export const logout = async (req, res) => {
     req.session.userValidated = req.sessionStore.userValidated = false;
@@ -29,9 +29,9 @@ export const logout = async (req, res) => {
             res.redirect(`/`);
         });
     })
-};
+    };
 
 export const current =  async (req, res) => {
     res.send({ status: 'OK', data: req.user });
-};
+    };
    

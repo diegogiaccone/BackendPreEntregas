@@ -15,7 +15,7 @@ export const validate = async (req, res, next) => {
 export const getUsers = async () => {
     const users = await manager.getUsers()
     console.log(users)
-}
+    }
 
 export const getUpdate = async (req, res) => {                  
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)      
@@ -53,17 +53,17 @@ export const getUserById = async (req, res) => { // ? indica que el parámetro e
     } catch (err) {
         res.status(500).send({ status: 'ERR', error: 'No se encuentra el usuario' });
     }
-};
+    };
 
 export const fakeUser = async (req, res) => {
     const users = [];
     for (let i= 0; i < 10; i++){users.push(generateUser())}
     res.send({status: "OK", payload: users })
-}
+    }
 
 export const getRegister = async (req, res) => {        
     res.render('registrar');
-};   
+    };   
     
 export const addUser = manager.addUser
 
@@ -80,7 +80,7 @@ export const updateUser = async (uid, res) => {
     } catch (err) {
         console.log({ status: 'ERR', error: err });
     }
-};
+    };
 
 export const updateAvatarUser = async (uid, res) => {
     try {            
@@ -95,7 +95,7 @@ export const updateAvatarUser = async (uid, res) => {
     } catch (err) {
         console.log({ status: 'ERR', error: err });
     }
-};
+    };
     
 export const deleteUser = async(req, res) => {
     try {
@@ -108,7 +108,7 @@ export const deleteUser = async(req, res) => {
     } catch (err) {
         res.status(500).send({ status: 'ERR', error: err });
     }
-};
+    };
 
 
 

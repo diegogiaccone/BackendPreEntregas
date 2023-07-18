@@ -43,7 +43,7 @@ export const getProductsPaginated = async (req, res) => {
             });
         }                    
     }); 
-};
+    };
     
 export const logout = async (req, res) => {
     req.session.userValidated = req.sessionStore.userValidated = false;
@@ -56,7 +56,7 @@ export const logout = async (req, res) => {
             res.redirect(BASE_URL);
         });
     })
-};
+    };
     
 export const login = users.validateUser; 
 

@@ -5,6 +5,7 @@ import userModel from '../model/user.model.js';
 import ticketModel from '../model/ticket.model.js';
 import { nanoid } from 'nanoid';
 
+
 export default class TicketManager {
     static id = 0
     constructor(){       
@@ -43,8 +44,7 @@ export default class TicketManager {
         try {                                        
             const cid = req.body.cid 
             const tid = req.session.user.ticket[0]
-            const tickets = await ticketModel.findOne({ '_id': new mongoose.Types.ObjectId(tid)})      
-            console.log("esto es tickets",tickets)                                                                  
+            const tickets = await ticketModel.findOne({ '_id': new mongoose.Types.ObjectId(tid)})                                                                           
             const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}).populate(`products.prods`)
             let products = []             
             if(!process) return "Carrito no encontrado"                      
@@ -68,13 +68,17 @@ export default class TicketManager {
                         const toNumber = parseFloat(item.prods[0].price * item.quantity);                                                         
                         return accumulator + toNumber;                             
                       },0);      
-                        const date = new Date()  
-                      
+                                            
+                       const date = new Date()
+                       const date2 = new Intl.DateTimeFormat('es', { dateStyle: 'full', timeStyle: 'long'}).format(date);   
+                       console.log("date",date, "date2", date2)             
+                 
+         
                         setTimeout(async ()=>{
                             const newTicket = { 
                                 tickets: products,                                                                             
                                 code: nanoid(),
-                                purchase_datetime: date,
+                                purchase_datetime: date2,
                                 purchaser: req.session.user.user,
                                 total: Total
                             }
@@ -93,8 +97,7 @@ export default class TicketManager {
         
         try {           
                 const ticketUser = await (req.session.user.ticket)                                          
-                const process = await ticketModel.findOne({ '_id': new mongoose.Types.ObjectId(ticketUser[0])})
-                console.log("process", process.purchase)              
+                const process = await ticketModel.findOne({ '_id': new mongoose.Types.ObjectId(ticketUser[0])})                           
                 const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)                
                 const avatar= userObjet.avatar               
                 const name = userObjet.name

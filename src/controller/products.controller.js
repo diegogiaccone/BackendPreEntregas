@@ -9,7 +9,7 @@ export const validate = async (req, res, next) => {
     } else {
         res.status(401).send({ status: 'ERR', error: 'No tiene autorización para realizar esta solicitud' });
     }
-}
+    }
 
 export const getUpdate = async (req, res) => {
         const prod = req.body               

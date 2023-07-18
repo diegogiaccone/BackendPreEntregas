@@ -13,7 +13,7 @@ const schema = ({
                 },            
                 code: String,             
                 purchaser: String,
-                purchase_datetime: Date,
+                purchase_datetime: String,
                 amount: Number,
                 total: Number 
             }
