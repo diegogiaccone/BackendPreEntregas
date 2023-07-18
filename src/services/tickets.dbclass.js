@@ -43,46 +43,51 @@ export default class TicketManager {
         try {                                        
             const cid = req.body.cid 
             const tid = req.session.user.ticket[0]
-            const tickets = await ticketModel.findOne({ '_id': new mongoose.Types.ObjectId(tid)})                                                                        
-            const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}).populate(`products.prods`)                                
+            const tickets = await ticketModel.findOne({ '_id': new mongoose.Types.ObjectId(tid)})      
+            console.log("esto es tickets",tickets)                                                                  
+            const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}).populate(`products.prods`)
+            let products = []             
             if(!process) return "Carrito no encontrado"                      
             if(process.products.length >= 1){           
                 process.products.forEach(element => {                 
                     element.prods.forEach(async (e) => {
                         const itemUpdate = await productModel.findById({_id: e._id})
                         if(itemUpdate.stock >= element.quantity){                            
+                            products.push({title: itemUpdate.title, quantity: element.quantity})
+                            //console.log("esto es products", products)                                               
+                            console.log("esto es products", products)
                             await productModel.findOneAndUpdate(                            
                                 { _id: e._id },
                                 { $set: {stock: itemUpdate.stock - element.quantity}},
                                 { new: true }
-                                )
-                                
+                                )                                
                             }else{                               
                                 console.log("no se pudo realizar la compra devido a falta de stock en uno de tus productos")
                             }
                         })                       
-                    });             
+                    });                   
                     const Total = process.products.reduce(function Total(accumulator, item){
                         const toNumber = parseFloat(item.prods[0].price * item.quantity);                                                         
                         return accumulator + toNumber;                             
                       },0);      
-                        const date = new Date().toString()                               
-
-                        const newTicket = {
-                            tickets: process.products,
-                            code: nanoid(),
-                            purchase_datetime: date,
-                            purchaser:req.session.user.user,
-                            total: Total
-                        }
-
-                        tickets.purchase.push(newTicket)
-                        await ticketModel.findOneAndUpdate({_id: tid},{$set: tickets}, { new: true })                               
-                        this.emptyCart(cid);
+                        const date = new Date()  
+                      
+                        setTimeout(async ()=>{
+                            const newTicket = { 
+                                tickets: products,                                                                             
+                                code: nanoid(),
+                                purchase_datetime: date,
+                                purchaser: req.session.user.user,
+                                total: Total
+                            }
+                            tickets.purchase.push(newTicket)
+                            await ticketModel.findOneAndUpdate({_id: tid},{$set: tickets},{ new: true })                               
+                            this.emptyCart(cid);
+                        },2000)                                 
                     }     
         
         } catch (error) {
-            console.error("No se pudo agregar producto al carrito " + error);           
+            console.error("No se pudo generar el ticket" + error);           
         } 
     }
 
@@ -90,9 +95,8 @@ export default class TicketManager {
         
         try {           
                 const ticketUser = await (req.session.user.ticket)                                          
-                const process = await ticketModel.findOne({ '_id': new mongoose.Types.ObjectId(ticketUser[0])})                                                              
-                const products = process.purchase.map(prods => prods.tickets) 
-                console.log("esto es products",products)                                        
+                const process = await ticketModel.findOne({ '_id': new mongoose.Types.ObjectId(ticketUser[0])})
+                console.log("process", process.purchase)              
                 const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)                
                 const avatar= userObjet.avatar               
                 const name = userObjet.name
@@ -101,8 +105,8 @@ export default class TicketManager {
                 const rol = userObjet.rol[0].name                                    
                                                     
                 res.render(`tickets`, {
-                    ticket: products,                                                       
-                    name:name, 
+                    ticket: process.purchase,                                                       
+                    name: name, 
                     rol: rol, 
                     cart: req.session.user.cart[0],                   
                     avatar: avatar,

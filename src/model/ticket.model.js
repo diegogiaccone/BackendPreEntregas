@@ -8,10 +8,9 @@ const schema = ({
     purchase: {
         type: [
             {   
-                tickets:[{
-                    ref: 'products',
-                    type: Schema.Types.ObjectId,
-                }],            
+                tickets:{                    
+                     type : Array , default : [] 
+                },            
                 code: String,             
                 purchaser: String,
                 purchase_datetime: Date,
