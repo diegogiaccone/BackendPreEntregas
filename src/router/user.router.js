@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { __dirname } from '../utils.js';
 import { authentication } from "../auth/passport.jwt.js";
-import { addUser, deleteUser, getRegister, getUserById, updateUser, validate, getUpdate, getAvatarUpdate, updateAvatarUser, getUsers } from "../controller/user.controller.js";
+import { addUser, deleteUser, getRegister, getUserById, updateUser, validate, getUpdate, getAvatarUpdate, updateAvatarUser, getUsers, fakeUser } from "../controller/user.controller.js";
 
 
 const router = Router();
@@ -12,6 +12,8 @@ const userRoutes = (io) => {
     router.get(`/updatepass`, getUpdate,[validate, authentication('jwtAuth')])
 
     router.get(`/users`, getUsers,[validate, authentication('jwtAuth')])
+
+    router.get(`/fakeuser`, fakeUser, [validate, authentication('jwtAuth')])
 
     router.get(`/updateavatar`, getAvatarUpdate,[validate, authentication('jwtAuth')])
 

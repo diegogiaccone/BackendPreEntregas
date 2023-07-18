@@ -8,6 +8,9 @@
         <a href="/" class="btn btn-primary cart">Inicio</a>
         <button type="submit" class="btn btn-success button cart productall"><a class="page-link" href="/api/products_index">Todos los Productos</a></button>
         <a href="/api/tickets" class="btn btn-danger button cart productall">Mis Compras  📃</a>
+        {{#if isAdmin}}
+        <a href="/fakeuser" class="btn btn-info text-light button cart productall">MOCK FAKERUSER</a>           
+        {{/if}}
         </div>     
         <div class="navbartotal">
         <div >

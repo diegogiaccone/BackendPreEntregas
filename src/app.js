@@ -2,7 +2,7 @@ import express from 'express';
 import MongoSingleton from './services/mongo.dbclass.js';
 import productRoutes from './router/products.router.js';
 import UserRoutes from './router/user.router.js';
-import { __dirname } from './utils.js';
+import { __dirname} from './utils.js';
 import { engine } from 'express-handlebars';
 import Handlebars from 'handlebars';
 import { Server } from 'socket.io';
@@ -22,6 +22,8 @@ import { initPassport } from './auth/passport.jwt.js';
 import methodOverride from 'method-override';
 import config from './config/config.env.js';
 import ticketRoutes from './router/ticket.router.js';
+
+
 
 
 const PORT = config.PORT;
@@ -74,7 +76,6 @@ app.use(`/api`, cartRoutes(io));
 app.use(`/chat`, chatRoutes(io))
 app.use(`/api`, ticketRoutes());
 app.use('/', sessionRoutes());
-
 
 // Plantillas estaticas
 app.use('/public', express.static(`${__dirname}/public`));

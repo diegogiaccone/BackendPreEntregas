@@ -5,9 +5,12 @@
         <div class="title">
           <img class="avatar" src="https://i.postimg.cc/65D2wVCC/imagen.png" alt="">
         <h1>FUNKOPOPS</h1>
-        <a href="/" class="btn btn-primary cart">Inicio</a>
+        <a href="/api/carts" class="btn btn-warning cart productall">Mi Carrito Funko 🛒</a>
         <button type="submit" class="btn btn-success button cart productall"><a class="page-link" href="/api/products_index">Todos los Productos</a></button>
-        <a href="/api/carts" class="btn btn-warning cart">🛒</a>
+        <a href="/" class="btn btn-primary cart" style="margin-left: 10px;">Inicio</a>
+        {{#if isAdmin}}
+        <a href="/fakeuser" class="btn btn-info text-light button cart productall">MOCK FAKERUSER</a>           
+        {{/if}}
         </div>     
         <div class="navbartotal">
         <div >

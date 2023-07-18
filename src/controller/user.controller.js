@@ -1,6 +1,6 @@
 import Users from "../services/user.dbclass.js";
 import userModel from "../model/user.model.js";
-import { __dirname } from '../utils.js';
+import { __dirname, generateUser } from '../utils.js';
 
 const manager = new Users();
     
@@ -54,6 +54,12 @@ export const getUserById = async (req, res) => { // ? indica que el parámetro e
         res.status(500).send({ status: 'ERR', error: 'No se encuentra el usuario' });
     }
 };
+
+export const fakeUser = async (req, res) => {
+    const users = [];
+    for (let i= 0; i < 10; i++){users.push(generateUser())}
+    res.send({status: "OK", payload: users })
+}
 
 export const getRegister = async (req, res) => {        
     res.render('registrar');

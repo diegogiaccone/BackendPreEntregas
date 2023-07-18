@@ -53,9 +53,7 @@ export default class TicketManager {
                     element.prods.forEach(async (e) => {
                         const itemUpdate = await productModel.findById({_id: e._id})
                         if(itemUpdate.stock >= element.quantity){                            
-                            products.push({title: itemUpdate.title, quantity: element.quantity})
-                            //console.log("esto es products", products)                                               
-                            console.log("esto es products", products)
+                            products.push({title: itemUpdate.title, quantity: element.quantity})                            
                             await productModel.findOneAndUpdate(                            
                                 { _id: e._id },
                                 { $set: {stock: itemUpdate.stock - element.quantity}},
@@ -102,7 +100,8 @@ export default class TicketManager {
                 const name = userObjet.name
                 const pass = userObjet.pass
                 const existPass = pass === undefined ? false : true
-                const rol = userObjet.rol[0].name                                    
+                const rol = userObjet.rol[0].name 
+                const isAdmin = rol === "Admin" ? true : false                                   
                                                     
                 res.render(`tickets`, {
                     ticket: process.purchase,                                                       
@@ -110,7 +109,8 @@ export default class TicketManager {
                     rol: rol, 
                     cart: req.session.user.cart[0],                   
                     avatar: avatar,
-                    pass: existPass 
+                    pass: existPass,
+                    isAdmin: isAdmin 
                 })
             } catch (err) {
                 res.status(500).send({ status: 'ERR', error: err });            
@@ -128,38 +128,7 @@ export default class TicketManager {
         } catch (err) {
             return false;
         }
-    }
-    
-
-    ticketPurchase = async (req, res) => {   
-        try {                       
-            const cid = await (req.session.user.cart[0]) 
-            const pid = req.body                    
-            const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)})           
-            if(!process) return "Carrito no encontrado"          
-            const validarProd = process.products.find(prod => prod.prods[0]._id == pid.id)                                   
-            if (validarProd) {
-                const result = await cartModel.findOneAndUpdate(
-                    { _id: cid,},
-                    { $pull: { products: { prods: new mongoose.Types.ObjectId(pid.id)}}},
-                    { new: true }
-                )           
-                console.log(result)               
-            }else{               
-                console.log(process)                        
-            }                
-            
-            res.redirect(`/api/carts`)           
-            //res.send(this.statusMsg = 'Producto quitado del carrito')                        
-            this.status = 1;
-            this.statusMsg = 'Producto quitado del carrito';
-            return process;
-        } catch (err) {
-            this.status = -1;
-            this.statusMsg = `deleteCartProduct: ${err}`;
-        }
-    }
-    
+    }    
 }
     
 

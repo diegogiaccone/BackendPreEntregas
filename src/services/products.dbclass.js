@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import productModel from '../model/products.model.js';
 
+
 export default class Products {
     constructor() {     
         this.status = 0;
@@ -34,6 +35,7 @@ export default class Products {
         let carts = await this.readProducts(id);
         return carts.find(cart => cart.id === id)
     }
+
 
     addProduct = async (product) => {
         try {
