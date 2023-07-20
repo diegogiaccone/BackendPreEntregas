@@ -70,9 +70,7 @@ export default class TicketManager {
                       },0);      
                                             
                        const date = new Date()
-                       const date2 = new Intl.DateTimeFormat('es', { dateStyle: 'full', timeStyle: 'long'}).format(date);   
-                       console.log("date",date, "date2", date2)             
-                 
+                       const date2 = new Intl.DateTimeFormat('es', { dateStyle: 'full', timeStyle: 'long'}).format(date);                      
          
                         setTimeout(async ()=>{
                             const newTicket = { 
@@ -85,7 +83,7 @@ export default class TicketManager {
                             tickets.purchase.push(newTicket)
                             await ticketModel.findOneAndUpdate({_id: tid},{$set: tickets},{ new: true })                               
                             this.emptyCart(cid);
-                        },2000)                                 
+                        },1500)                                 
                     }     
         
         } catch (error) {
