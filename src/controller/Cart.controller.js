@@ -1,15 +1,40 @@
 import CartManager from "../services/Cart.dbclass.js";
 import TicketManager from "../services/tickets.dbclass.js";
+import { transport } from "../config/mail.config.js";
 
 const manager = new CartManager();
 const ticket = new TicketManager();
 
+
 export const productsInCart = manager.productsInCart
+
+export const downloadTicket = ticket.downloadTicket
 
 export const purchase = async (cid, res) => {
     await ticket.creatTicket(cid);
     res.redirect(`/`) 
     }
+
+export const getMail = async (req, res) => {
+    const result = await transport.sendMail({
+        from: 'Diego Giaccone <diegogiaccone35@gmail.com>',
+        to: 'diego_fg91@hotmail.com',
+        subject: 'Coder prueba 02',
+        html: `
+            <h1><b>Coder prueba 07</b></h1>
+            <p style="color: #f00;">
+                <b>CoderHouse</b><br>
+                <img src="https://i.postimg.cc/sDGCFRXQ/favicon.png" />
+            </p>
+        `,
+        attachments: [
+            /* { filename: 'logo_coder.png', path: `${__dirname}/static/logo_coder.png`, cid: 'logo_coder' },
+            { filename: 'sample.png', path: `${__dirname}/static/sample.pdf`, cid: 'sample' } */
+        ]
+    })
+    
+    res.status(200).send({ status: 'OK', result: result });
+}
 
 export const getTickets = ticket.ticketsInCart
 

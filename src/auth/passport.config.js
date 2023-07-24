@@ -73,7 +73,8 @@ const initializePassport = () => {
                     rol: rol,
                     cart: cart,
                     ticket: ticket
-                }                               
+                }    
+                              
                 let result = await userModel.create(newUser)
                 cb(null, result)
             }else{
@@ -91,7 +92,7 @@ const initializePassport = () => {
       },
       async(accessToken, refreshToken, profile, cb) => {        
         try{
-            let users = await userModel.findOne({ user: profile.id })
+            let users = await userModel.findOne({ user: profile.id })           
             if(!users){
                 const rol = await rolModel.findOne({name: "Usuario"})
                 const cart = await cartModel.create({

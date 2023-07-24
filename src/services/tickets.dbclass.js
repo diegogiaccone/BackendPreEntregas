@@ -4,6 +4,8 @@ import productModel from '../model/products.model.js';
 import userModel from '../model/user.model.js';
 import ticketModel from '../model/ticket.model.js';
 import { nanoid } from 'nanoid';
+import puppeteer from 'puppeteer';
+import { __dirname } from '../utils.js';
 
 
 export default class TicketManager {
@@ -70,14 +72,42 @@ export default class TicketManager {
                       },0);      
                                             
                        const date = new Date()
-                       const date2 = new Intl.DateTimeFormat('es', { dateStyle: 'full', timeStyle: 'long'}).format(date);                      
-         
+                       const date2 = new Intl.DateTimeFormat('es', { dateStyle: 'full', timeStyle: 'long'}).format(date);
+                       const code = nanoid()
+                       const browser = await puppeteer.launch({headless: 'new'});
+                       const page = await browser.newPage();
+                       const htmlContent = `
+                       <div>
+                       <div style="text-align:center">
+                       <h2>FunkoPop Ticket</h2>                       
+                       </div>
+                       <div>
+                       <h4>Codigo del Ticket: ${code}</h4>
+                       <h4>Fecha: ${date2}</h4>
+                       <h4>usuario: ${req.session.user.user}</h4>
+                       <h4>Precio total: $ ${Total}</h4>
+                       <h4>Muchas Gracias por su compra</h4>
+                       <div style="display:flex; justify-content:center;">
+                       <img src="https://i.postimg.cc/65D2wVCC/imagen.png" alt="">
+                       <img src="https://i.postimg.cc/hPD6YcWq/favicon.png" alt="">                       
+                       </div>
+                       </div>
+                       </div>`                       
+                       await page.setContent(htmlContent)
+                       await page.emulateMediaFeatures(`screen`);        
+                       await page.pdf({
+                        path: `src/public/tickets/${code}.pdf`,
+                        format: `A6`,
+                        printBackground: true
+                       });                   
+                       await browser.close();                   
+                    
                         setTimeout(async ()=>{
                             const newTicket = { 
                                 tickets: products,                                                                             
-                                code: nanoid(),
+                                code: code,
                                 purchase_datetime: date2,
-                                purchaser: req.session.user.user,
+                                purchaser: req.session.user.user,                              
                                 total: Total
                             }
                             tickets.purchase.push(newTicket)
@@ -116,6 +146,12 @@ export default class TicketManager {
             } catch (err) {
                 res.status(500).send({ status: 'ERR', error: err });            
         }}
+
+    downloadTicket = async (req, res) => {
+        const code = req.body.code        
+        res.download(`${__dirname}/public/tickets/${code}.pdf`)
+    }
+
     
     emptyCart = async (cid) => {
         try {

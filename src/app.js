@@ -24,6 +24,7 @@ import config from './config/config.env.js';
 import ticketRoutes from './router/ticket.router.js';
 
 
+
 const PORT = config.PORT;
 const MONGOOSE_URL = config.MONGOOSE_URL;
 const SECRET = config.SECRET;

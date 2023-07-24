@@ -263,3 +263,7 @@ h1{
     display: flex;
     justify-content: space-evenly;
 }
+
+.pdf{
+    margin-left: 20px;
+}

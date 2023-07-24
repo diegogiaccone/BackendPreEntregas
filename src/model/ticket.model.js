@@ -14,7 +14,7 @@ const schema = ({
                 code: String,             
                 purchaser: String,
                 purchase_datetime: String,
-                amount: Number,
+                amount: Number,               
                 total: Number 
             }
        ],
