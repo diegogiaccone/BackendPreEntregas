@@ -22,6 +22,7 @@ import { initPassport } from './auth/passport.jwt.js';
 import methodOverride from 'method-override';
 import config from './config/config.env.js';
 import ticketRoutes from './router/ticket.router.js';
+import { addLogger } from './services/logger.services.js';
 
 
 
@@ -75,6 +76,7 @@ app.use(`/api`, cartRoutes(io));
 app.use(`/chat`, chatRoutes(io))
 app.use(`/api`, ticketRoutes());
 app.use('/', sessionRoutes());
+app.use(`/`, addLogger)
 
 // Plantillas estaticas
 app.use('/public', express.static(`${__dirname}/public`));

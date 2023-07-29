@@ -1,0 +1,9 @@
+{"level":"warn","message":"Alerta"}
+{"level":"warn","message":"Alerta"}
+{"level":"error","message":"GET /public/style.css 12:25:19"}
+{"level":"error","message":"GET /public/style.css 12:25:29"}
+{"level":"error","message":"GET /public/style.css 12:25:38"}
+{"level":"error","message":"GET /public/style.css 12:26:22"}
+{"level":"fatal","message":"GET /public/style.css 12:27:16"}
+{"level":"fatal","message":"GET /public/style.css 12:27:28"}
+{"level":"fatal","message":"GET /public/style.css 12:27:40"}

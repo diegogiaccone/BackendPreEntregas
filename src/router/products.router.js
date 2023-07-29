@@ -3,6 +3,7 @@ import Rol from "../services/isAdmin.dbclass.js";
 import { authentication } from "../auth/passport.jwt.js";
 import { authorization } from "../auth/passport.jwt.js";
 import { addProduct, deleteProduct, getProducts, getProductsIndex, getUpdate, updateProduct, validate } from "../controller/products.controller.js";
+import { addLogger } from "../services/logger.services.js";
 
 const router = Router();
 const rol = new Rol();

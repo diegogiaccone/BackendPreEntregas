@@ -39,9 +39,9 @@ export const getProductsIndex = async (req, res) => {
             products: products, name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass});
     };
 
-export const getProducts = async (req, res) => {        
-        try {
-            const products = await manager.getProducts();            
+export const getProducts = async (req, res) => {          
+        try {                 
+            const products = await manager.getProducts(); 
             res.status(200).send({ status: 'OK', data: products });
         } catch (err) {
             res.status(500).send({ status: 'ERR', error: err });

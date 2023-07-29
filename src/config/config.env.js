@@ -16,6 +16,7 @@ console.log(args.m)
 dotenv.config({path: args.m == 'PROD' ? './.env.production' : './.env.development'})
 
 const config = {
+MODE: args.m,
 PORT: args.p,
 WSPORT: args.Wsp,
 MONGOOSE_URL: process.env.MONGOOSE_URL,

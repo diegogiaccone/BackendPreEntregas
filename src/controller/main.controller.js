@@ -6,8 +6,8 @@ import factoryProduct from '../services/factory.js';
 const users = new Users();
 const manager = new factoryProduct(); 
    
-export const getProductsPaginated = async (req, res) => {
-    store.get(req.sessionID, async (err, data) => {
+export const getProductsPaginated = async (req, res) => {   
+       store.get(req.sessionID, async (err, data) => {
         if (err) console.log(`Error al recuperar datos de sesión (${err})`);
         if (data !== null && (req.session.userValidated || req.sessionStore.userValidated)) {           
             if (req.query.page === undefined) req.query.page = 0;    
