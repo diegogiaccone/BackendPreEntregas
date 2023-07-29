@@ -5,7 +5,8 @@ import userModel from '../model/user.model.js';
 import ticketModel from '../model/ticket.model.js';
 import { nanoid } from 'nanoid';
 import puppeteer from 'puppeteer';
-import { __dirname } from '../utils.js';
+import { __dirname, pdf, getMail } from '../utils.js';
+
 
 
 export default class TicketManager {
@@ -38,11 +39,11 @@ export default class TicketManager {
     getTicketsById = async (req, res) => {        
         const cartById = await ticketModel.findOne(req.body);
         if(!cartById) return "Carrito no encontrado"
-        return cartById 
+        return cartById
     }
  
 
-    creatTicket = async (req, res) => {
+    creatTicket = async (req, res, next) => {
         try {                                        
             const cid = req.body.cid 
             const tid = req.session.user.ticket[0]
@@ -73,26 +74,10 @@ export default class TicketManager {
                                             
                        const date = new Date()
                        const date2 = new Intl.DateTimeFormat('es', { dateStyle: 'full', timeStyle: 'long'}).format(date);
-                       const code = nanoid()
+                       const code = nanoid()                       
                        const browser = await puppeteer.launch({headless: 'new'});
-                       const page = await browser.newPage();
-                       const htmlContent = `
-                       <div>
-                       <div style="text-align:center">
-                       <h2>FunkoPop Ticket</h2>                       
-                       </div>
-                       <div>
-                       <h4>Codigo del Ticket: ${code}</h4>
-                       <h4>Fecha: ${date2}</h4>
-                       <h4>usuario: ${req.session.user.user}</h4>
-                       <h4>Precio total: $ ${Total}</h4>
-                       <h4>Muchas Gracias por su compra</h4>
-                       <div style="display:flex; justify-content:center;">
-                       <img src="https://i.postimg.cc/65D2wVCC/imagen.png" alt="">
-                       <img src="https://i.postimg.cc/hPD6YcWq/favicon.png" alt="">                       
-                       </div>
-                       </div>
-                       </div>`                       
+                       const page = await browser.newPage();                       
+                       const htmlContent = pdf(code, date2, req.session.user.user,Total)                      
                        await page.setContent(htmlContent)
                        await page.emulateMediaFeatures(`screen`);        
                        await page.pdf({
@@ -100,7 +85,8 @@ export default class TicketManager {
                         format: `A6`,
                         printBackground: true
                        });                   
-                       await browser.close();                   
+                       await browser.close();  
+                       getMail(code, req.session.user.user)                 
                     
                         setTimeout(async ()=>{
                             const newTicket = { 
@@ -110,10 +96,10 @@ export default class TicketManager {
                                 purchaser: req.session.user.user,                              
                                 total: Total
                             }
-                            tickets.purchase.push(newTicket)
+                            tickets.purchase.push(newTicket)                            
                             await ticketModel.findOneAndUpdate({_id: tid},{$set: tickets},{ new: true })                               
                             this.emptyCart(cid);
-                        },1500)                                 
+                        },1500)                       
                     }     
         
         } catch (error) {

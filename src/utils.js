@@ -2,6 +2,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import bcrypt from 'bcryptjs';
 import {Faker, en} from '@faker-js/faker'
+import { transport } from "./config/mail.config.js";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -53,6 +54,43 @@ export const errorsDict = {
     INTERNAL_ERROR: { code: 500, msg: 'Error interno de ejecución del servidor' }
 }
 
+export const pdf =  (code, date2, date3, Total) => {
+    return `<body>
+            <div>
+                <div style="text-align:center">
+                    <h2>FunkoPop Ticket</h2>
+                </div>
+                <div>
+                    <h4>Codigo del Ticket: ${code}</h4>
+                    <h4>Fecha: ${date2}</h4>
+                    <h4>usuario: ${date3}</h4>                                                         
+                    <h4>Precio total: $ ${Total}</h4>
+                    <h4>Muchas Gracias por su compra</h4>
+                        <div style="display:flex; justify-content:center;">
+                            <img src="https://i.postimg.cc/65D2wVCC/imagen.png" alt="">
+                                   <img src="https://i.postimg.cc/hPD6YcWq/favicon.png" alt="">
+                               </div>
+                           </div>
+                       </div>
+                   </body>` 
+}
+
+export const getMail = (code, date4) => {
+    return transport.sendMail({
+        from: 'FunkoPops <diegogiaccone35@gmail.com>',
+        to: date4,
+        subject: 'Ticket de Compra',
+        html: `
+            <h1><b>Muchas Gracias por su compra</b></h1>
+            <p style="color: #f00;">
+                <b>Funko Pops</b><br>
+                <img src="https://i.postimg.cc/sDGCFRXQ/favicon.png" />
+            </p>
+        `,
+        attachments: [
+            { filename: 'ticket.pdf', path: `${__dirname}/public/tickets/${code}.pdf`, cid: 'ticket.pdf' },            
+        ]
+    })}
 
 const createHash = (pass) => {
     return bcrypt.hash(pass, bcrypt.genSaltSync(10));
