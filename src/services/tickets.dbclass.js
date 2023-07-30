@@ -49,14 +49,14 @@ export default class TicketManager {
             const tid = req.session.user.ticket[0]
             const tickets = await ticketModel.findOne({ '_id': new mongoose.Types.ObjectId(tid)})                                                                           
             const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}).populate(`products.prods`)
-            let products = []             
+            let products = []                   
             if(!process) return "Carrito no encontrado"                      
             if(process.products.length >= 1){           
                 process.products.forEach(element => {                 
                     element.prods.forEach(async (e) => {
                         const itemUpdate = await productModel.findById({_id: e._id})
                         if(itemUpdate.stock >= element.quantity){                            
-                            products.push({title: itemUpdate.title, quantity: element.quantity})                            
+                            products.push({title: itemUpdate.title, quantity: element.quantity, description: itemUpdate.description, price: itemUpdate.price, total: itemUpdate.price * element.quantity})                            
                             await productModel.findOneAndUpdate(                            
                                 { _id: e._id },
                                 { $set: {stock: itemUpdate.stock - element.quantity}},
@@ -70,19 +70,20 @@ export default class TicketManager {
                     const Total = process.products.reduce(function Total(accumulator, item){
                         const toNumber = parseFloat(item.prods[0].price * item.quantity);                                                         
                         return accumulator + toNumber;                             
-                      },0);      
+                      },0);                       
                                             
                        const date = new Date()
                        const date2 = new Intl.DateTimeFormat('es', { dateStyle: 'full', timeStyle: 'long'}).format(date);
+                       const name = req.session.user.name
                        const code = nanoid()                       
                        const browser = await puppeteer.launch({headless: 'new'});
                        const page = await browser.newPage();                       
-                       const htmlContent = pdf(code, date2, req.session.user.user,Total)                      
+                       const htmlContent = pdf(name, req.session.user.user, code, date2, products, Total)                      
                        await page.setContent(htmlContent)
                        await page.emulateMediaFeatures(`screen`);        
                        await page.pdf({
                         path: `src/public/tickets/${code}.pdf`,
-                        format: `A6`,
+                        format: `A3`,
                         printBackground: true
                        });                   
                        await browser.close();  
@@ -99,7 +100,7 @@ export default class TicketManager {
                             tickets.purchase.push(newTicket)                            
                             await ticketModel.findOneAndUpdate({_id: tid},{$set: tickets},{ new: true })                               
                             this.emptyCart(cid);
-                        },1500)                       
+                        },1500)                                                                      
                     }     
         
         } catch (error) {

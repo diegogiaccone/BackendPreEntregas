@@ -54,27 +54,220 @@ export const errorsDict = {
     INTERNAL_ERROR: { code: 500, msg: 'Error interno de ejecución del servidor' }
 }
 
-export const pdf =  (code, date2, date3, Total) => {
-    return `<body>
-            <div>
-                <div style="text-align:center">
-                    <h2>FunkoPop Ticket</h2>
-                </div>
-                <div>
-                    <h4>Codigo del Ticket: ${code}</h4>
-                    <h4>Fecha: ${date2}</h4>
-                    <h4>usuario: ${date3}</h4>                                                         
-                    <h4>Precio total: $ ${Total}</h4>
-                    <h4>Muchas Gracias por su compra</h4>
-                        <div style="display:flex; justify-content:center;">
-                            <img src="https://i.postimg.cc/65D2wVCC/imagen.png" alt="">
-                                   <img src="https://i.postimg.cc/hPD6YcWq/favicon.png" alt="">
-                               </div>
-                           </div>
-                       </div>
-                   </body>` 
-}
 
+export const pdf =  (name, email, code, date, array, Total) => {     
+    let prods = [] 
+    array.forEach((element) => {        
+        const content = `<tr>
+        <td class="service">Compra Aprobada</td>
+        <td class="desc">${element.title}&nbsp;&nbsp;(${element.description})</td>
+        <td class="unit">$ ${element.price}</td>
+        <td class="qty">${element.quantity}</td>
+        <td class="total">$ ${element.total}</td>
+        </tr>`        
+        prods.push(content)
+    }) 
+
+    return `<!DOCTYPE html>
+         <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <title>Example 1</title>
+        <link rel="stylesheet" href="style.css" media="all" />
+        </head>
+      <body>
+      <header class="clearfix">
+      <div id="logo">
+      <img src="https://i.postimg.cc/65D2wVCC/imagen.png">
+      </div>
+      <h1>FUNKO POP</h1>
+      <div id="company" class="clearfix">
+      <div>FunkoPops</div>
+            <div>Av.Corrientes 1333 PB<br /> Bs As Argentina</div>
+            <div>(+54) 116666666</div>
+            <div><a href="diego_fg91@hotmail.com">diego_fg91@hotmail.com</a></div>
+            </div>
+            <div id="project">
+            <div><span>DETALLES</span> Datos del comprador</div>
+            <div><span>CLIENTE</span> ${name}</div>            
+            <div><span>EMAIL</span> ${email}</div>
+            <div><span>FECHA</span> ${date}</div>  
+            <div><span>TICKET N°</span> ${code}</div>           
+          </div>
+        </header>
+        <main>
+        <table>
+        <thead>
+        <tr>
+        <th class="service">ESTADO</th>
+        <th class="desc">DESCRIPTION</th>
+        <th>PRECIO</th>
+        <th>CANTIDAD</th>
+        <th>SUBTOTAL</th>
+        </tr>
+        </thead>
+        <tbody>     
+           ${prods}
+        <tr>
+        <td colspan="4" class="grand total">TOTAL</td>
+        <td class="grand total">$ ${Total}</td>
+            </tr>
+        </tbody>
+          </table>
+          <div id="notices">          
+          <div class="notice">Muchas Gracias por su compra
+          <img src="https://i.postimg.cc/hPD6YcWq/favicon.png">          
+          </div>
+          </div>
+          </main>
+          <footer>
+          Funko Pop 
+          </footer>               
+      </body>
+      </html>
+
+      <style>
+      .clearfix:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+      
+      a {
+        color: #5D6975;
+        text-decoration: underline;
+      }
+      
+      body {
+        position: relative;
+        width: 21cm;  
+        height: 29.7cm; 
+        margin: 0 auto; 
+        color: #001028;
+        background: #FFFFFF; 
+        font-family: Arial, sans-serif; 
+        font-size: 12px; 
+        font-family: Arial;
+      }
+      
+      header {
+        padding: 10px 0;
+        margin-bottom: 30px;
+      }
+      
+      #logo {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      
+      #logo img {
+        width: 90px;
+      }
+      
+      h1 {
+        border-top: 1px solid  #5D6975;
+        border-bottom: 1px solid  #5D6975;
+        color: #5D6975;
+        font-size: 2.4em;
+        line-height: 1.4em;
+        font-weight: normal;
+        text-align: center;
+        margin: 0 0 20px 0;
+        background: url(dimension.png);
+      }
+      
+      #project {
+        float: left;
+      }
+      
+      #project span {
+        color: #5D6975;
+        text-align: right;
+        width: 52px;
+        margin-right: 10px;
+        display: inline-block;
+        font-size: 0.8em;
+      }
+      
+      #company {
+        float: right;
+        text-align: right;
+      }
+      
+      #project div,
+      #company div {
+        white-space: nowrap;        
+      }
+      
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        margin-bottom: 20px;
+      }
+      
+      table tr:nth-child(2n-1) td {
+        background: #F5F5F5;
+      }
+      
+      table th,
+      table td {
+        text-align: center;
+      }
+      
+      table th {
+        padding: 5px 20px;
+        color: #5D6975;
+        border-bottom: 1px solid #C1CED9;
+        white-space: nowrap;        
+        font-weight: normal;
+      }
+      
+      table .service,
+      table .desc {
+        text-align: left;
+      }
+      
+      table td {
+        padding: 20px;
+        text-align: right;
+      }
+      
+      table td.service,
+      table td.desc {
+        vertical-align: top;
+      }
+      
+      table td.unit,
+      table td.qty,
+      table td.total {
+        font-size: 1.2em;
+      }
+      
+      table td.grand {
+        border-top: 1px solid #5D6975;;
+      }
+      
+      #notices .notice {
+        color: #5D6975;
+        font-size: 1.2em;
+      }
+      
+      footer {
+        color: #5D6975;
+        width: 100%;
+        height: 30px;
+        position: absolute;
+        bottom: 0;
+        border-top: 1px solid #C1CED9;
+        padding: 8px 0;
+        text-align: center;
+      }
+     
+    </style>`   
+}
+                
+                
 export const getMail = (code, date4) => {
     return transport.sendMail({
         from: 'FunkoPops <diegogiaccone35@gmail.com>',
