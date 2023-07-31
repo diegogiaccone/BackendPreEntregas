@@ -83,7 +83,7 @@ export default class TicketManager {
                        await page.emulateMediaFeatures(`screen`);        
                        await page.pdf({
                         path: `src/public/tickets/${code}.pdf`,
-                        format: `A3`,
+                        format: `A4`,
                         printBackground: true
                        });                   
                        await browser.close();  

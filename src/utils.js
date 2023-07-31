@@ -54,7 +54,6 @@ export const errorsDict = {
     INTERNAL_ERROR: { code: 500, msg: 'Error interno de ejecución del servidor' }
 }
 
-
 export const pdf =  (name, email, code, date, array, Total) => {     
     let prods = [] 
     array.forEach((element) => {        
@@ -140,8 +139,8 @@ export const pdf =  (name, email, code, date, array, Total) => {
       
       body {
         position: relative;
-        width: 21cm;  
-        height: 29.7cm; 
+        width: 19.5cm;  
+        height: 28.7cm; 
         margin: 0 auto; 
         color: #001028;
         background: #FFFFFF; 
@@ -265,8 +264,7 @@ export const pdf =  (name, email, code, date, array, Total) => {
       }
      
     </style>`   
-}
-                
+}              
                 
 export const getMail = (code, date4) => {
     return transport.sendMail({

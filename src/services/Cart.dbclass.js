@@ -68,8 +68,7 @@ export default class CartManager {
             if (validarProd) {
                 validarProd.quantity +=1               
             }else{                
-                process.products.push({prods: product}) 
-                console.log(process)                        
+                process.products.push({prods: product})                                        
             }
                  
             const result = await cartModel.findOneAndUpdate(
@@ -214,35 +213,6 @@ export default class CartManager {
             this.statusMsg = `deleteCartProduct: ${err}`;
         }
     } 
-
-    ticketPurchase = async (req, res) => {   
-        try {                       
-            const cid = await (req.session.user.cart[0]) 
-            const pid = req.body                    
-            const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)})           
-            if(!process) return "Carrito no encontrado"          
-            const validarProd = process.products.find(prod => prod.prods[0]._id == pid.id)                                   
-            if (validarProd) {
-                const result = await cartModel.findOneAndUpdate(
-                    { _id: cid,},
-                    { $pull: { products: { prods: new mongoose.Types.ObjectId(pid.id)}}},
-                    { new: true }
-                )           
-                console.log(result)               
-            }else{               
-                console.log(process)                        
-            }                
-            
-            res.redirect(`/api/carts`)           
-            //res.send(this.statusMsg = 'Producto quitado del carrito')                        
-            this.status = 1;
-            this.statusMsg = 'Producto quitado del carrito';
-            return process;
-        } catch (err) {
-            this.status = -1;
-            this.statusMsg = `deleteCartProduct: ${err}`;
-        }
-    }
     
 }
     
