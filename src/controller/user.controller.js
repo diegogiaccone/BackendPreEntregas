@@ -90,20 +90,7 @@ export const getRegister = async (req, res) => {
     
 export const addUser = manager.addUser
 
-export const updateRol = async (uid, res) => {
-    try {            
-        await manager.updateRol(uid);
-        
-        if (manager.checkStatus() === 1) {
-            console.log({ status: 'OK', msg: manager.showStatusMsg() });
-            res.redirect(`/`)
-        } else {
-            res.send({ status: 'ERR', error: manager.showStatusMsg() });
-        }
-    } catch (err) {
-        console.log({ status: 'ERR', error: err });
-    }
-    };
+export const updateRol = manager.updateRol
 
 export const updateUser = async (uid, res) => {
     try {            

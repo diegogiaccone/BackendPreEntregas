@@ -177,12 +177,17 @@ class Users {
     updateRol = async (req, res) => {
         try {
             const user = req.body.user                       
-            const userObjet = await userModel.findOne({user: user})            
-            const uid = userObjet._id            
-            const rol = req.body.rol                                           
-            const process = await userModel.updateOne({ '_id': new mongoose.Types.ObjectId(uid)}, {rol: rol});                
-                this.status = 1;
-                process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Avatar actualizada";           
+            const userObjet = await userModel.findOne({user: user})
+            if(userObjet){
+                const uid = userObjet._id            
+                const rol = req.body.rol                                           
+                const process = await userModel.updateOne({ '_id': new mongoose.Types.ObjectId(uid)}, {rol: rol});                
+                    this.status = 1;
+                    process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Avatar actualizada";
+                    res.redirect(`/`)
+            }else{
+                res.send("El Usuario ingresado no se encuentra en nuestra base de datos por favor verifique los datos e intentelo nuevamente")
+            } 
 
         } catch (err) {
             this.status = -1;
