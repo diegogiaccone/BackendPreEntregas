@@ -59,25 +59,28 @@ export default class CartManager {
     addProductInCart = async (req, res) => {
         try {                                        
             const cid = req.session.user.cart[0]                           
-            const pid = req.body                                                                                      
+            const pid = req.body    
+            const user = req.session.user                                                                                  
             const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)})                                 
             if(!process) return "Carrito no encontrado"            
             const product = await productModel.findOne({'_id': new mongoose.Types.ObjectId(pid)});                                   
             if(!product) return "Producto no encontrado"
-            const validarProd = process.products.find(prod => prod.prods[0]._id == pid.id)                         
-            if (validarProd) {
-                validarProd.quantity +=1               
-            }else{                
-                process.products.push({prods: product})                                        
-            }
-                 
-            const result = await cartModel.findOneAndUpdate(
-                { _id: cid,},
-                { $set: process},
-                { new: true }
-            )           
-             
-            res.redirect(`/api/carts`)            
+            const validarProd = process.products.find(prod => prod.prods[0]._id == pid.id)
+            if(product.owner != user.user){
+                if (validarProd) {
+                    validarProd.quantity +=1               
+                }else{                
+                    process.products.push({prods: product})                                        
+                }                     
+                const result = await cartModel.findOneAndUpdate(
+                    { _id: cid,},
+                    { $set: process},
+                    { new: true }
+                )                
+                res.redirect(`/api/carts`)            
+            }else{
+                res.send(`No puede agregar al carrito un producto propio`)
+            }                         
         
         } catch (error) {
             console.error("No se pudo agregar producto al carrito " + error);

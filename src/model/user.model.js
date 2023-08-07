@@ -9,7 +9,8 @@ const schema = new mongoose.Schema({
     apellido: String,
     user: {type: String, unique: true},
     pass: String,
-    avatar: String, 
+    avatar: String,
+    token: String, 
     rol: [{
         ref:"rol",
         type: Schema.Types.ObjectId

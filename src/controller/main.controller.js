@@ -1,6 +1,7 @@
 import Users from '../services/user.dbclass.js';
 import userModel from "../model/user.model.js";
-import { store, BASE_URL, PRODUCTS_PER_PAGE } from "../app.js";
+import { store } from "../app.js";
+import config from '../config/config.env.js';
 import factoryProduct from '../services/factory.js';
 
 const users = new Users();
@@ -11,18 +12,18 @@ export const getProductsPaginated = async (req, res) => {
         if (err) console.log(`Error al recuperar datos de sesión (${err})`);
         if (data !== null && (req.session.userValidated || req.sessionStore.userValidated)) {           
             if (req.query.page === undefined) req.query.page = 0;    
-            const result = await manager.getProductsPaginated(req.query.page * PRODUCTS_PER_PAGE, PRODUCTS_PER_PAGE);                                   
+            const result = await manager.getProductsPaginated(req.query.page * config.PRODUCTS_PER_PAGE, config.PRODUCTS_PER_PAGE);                                   
             const pagesArray = [];
             for (let i = 0; i < result.totalPages; i++) pagesArray.push({ index: i, indexPgBar: i});                
             const pagination = {                    
-                baseUrl: BASE_URL,
+                baseUrl: config.BASE_URL,
                 limit: result.limit,
                 offset: result.offset,
                 totalPages: result.totalPages,
                 totalDocs: result.totalDocs,
                 page: result.page - 1,
-                nextPageUrl: `${BASE_URL}?page=${result.nextPage - 1}`,
-                prevPageUrl: `${BASE_URL}?page=${result.prevPage - 1}`,
+                nextPageUrl: `${config.BASE_URL}?page=${result.nextPage - 1}`,
+                prevPageUrl: `${config.BASE_URL}?page=${result.prevPage - 1}`,
                 hasPrevPage: result.hasPrevPage,
                 hasNextPage: result.hasNextPage,
                 pagesArray: pagesArray
@@ -33,13 +34,14 @@ export const getProductsPaginated = async (req, res) => {
             const pass = userObjet.pass            
             const rol = userObjet.rol[0].name
             const isAdmin = rol === "Admin" ? true : false
+            const isPremium = rol === "Premium" ? true : false
             const avatar = userObjet.avatar            
             const existPass = pass === undefined ? false : true     
-            res.render('products',{ products: result.docs, pagination: pagination, name:name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass});
+            res.render('products',{ products: result.docs, pagination: pagination, name:name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, isPremium: isPremium});
         } else {            
             res.render('login', {
                 sessionInfo: req.session.userValidated !== undefined ? req.session : req.sessionStore,
-                baseUrl: BASE_URL
+                baseUrl: config.BASE_URL
             });
         }                    
     }); 
@@ -53,7 +55,7 @@ export const logout = async (req, res) => {
         req.sessionStore.destroy(req.sessionID, (err) => {
             if (err) console.log(`Error al destruir sesión (${err})`);
             console.log('Sesión destruída');
-            res.redirect(BASE_URL);
+            res.redirect(config.BASE_URL);
         });
     })
     };

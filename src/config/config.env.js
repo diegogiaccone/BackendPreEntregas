@@ -36,6 +36,5 @@ FACEBOOK_SECRET: process.env.FACEBOOK_SECRET,
 PASS_GMAIL: process.env.PASS_GMAIL
 }
 
-console.log(config)
 
 export default config

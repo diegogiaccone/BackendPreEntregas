@@ -6,6 +6,7 @@ import { generateToken, authToken } from '../auth/jwt.config.js'
 import cartModel from '../model/Cart.model.js';
 import config from '../config/config.env.js';
 import ticketModel from '../model/ticket.model.js';
+import { recoverPass, generateTokenpass } from '../utils.js';
 
 class Users {
     constructor() {
@@ -80,7 +81,7 @@ class Users {
 
     updateUser = async (req, res) => {
         try {
-            const user = req.body.user            
+            const user = req.session.user.user                       
             const userObjet = await userModel.findOne({user: user})
             const uid = userObjet._id            
             const userpass = userObjet.pass
@@ -101,6 +102,61 @@ class Users {
         }
     }
 
+    getPass = async (req, res) => {
+        const token = req.params.token        
+        const userObjet = await userModel.findOne({token: token})        
+        const user = userObjet.user
+        const userToken = userObjet.token       
+        res.render(`passrecovery`, {user: user, token: userToken})
+    }
+
+    passRecovery = async (req, res) => {
+        try {            
+            const user = req.body.user                 
+            const userObjet = await userModel.findOne({user: user})
+            const uid = userObjet._id   
+            const userpass = userObjet.pass        
+            const newpass = req.body.newpass
+            const newpass2 = req.body.newpass2 
+            const verify = await bcrypt.compareSync(newpass, userpass) 
+            if(verify == true){
+                res.send(`La contraseña indicada no puede ser igual a la anterior vualva hacia atras y prueba con otra contraseña`)
+            }else{
+                if(newpass == newpass2){
+                    const passHash = await bcrypt.hash(newpass, 8)                
+                    await userModel.updateOne({ '_id': new mongoose.Types.ObjectId(uid)}, {pass: passHash});                                           
+                    res.redirect(`/`)
+                }else{
+                    res.send(`Las contraseñas deben ser iguales`)
+                }
+            }                                 
+
+        } catch (err) {
+            this.status = -1;
+            this.statusMsg = `updateUser: ${err}`;
+        }
+    }
+
+    updatePass = async (req, res) => {
+        try{
+            const user = req.body.user
+            const userObjet = await userModel.findOne({user: user})
+            if(userObjet != null) {
+                const uid = userObjet._id             
+                const token = generateTokenpass()                
+                recoverPass(user, token)
+                const process = await userModel.updateOne({ '_id': new mongoose.Types.ObjectId(uid)}, {token: token});
+                this.status = 1;
+                process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Contraseña actualizada";    
+                res.send(`Le enviamos un mail con un link para reestablecer su contraseña`)                                    
+            }else{
+                res.send(`El Email ingresado No se encuentra en la base de datos`)
+            }            
+        }catch(err){
+            console.log(err)
+        }
+    }
+
     updateAvatarUser = async (req, res) => {
         try {
             const user = req.session.user.user                       
@@ -117,6 +173,22 @@ class Users {
             this.statusMsg = `updateUser: ${err}`;
         }
     }
+
+    updateRol = async (req, res) => {
+        try {
+            const user = req.body.user                       
+            const userObjet = await userModel.findOne({user: user})            
+            const uid = userObjet._id            
+            const rol = req.body.rol                                           
+            const process = await userModel.updateOne({ '_id': new mongoose.Types.ObjectId(uid)}, {rol: rol});                
+                this.status = 1;
+                process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Avatar actualizada";           
+
+        } catch (err) {
+            this.status = -1;
+            this.statusMsg = `updateUser: ${err}`;
+        }
+    } 
 
     deleteUser = async (id) => {
         try {

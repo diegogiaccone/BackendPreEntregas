@@ -268,3 +268,34 @@ h1{
     margin-left: 20px;
 }
 
+.container5 {
+    width: 300px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+  }
+
+  select:hover {
+    border-color: #999;
+  }
+
+  select:focus {
+    border-color: #555;
+    outline: none;
+  }

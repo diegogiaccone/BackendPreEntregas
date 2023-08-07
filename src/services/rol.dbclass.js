@@ -7,7 +7,7 @@ const createRol = async () => {
 
         const values = await Promise.all([
             new rolModel({name : "Usuario"}).save(),
-            new rolModel({name : "Moderador"}).save(),
+            new rolModel({name : "Premium"}).save(),
             new rolModel({name : "Admin"}).save()
         ]);
         console.log(values)

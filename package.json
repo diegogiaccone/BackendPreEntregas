@@ -17,6 +17,7 @@
     "connect-mongo": "^5.0.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-compression": "^1.0.2",
@@ -38,7 +39,7 @@
     "puppeteer": "^20.9.0",
     "session-file-store": "^1.5.0",
     "socket.io": "^4.6.1",
-    "sweetalert2": "^11.4.8",
+    "sweetalert2": "^11.6.13",
     "winston": "^3.10.0"
   },
   "devDependencies": {

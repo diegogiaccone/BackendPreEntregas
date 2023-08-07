@@ -5,7 +5,7 @@ const PRIVATE_KEY = process.env.SECRET;
 
 const generateToken = (user) => {
     // sign: payload (contenido), clave de cifrado, tiempo de validez
-    return jwt.sign(user, PRIVATE_KEY, { expiresIn: '24h' });
+    return jwt.sign(user, PRIVATE_KEY, { expiresIn: '1h' });
 }
 
 const authToken = (req, res, next) => {

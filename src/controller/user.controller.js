@@ -1,6 +1,7 @@
 import Users from "../services/user.dbclass.js";
 import userModel from "../model/user.model.js";
 import { __dirname, generateUser } from '../utils.js';
+import rolModel from "../model/rol.model.js";
 
 const manager = new Users();
     
@@ -17,6 +18,8 @@ export const getUsers = async () => {
     console.log(users)
     }
 
+export const getRecoveryPass = manager.getPass   
+
 export const getUpdate = async (req, res) => {                  
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)      
         const name = userObjet.name
@@ -29,6 +32,18 @@ export const getUpdate = async (req, res) => {
             name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass});
     }
 
+export const getRol = async (req, res) => {                  
+    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)            
+    const name = userObjet.name
+    const pass = userObjet.pass
+    const existPass = pass === undefined ? false : true 
+    const rol = userObjet.rol[0].name        
+    const isAdmin = rol === "Admin" ? true : false; 
+    const avatar = userObjet.avatar                               
+    res.render('rol', {
+        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass});
+}
+
 export const getAvatarUpdate = async (req, res) => {                  
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)      
         const name = userObjet.name 
@@ -40,7 +55,15 @@ export const getAvatarUpdate = async (req, res) => {
         res.render('updateavatar', {
             name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass});
     }    
-       
+
+export const getRecovery = async (req, res) => {
+    res.render('recovery')
+}
+
+export const passRecovery = manager.passRecovery
+
+export const mailPassRecovery =  manager.updatePass  
+
 export const getUserById = async (req, res) => { // ? indica que el parámetro es opcional
     try {
             if (req.params.id === undefined) {
@@ -66,6 +89,21 @@ export const getRegister = async (req, res) => {
     };   
     
 export const addUser = manager.addUser
+
+export const updateRol = async (uid, res) => {
+    try {            
+        await manager.updateRol(uid);
+        
+        if (manager.checkStatus() === 1) {
+            console.log({ status: 'OK', msg: manager.showStatusMsg() });
+            res.redirect(`/`)
+        } else {
+            res.send({ status: 'ERR', error: manager.showStatusMsg() });
+        }
+    } catch (err) {
+        console.log({ status: 'ERR', error: err });
+    }
+    };
 
 export const updateUser = async (uid, res) => {
     try {            

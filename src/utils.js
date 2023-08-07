@@ -3,12 +3,28 @@ import path from 'path';
 import bcrypt from 'bcryptjs';
 import {Faker, en} from '@faker-js/faker'
 import { transport } from "./config/mail.config.js";
+import config from './config/config.env.js';
+import { randomBytes } from 'crypto';
+import jwt from 'jsonwebtoken';
 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename); 
 
 const faker = new Faker({locale: en})
+
+
+export const generateTokenpass = () => {
+  const token = randomBytes(32).toString('hex'); 
+  
+  const signedToken = jwt.sign(
+    { token: token },
+    config.SECRET, // Aquí debería ser una clave secreta más segura
+    { expiresIn: '1h' }
+  );
+  
+  return signedToken;
+};
 
 export const generateUser = () => {
     let products = [];
@@ -281,6 +297,22 @@ export const getMail = (code, date4) => {
         attachments: [
             { filename: 'ticket.pdf', path: `${__dirname}/public/tickets/${code}.pdf`, cid: 'ticket.pdf' },            
         ]
+    })}
+
+export const recoverPass = (date, code) => {
+    return transport.sendMail({
+        from: 'FunkoPops <diegogiaccone35@gmail.com>',
+        to: date,
+        subject: 'Reestablece tu contraseña',
+        html: `
+            <h1><b>Si ud no ha solicitado el reestablecimiento de su contraseña ignore este mail</b></h1>
+            <h1><b>Click en el siguiente enlace para reestablecer la contraseña</b></h1>
+            <a href="http://localhost:3030/recoverypass/${code}" class="btn btn-primary git">http://localhost:3030/recoverypass/${code}</a>
+            <p style="color: #f00;">
+                <b>Funko Pops</b><br>
+                <img src="https://i.postimg.cc/sDGCFRXQ/favicon.png" />
+            </p>
+        `        
     })}
 
 const createHash = (pass) => {

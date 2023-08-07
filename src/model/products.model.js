@@ -11,7 +11,8 @@ const schema = new mongoose.Schema({
     price: Number, 
     thumbnail: String,
     code: String,    
-    stock: Number, 
+    stock: Number,
+    owner: String, 
     category: {type: String, index: true}
 }); 
 

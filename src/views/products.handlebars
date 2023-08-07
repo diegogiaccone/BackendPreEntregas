@@ -9,7 +9,8 @@
         <button type="submit" class="btn btn-success button cart productall"><a class="page-link" href="/api/products_index">Todos los Productos</a></button>
         <a href="/api/tickets" class="btn btn-danger button cart productall">Mis Compras  📃</a>
         {{#if isAdmin}}
-        <a href="/fakeuser" class="btn btn-info text-light button cart productall">MOCK FAKERUSER</a>           
+        <a href="/fakeuser" class="btn btn-info text-light button cart productall">Mock Fakeuser</a>           
+        <a href="/rol" class="btn btn-primary text-light button cart productall">Asignar Rol</a> 
         {{/if}}
         </div>     
         <div class="navbartotal">
@@ -63,7 +64,7 @@
                 </button>
               </div>             
               </form>
-              {{#if ../isAdmin}}          
+              {{#or ../isAdmin ../isPremium}}          
               <form action="/api/products_index:id?_method=DELETE" method="post">
               <div class="d-grid gap-2 eliminar">
                 <input type="hidden" name="id" value="{{this.id}}">                
@@ -80,7 +81,7 @@
                 </button>
               </div>
               </form>
-              {{/if}}               
+              {{/or}}               
             </div>
           </div>
         </div>

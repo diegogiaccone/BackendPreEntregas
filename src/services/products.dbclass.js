@@ -106,11 +106,25 @@ export default class Products {
 
     updateProduct = async (req, res) => {
         try {
-                const pid = req.params.pid               
-                const data = req.body                
-                const process = await productModel.updateOne({ '_id': new mongoose.Types.ObjectId(pid) }, data);               
-                this.status = 1;
-                process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Producto actualizado";                
+                const pid = req.params.pid 
+                const product = await productModel.findOne({ '_id': new mongoose.Types.ObjectId(pid)});
+                const user = req.session.user              
+                const data = req.body
+                if(user.rol[0].name === "Admin" || user.rol[0].name === "Premium"){
+                    if(user.rol[0].name === "Admin"){
+                        await productModel.updateOne({ '_id': new mongoose.Types.ObjectId(pid) }, data);
+                        res.redirect(`products_index`)
+                    }else{
+                        if(user.rol[0].name === "Premium" && product.owner == user.user){
+                            await productModel.updateOne({ '_id': new mongoose.Types.ObjectId(pid) }, data);
+                            res.redirect(`products_index`)
+                        }else{
+                            res.send("Debe ser Admin o Propietario del Articulo para Borrarlo o modificarlo")
+                        }                   
+                    }    
+                }else{
+                    res.send("Ud no tiene autorizacion para realizar esta acción")
+                }                      
             }            
         catch (err) {
             this.status = -1;
@@ -120,9 +134,24 @@ export default class Products {
 
     deleteProduct = async (req, res) => {
         try {
-            const id = req.body            
-            const process = await productModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id.id)});
-            console.log(process)                                            
+            const id = req.body
+            const product = await productModel.findOne({ '_id': new mongoose.Types.ObjectId(id.id)});          
+            const user = req.session.user
+            if(user.rol[0].name === "Admin" || user.rol[0].name === "Premium"){
+                if(user.rol[0].name === "Admin"){
+                    await productModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id.id)});
+                    res.redirect(`products_index`)
+                }else{
+                    if(user.rol[0].name === "Premium" && product.owner == user.user){
+                        await productModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id.id)});
+                        res.redirect(`products_index`)
+                    }else{
+                        res.send("Debe ser Admin o Propietario del Articulo para Borrarlo o modificarlo")
+                    }                   
+                }    
+            }else{
+                res.send("Ud no tiene autorizacion para realizar esta acción")
+            }                                                    
         } catch (err) {
             console.log(err)
         }        
