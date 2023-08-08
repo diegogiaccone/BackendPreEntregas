@@ -148,9 +148,9 @@ class Users {
                 const process = await userModel.updateOne({ '_id': new mongoose.Types.ObjectId(uid)}, {token: token});
                 this.status = 1;
                 process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Contraseña actualizada";    
-                res.send(`Le enviamos un mail con un link para reestablecer su contraseña`)                                    
+                res.redirect(`messages`)                                    
             }else{
-                res.send(`El Email ingresado No se encuentra en la base de datos`)
+                res.redirect(`errmessages`)
             }            
         }catch(err){
             console.log(err)
@@ -172,6 +172,14 @@ class Users {
             this.status = -1;
             this.statusMsg = `updateUser: ${err}`;
         }
+    }
+
+    getMessages = async (req, res) => {
+        res.render(`messages`)
+    }
+
+    getErrMessages = async (req, res) => {
+        res.render(`errmessages`)
     }
 
     updateRol = async (req, res) => {

@@ -18,6 +18,11 @@ export const getUsers = async () => {
     console.log(users)
     }
 
+export const getMessages = manager.getMessages
+
+
+export const getErrMessages = manager.getErrMessages
+
 export const getRecoveryPass = manager.getPass   
 
 export const getUpdate = async (req, res) => {                  

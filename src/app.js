@@ -34,14 +34,14 @@ const PRODUCTS_PER_PAGE = config.PRODUCTS_PER_PAGE;
 const wspuerto = config.WSPORT;
 export const store = MongoStore.create({ mongoUrl: MONGOOSE_URL, mongoOptions: {}, ttl: 3600});
 
-if (cluster.isPrimary) {
+/* if (cluster.isPrimary) {
     for (let i = 0; i < cpus().length; i++) cluster.fork();
     
     cluster.on('exit', (worker, code, signal) => {
         console.log(`Se cerró el WORKER ${worker.process.pid}`);
         cluster.fork();
     });
-} else {
+} else { */
     
     const app = express();
     createRol();
@@ -166,6 +166,6 @@ if (cluster.isPrimary) {
     } catch(err) {
         console.log('No se puede conectar con el servidor de bbdd');
     }
-}
+//}
 
 
