@@ -61,6 +61,18 @@ export const getAvatarUpdate = async (req, res) => {
             name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass});
     }    
 
+export const getEqual = async (req, res) => {
+    res.render('mailequal')
+}
+
+export const getPassEqual = async (req, res) => {
+    res.render('passequal')
+}
+
+export const getSuccess = async (req, res) => {
+    res.render('success')
+}
+
 export const getRecovery = async (req, res) => {
     res.render('recovery')
 }

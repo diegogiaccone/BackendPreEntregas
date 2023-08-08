@@ -120,14 +120,14 @@ class Users {
             const newpass2 = req.body.newpass2 
             const verify = await bcrypt.compareSync(newpass, userpass) 
             if(verify == true){
-                res.send(`La contraseña indicada no puede ser igual a la anterior vualva hacia atras y prueba con otra contraseña`)
+                res.redirect(`mailequal`)
             }else{
                 if(newpass == newpass2){
                     const passHash = await bcrypt.hash(newpass, 8)                
                     await userModel.updateOne({ '_id': new mongoose.Types.ObjectId(uid)}, {pass: passHash});                                           
-                    res.redirect(`/`)
+                    res.redirect(`success`)
                 }else{
-                    res.send(`Las contraseñas deben ser iguales`)
+                    res.redirect(`passequal`)
                 }
             }                                 
 

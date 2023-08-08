@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { __dirname } from '../utils.js';
 import { authentication } from "../auth/passport.jwt.js";
-import { addUser, deleteUser, getRegister, getUserById, updateUser, validate, getUpdate, getAvatarUpdate, updateAvatarUser, getUsers, fakeUser, getRecovery, getRecoveryPass, mailPassRecovery, passRecovery, getRol, updateRol, getMessages, getErrMessages } from "../controller/user.controller.js";
+import { addUser, deleteUser, getRegister, getUserById, updateUser, validate, getUpdate, getAvatarUpdate, updateAvatarUser, getUsers, fakeUser, getRecovery, getRecoveryPass, mailPassRecovery, passRecovery, getRol, updateRol, getMessages, getErrMessages, getEqual, getSuccess, getPassEqual } from "../controller/user.controller.js";
 import Rol from "../services/isAdmin.dbclass.js";
 
 const rol = new Rol();
@@ -17,6 +17,12 @@ const userRoutes = (io) => {
     router.get(`/errmessages`, getErrMessages)
 
     router.get(`/recovery`, getRecovery) 
+
+    router.get(`/recoverypass/mailequal`, getEqual)
+
+    router.get(`/recoverypass/passequal`, getPassEqual)
+
+    router.get(`/recoverypass/success`, getSuccess)
 
     router.get('/recoverypass/:token', getRecoveryPass)
 
