@@ -50,7 +50,7 @@ if (cluster.isPrimary) {
         console.log(`Servidor API/Socket.io iniciando en puerto ${wspuerto}`)    
     }) 
     
-    /* let users = []; */
+    
     const io = new Server(httpServer, { cors: { origin: "*", methods: ["PUT", "GET", "POST", "DELETE", "OPTIONS"], credentials: false }});
     
     // Parseo correcto de urls

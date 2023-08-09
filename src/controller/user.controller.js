@@ -37,6 +37,19 @@ export const getUpdate = async (req, res) => {
             name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass});
     }
 
+export const getUserRol = async (req, res) => {                  
+    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)            
+    const name = userObjet.name
+    const pass = userObjet.pass
+    const id = userObjet._id
+    const existPass = pass === undefined ? false : true 
+    const rol = userObjet.rol[0].name        
+    const isAdmin = rol === "Admin" ? true : false; 
+    const avatar = userObjet.avatar                               
+    res.render('userrol', {
+        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, id: id});
+}
+
 export const getRol = async (req, res) => {                  
     const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)            
     const name = userObjet.name
@@ -108,6 +121,8 @@ export const getRegister = async (req, res) => {
 export const addUser = manager.addUser
 
 export const updateRol = manager.updateRol
+
+export const updateUserRol = manager.updateUserRol
 
 export const updateUser = async (uid, res) => {
     try {            

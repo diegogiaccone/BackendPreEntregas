@@ -203,6 +203,26 @@ class Users {
         }
     } 
 
+    updateUserRol = async (req, res) => {
+        try {
+            const uid = req.params
+            console.log("uid", uid)                      
+            const userObjet = await userModel.findOne({_id: uid.uid})
+            if(userObjet){
+                const uid = userObjet._id            
+                const rol = req.body.rol                                           
+                const process = await userModel.updateOne({ '_id': new mongoose.Types.ObjectId(uid)}, {rol: rol});                
+                    this.status = 1;
+                    process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Avatar actualizada";
+                    res.redirect(`/`)
+            }
+
+        } catch (err) {
+            this.status = -1;
+            this.statusMsg = `updateUser: ${err}`;
+        }
+    }
+
     deleteUser = async (id) => {
         try {
             const process = await userModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id) });

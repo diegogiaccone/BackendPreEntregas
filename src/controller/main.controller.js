@@ -35,9 +35,10 @@ export const getProductsPaginated = async (req, res) => {
             const rol = userObjet.rol[0].name
             const isAdmin = rol === "Admin" ? true : false
             const isPremium = rol === "Premium" ? true : false
+            const isUser = rol === "Usuario" ? true : false
             const avatar = userObjet.avatar            
             const existPass = pass === undefined ? false : true     
-            res.render('products',{ products: result.docs, pagination: pagination, name:name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, isPremium: isPremium});
+            res.render('products',{ products: result.docs, pagination: pagination, name:name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, isPremium: isPremium, isUser: isUser});
         } else {            
             res.render('login', {
                 sessionInfo: req.session.userValidated !== undefined ? req.session : req.sessionStore,
