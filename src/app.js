@@ -25,6 +25,8 @@ import ticketRoutes from './router/ticket.router.js';
 import { addLogger } from './services/logger.services.js';
 import cluster from 'cluster';
 import { cpus } from 'os';
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUiExpress from 'swagger-ui-express';
 
 const PORT = config.PORT;
 const MONGOOSE_URL = config.MONGOOSE_URL;
@@ -34,14 +36,28 @@ const PRODUCTS_PER_PAGE = config.PRODUCTS_PER_PAGE;
 const wspuerto = config.WSPORT;
 export const store = MongoStore.create({ mongoUrl: MONGOOSE_URL, mongoOptions: {}, ttl: 3600});
 
-if (cluster.isPrimary) {
+
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.1',
+        info: {
+            title: 'Documentación sistema AdoptMe',
+            description: 'Esta documentación cubre toda la API habilitada para AdoptMe'
+        }
+    },
+    apis: ['./src/docs/**/*.yaml']
+}
+
+const specs = swaggerJsdoc(swaggerOptions);
+
+/* if (cluster.isPrimary) {
     for (let i = 0; i < cpus().length; i++) cluster.fork();
     
     cluster.on('exit', (worker, code, signal) => {
         console.log(`Se cerró el WORKER ${worker.process.pid}`);
         cluster.fork();
     });
-} else {
+} else { */
     
     const app = express();
     createRol();
@@ -77,7 +93,7 @@ if (cluster.isPrimary) {
     app.use(passport.initialize());
     app.use(passport.session());
     
-    // end points
+    // end points    
     app.use('/', mainRoutes(io, store, BASE_URL, PRODUCTS_PER_PAGE));
     app.use('/', UserRoutes(io));
     app.use('/api', productRoutes(io));
@@ -85,7 +101,8 @@ if (cluster.isPrimary) {
     app.use(`/chat`, chatRoutes(io))
     app.use(`/api`, ticketRoutes());
     app.use('/', sessionRoutes());
-    app.use(`/`, addLogger)
+    app.use(`/`, addLogger);
+    app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
     
     // Plantillas estaticas
     app.use('/public', express.static(`${__dirname}/public`));
@@ -166,6 +183,6 @@ if (cluster.isPrimary) {
     } catch(err) {
         console.log('No se puede conectar con el servidor de bbdd');
     }
-}
+//}
 
 

@@ -13,7 +13,7 @@ const productRoutes = (io) => {
 
     router.get('/products_index', getProductsIndex, [validate, authentication('jwtAuth')]);
 
-    router.get('/products', getProducts, [validate, authentication('jwtAuth')]);
+    router.get('/products', getProducts, [validate, authentication('jwtAuth'), rol.isAdmin]);
     
     router.post('/products_index', addProduct, [validate, authentication('jwtAuth'), rol.isAdmin, rol.isPremium]);
     

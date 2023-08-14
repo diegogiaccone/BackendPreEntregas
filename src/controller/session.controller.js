@@ -31,7 +31,5 @@ export const logout = async (req, res) => {
     })
     };
 
-export const current =  async (req, res) => {
-    res.send({ status: 'OK', data: req.user });
-    };
+
    

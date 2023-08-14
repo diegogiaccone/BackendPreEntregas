@@ -2,7 +2,7 @@ import { Router } from "express";
 import passport from "passport";
 import initializePassport from "../auth/passport.config.js";
 import { authentication } from "../auth/passport.jwt.js";
-import { current, login, logout } from "../controller/session.controller.js";
+import { login, logout } from "../controller/session.controller.js";
 
 initializePassport();
 
@@ -21,9 +21,7 @@ const sessionRoutes = () => {
 
     router.get('/auth/facebook/callback',passport.authenticate('facebook'), login);   
 
-    router.get('/logout', logout);
-
-    router.get('/current', authentication('jwtAuth', { session: false }), current);
+    router.get('/logout', logout);    
    
     return router;
 }

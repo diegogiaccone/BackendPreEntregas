@@ -20,7 +20,6 @@ export const getUsers = async () => {
 
 export const getMessages = manager.getMessages
 
-
 export const getErrMessages = manager.getErrMessages
 
 export const getRecoveryPass = manager.getPass   
@@ -37,19 +36,6 @@ export const getUpdate = async (req, res) => {
             name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass});
     }
 
-export const getUserRol = async (req, res) => {                  
-    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)            
-    const name = userObjet.name
-    const pass = userObjet.pass
-    const id = userObjet._id
-    const existPass = pass === undefined ? false : true 
-    const rol = userObjet.rol[0].name        
-    const isAdmin = rol === "Admin" ? true : false; 
-    const avatar = userObjet.avatar                               
-    res.render('userrol', {
-        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, id: id});
-}
-
 export const getRol = async (req, res) => {                  
     const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)            
     const name = userObjet.name
@@ -60,7 +46,7 @@ export const getRol = async (req, res) => {
     const avatar = userObjet.avatar                               
     res.render('rol', {
         name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass});
-}
+    }
 
 export const getAvatarUpdate = async (req, res) => {                  
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)      
@@ -76,19 +62,19 @@ export const getAvatarUpdate = async (req, res) => {
 
 export const getEqual = async (req, res) => {
     res.render('mailequal')
-}
+    }
 
 export const getPassEqual = async (req, res) => {
     res.render('passequal')
-}
+    }
 
 export const getSuccess = async (req, res) => {
     res.render('success')
-}
+    }
 
 export const getRecovery = async (req, res) => {
     res.render('recovery')
-}
+    }
 
 export const passRecovery = manager.passRecovery
 
@@ -122,7 +108,6 @@ export const addUser = manager.addUser
 
 export const updateRol = manager.updateRol
 
-export const updateUserRol = manager.updateUserRol
 
 export const updateUser = async (uid, res) => {
     try {            
