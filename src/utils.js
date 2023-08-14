@@ -315,6 +315,17 @@ export const recoverPass = (date, code) => {
         `        
     })}
 
+export const swaggerOptions = {
+  definition: {
+      openapi: '3.0.1',
+      info: {
+          title: 'Documentación de la API Funko',
+          description: 'Esta documentación cubre toda la API'
+      }
+  },
+  apis: ['./src/docs/**/*.yaml']
+}
+
 const createHash = (pass) => {
     return bcrypt.hash(pass, bcrypt.genSaltSync(10));
 }

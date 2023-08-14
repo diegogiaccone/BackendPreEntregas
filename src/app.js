@@ -2,7 +2,7 @@ import express from 'express';
 import MongoSingleton from './services/mongo.dbclass.js';
 import productRoutes from './router/products.router.js';
 import UserRoutes from './router/user.router.js';
-import { __dirname} from './utils.js';
+import { __dirname, swaggerOptions} from './utils.js';
 import { engine } from 'express-handlebars';
 import Handlebars from 'handlebars';
 import { Server } from 'socket.io';
@@ -35,19 +35,6 @@ const BASE_URL = config.BASE_URL;
 const PRODUCTS_PER_PAGE = config.PRODUCTS_PER_PAGE;
 const wspuerto = config.WSPORT;
 export const store = MongoStore.create({ mongoUrl: MONGOOSE_URL, mongoOptions: {}, ttl: 3600});
-
-
-const swaggerOptions = {
-    definition: {
-        openapi: '3.0.1',
-        info: {
-            title: 'Documentación sistema AdoptMe',
-            description: 'Esta documentación cubre toda la API habilitada para AdoptMe'
-        }
-    },
-    apis: ['./src/docs/**/*.yaml']
-}
-
 const specs = swaggerJsdoc(swaggerOptions);
 
 /* if (cluster.isPrimary) {
