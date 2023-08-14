@@ -94,7 +94,7 @@ paths:
                   $ref: '#/components/schemas/carts'
         "500":
           description: 'ERROR'
-  /api/carts/:cid/products/:pid:    
+  /api/carts/{cid}/products/{pid}:    
     post:
       summary: Agrega un producto de la base de datos al carrito indicando por parametros el id del carrito y del producto
       tags:
