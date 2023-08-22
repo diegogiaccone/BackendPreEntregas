@@ -40,9 +40,10 @@ export default class Products {
     addProduct = async (product) => {
         try {
             if (!Products.#objEmpty(product) && Products.#verifyRequiredFields(product)) {
-                await productModel.create(product);           
+                const newprod = await productModel.create(product);                       
                 this.status = 1;
-                this.statusMsg = "Producto registrado en bbdd";      
+                this.statusMsg = "Producto registrado en bbdd";
+                return newprod      
             } else {
                 this.status = -1;
                 this.statusMsg = `Faltan campos obligatorios (${Products.requiredFields.join(', ')})`;
@@ -139,12 +140,14 @@ export default class Products {
             const user = req.session.user
             if(user.rol[0].name === "Admin" || user.rol[0].name === "Premium"){
                 if(user.rol[0].name === "Admin"){
-                    await productModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id.id)});
+                    const deleteProd = await productModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id.id)});
                     res.redirect(`products_index`)
+                    return deleteProd
                 }else{
                     if(user.rol[0].name === "Premium" && product.owner == user.user){
-                        await productModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id.id)});
+                        const deleteProd = await productModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id.id)});
                         res.redirect(`products_index`)
+                        return deleteProd
                     }else{
                         res.send("Debe ser Admin o Propietario del Articulo para Borrarlo o modificarlo")
                     }                   

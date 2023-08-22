@@ -44,7 +44,7 @@ export const getProductsIndex = async (req, res) => {
 export const getProducts = async (req, res) => {          
         try {                 
             const products = await manager.getProducts(); 
-            res.status(200).send({ status: 'OK', data: products });
+            res.status(200).send({ status: 'OK', payload: products });
         } catch (err) {
             res.status(500).send({ status: 'ERR', error: err });
         }
@@ -52,10 +52,10 @@ export const getProducts = async (req, res) => {
     
 export const addProduct = async (req, res) => {
         try {
-            await manager.addProduct(req.body);
-    
+            await manager.addProduct(req.body);                
             if (manager.checkStatus() === 1) {
                 res.redirect(`products_index`);
+               
             } else {
                 res.status(400).send({ status: 'ERR', error: manager.showStatusMsg() });
             }

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 mongoose.pluralize(null); // Importante! para no tener problemas con Mongoose
 
-const collection = 'carts';
+const collection = 'carts_test';
 
 const schema = ({    
     products: {

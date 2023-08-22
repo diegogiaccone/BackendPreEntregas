@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 mongoose.pluralize(null);
 
-const collection = 'users';
+const collection = 'users_test';
 
 const schema = new mongoose.Schema({        
     name: String,

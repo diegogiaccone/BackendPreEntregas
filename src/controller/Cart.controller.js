@@ -26,12 +26,7 @@ export const getCartPopulated = async (req, res) => {
     }
     }
   
-export const addProductInCart = async (cid, pid) => {
-    try {
-        await manager.addProductInCart(cid, pid);        
-    } catch (err) {
-       console.log(err)
-    }}
+export const addProductInCart = manager.addProductInCart
 
 export const deleteCartProduct = async (cid, pid) => {
     try {        
@@ -47,7 +42,7 @@ export const deleteCartProduct = async (cid, pid) => {
     }
     };
  
-export const emptyCart = async (cid) => {
+export const emptyCart = async (cid, res) => {
     try {
         await manager.emptyCart(cid);
 
@@ -57,7 +52,7 @@ export const emptyCart = async (cid) => {
             res.status(400).send({ status: 'ERR', error: 'No se pudo vaciar el carrito.' });
         }
     } catch (err) {
-        res.status(500).send({ status: 'ERR', error: err.message });
+         res.status(500).send({ status: 'ERR', error: err.message });
     }
     };
 
@@ -102,3 +97,7 @@ export const updateProductQty = async (req, res) => {
 
     }
  
+export const getCarts = async (req, res) => {
+    const carts = manager.getCarts()
+    res.status(200).send({status: "ok", payload: carts})
+}

@@ -47,7 +47,7 @@ class Users {
             const verify = await userModel.findOne({user: user})
             if(!verify){
                 userModel.create({name: name, apellido: apellido, user: user, pass: passHash, rol: rol, cart: cart, avatar: avatar, ticket: ticket})     
-                res.redirect('/')      
+                res.status(200).redirect('/')      
             }else{                 
                 res.send(`El usuario ya existe Por favor intente con otro nombre de usuario`)
             }

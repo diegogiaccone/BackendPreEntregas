@@ -13,8 +13,9 @@ export const validate = async (req, res, next) => {
         }
     }
 
-export const getUsers = async () => {
+export const getUsers = async (req,res) => {
     const users = await manager.getUsers()
+    res.status(200).send({status : "ok", payload: users})
     console.log(users)
     }
 
@@ -82,8 +83,8 @@ export const mailPassRecovery =  manager.updatePass
 
 export const getUserById = async (req, res) => { // ? indica que el parámetro es opcional
     try {
-            if (req.params.id === undefined) {
-            const users = await manager.getUsers();
+            if (req.params.id != undefined) {
+            const users = await manager.getUserById(req.params.id);
             res.status(200).send({ status: 'OK', data: users });
         } else {
             const user = await manager.getUserById(req.params.id);
