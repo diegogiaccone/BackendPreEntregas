@@ -38,7 +38,7 @@ const wspuerto = config.WSPORT;
 export const store = MongoStore.create({ mongoUrl: MONGOOSE_URL, mongoOptions: {}, ttl: 3600});
 const specs = swaggerJsdoc(swaggerOptions);
 
-// Configuración de Multer para guardar archivos en la carpeta 'uploads'
+// Configuración de Multer para guardar archivos en la carpeta 'public'
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {        
         if (file.fieldname === 'avatarFile') {

@@ -100,6 +100,8 @@ export default class CartManager {
                 const existPass = pass === undefined ? false : true
                 const rol = userObjet.rol[0].name  
                 const isAdmin = rol === "Admin" ? true : false
+                const isPremium = rol === "Premium" ? true : false;
+                const isUsuario = rol === "Usuario" ? true : false;
                 const Total = products.reduce(function Total(accumulator, item){
                     const toNumber = parseFloat(item.prods[0].price * item.quantity);                                                         
                     return accumulator + toNumber;                             
@@ -114,7 +116,9 @@ export default class CartManager {
                     total: Total,
                     avatar: avatar,
                     pass: existPass,
-                    isAdmin: isAdmin                   
+                    isAdmin: isAdmin,
+                    isPremium: isPremium,
+                    isUsuario: isUsuario                   
                 })
             } catch (err) {
                 res.status(500).send({ status: 'ERR', error: err });            

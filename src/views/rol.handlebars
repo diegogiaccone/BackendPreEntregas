@@ -25,7 +25,9 @@
     {{#if pass}}
     <li><a class="dropdown-item" href="/updatepass">Cambiar Contraseña</a></li>       
     {{/if}}
+    {{#or isPremium isUsuario}}
     <li><a class="dropdown-item" href="/uploadDocuments">Pasar a Premium</a></li>
+    {{/or}}
     <li><hr class="dropdown-divider"></li>
     <li><a href="{{baseUrl}}/logout" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>    
   </ul>

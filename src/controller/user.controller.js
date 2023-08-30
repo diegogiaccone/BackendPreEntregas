@@ -25,9 +25,11 @@ export const getUpdate = async (req, res) => {
     const existPass = pass === undefined ? false : true 
     const rol = userObjet.rol[0].name        
     const isAdmin = rol === "Admin" ? true : false; 
+    const isPremium = rol === "Premium" ? true : false;
+    const isUsuario = rol === "Usuario" ? true : false;
     const avatar = userObjet.avatar                               
     res.render('updatepass', {
-        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass});
+        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, isPremium: isPremium, isUsuario: isUsuario});
 }
 
 export const getRol = async (req, res) => {                  
@@ -36,7 +38,7 @@ export const getRol = async (req, res) => {
     const pass = userObjet.pass
     const existPass = pass === undefined ? false : true 
     const rol = userObjet.rol[0].name        
-    const isAdmin = rol === "Admin" ? true : false; 
+    const isAdmin = rol === "Admin" ? true : false;    
     const avatar = userObjet.avatar                               
     res.render('rol', {
         name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass});
@@ -51,9 +53,11 @@ export const getPremium = async (req, res) => {
     const existPass = pass === undefined ? false : true 
     const rol = userObjet.rol[0].name        
     const isAdmin = rol === "Admin" ? true : false; 
+    const isPremium = rol === "Premium" ? true : false;
+    const isUsuario = rol === "Usuario" ? true : false;
     const avatar = userObjet.avatar                               
     res.render('premium', {
-        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid, user: user});
+        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid, user: user, isPremium: isPremium, isUsuario: isUsuario});
 }
     
 export const getAvatarUpdate = async (req, res) => {                  
@@ -63,10 +67,12 @@ export const getAvatarUpdate = async (req, res) => {
     const existPass = pass === undefined ? false : true
     const rol = userObjet.rol[0].name        
     const isAdmin = rol === "Admin" ? true : false; 
+    const isPremium = rol === "Premium" ? true : false;
+    const isUsuario = rol === "Usuario" ? true : false;
     const avatar = userObjet.avatar
     const uid = userObjet._id                           
     res.render('updateavatar', {
-        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid});
+        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid, isPremium: isPremium, isUsuario: isUsuario});
 }    
     
 export const getEqual = async (req, res) => {
@@ -144,10 +150,12 @@ export const getUploadDocument = async(req, res) =>{
     const existPass = pass === undefined ? false : true
     const rol = userObjet.rol[0].name        
     const isAdmin = rol === "Admin" ? true : false; 
+    const isPremium = rol === "Premium" ? true : false;
+    const isUsuario = rol === "Usuario" ? true : false;
     const avatar = userObjet.avatar
     const uid = userObjet._id                           
     res.render('uploadDocuments', {
-        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid});
+        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid, isPremium: isPremium, isUsuario: isUsuario});
     
 }
 
@@ -158,10 +166,12 @@ export const getloadDocument = async(req, res) =>{
     const existPass = pass === undefined ? false : true
     const rol = userObjet.rol[0].name        
     const isAdmin = rol === "Admin" ? true : false; 
+    const isPremium = rol === "Premium" ? true : false;
+    const isUsuario = rol === "Usuario" ? true : false;
     const avatar = userObjet.avatar
     const uid = userObjet._id                           
     res.render('loadDocuments', {
-        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid});
+        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid, isPremium: isPremium, isUsuario: isUsuario});
     
 }
 

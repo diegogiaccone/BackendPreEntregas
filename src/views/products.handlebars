@@ -12,7 +12,9 @@
         {{!-- <a href="/fakeuser" class="btn btn-info text-light button cart productall">Mock Fakeuser</a> --}}           
         <a href="/rol" class="btn btn-primary text-light button cart productall">Asignar Rol</a> 
         {{/if}}   
-        <a href="/api/users/premium/:uid" class="btn btn-primary text-light button cart productall">Premium</a>     
+        {{#or isPremium isUser}}
+        <a href="/api/users/premium/:uid" class="btn btn-primary text-light button cart productall">Premium</a>          
+        {{/or}}
         </div>     
         <div class="navbartotal">
         <div >
@@ -28,7 +30,9 @@
     {{#if pass}}
     <li><a class="dropdown-item" href="/updatepass">Cambiar Contraseña</a></li>       
     {{/if}}
+    {{#or isPremium isUser}}
     <li><a class="dropdown-item" href="/uploadDocuments">Pasar a Premium</a></li>
+    {{/or}}
     <li><hr class="dropdown-divider"></li>
     <li><a href="{{baseUrl}}/logout" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>    
   </ul>

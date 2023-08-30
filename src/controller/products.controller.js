@@ -36,10 +36,11 @@ export const getProductsIndex = async (req, res) => {
         const rol = userObjet.rol[0].name
         const isAdmin = rol === "Admin" ? true : false; 
         const isPremium = rol === "Premium" ? true : false;
+        const isUsuario = rol === "Usuario" ? true : false;
         const avatar = userObjet.avatar
         const existPass = pass === undefined ? false : true                          
         res.render('products_index', {
-            products: products, name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, user: user, isPremium: isPremium});
+            products: products, name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, user: user, isPremium: isPremium, isUsuario: isUsuario});
     };
 
 export const getProducts = async (req, res) => {          

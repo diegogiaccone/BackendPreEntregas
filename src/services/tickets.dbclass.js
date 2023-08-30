@@ -120,7 +120,9 @@ export default class TicketManager {
                 const pass = userObjet.pass
                 const existPass = pass === undefined ? false : true
                 const rol = userObjet.rol[0].name 
-                const isAdmin = rol === "Admin" ? true : false                                   
+                const isAdmin = rol === "Admin" ? true : false  
+                const isPremium = rol === "Premium" ? true : false;
+                const isUsuario = rol === "Usuario" ? true : false;                                 
                                                     
                 res.render(`tickets`, {
                     ticket: process.purchase,                                                       
@@ -129,7 +131,9 @@ export default class TicketManager {
                     cart: req.session.user.cart[0],                   
                     avatar: avatar,
                     pass: existPass,
-                    isAdmin: isAdmin 
+                    isAdmin: isAdmin,
+                    isPremium: isPremium,
+                    isUsuario: isUsuario 
                 })
             } catch (err) {
                 res.status(500).send({ status: 'ERR', error: err });            
