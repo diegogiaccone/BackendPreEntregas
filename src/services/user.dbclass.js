@@ -263,8 +263,7 @@ class Users {
         try {            
             const userId = req.params.uid;
             const uploadedDocuments = req.file
-            const avatar = req.body.avatar   
-            console.log("upload", uploadedDocuments)
+            const avatar = req.body.avatar            
             if(avatar){
             const user = req.session.user.user                       
             const userObjet = await userModel.findOne({user: user})            
