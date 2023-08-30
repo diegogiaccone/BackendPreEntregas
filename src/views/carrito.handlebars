@@ -12,6 +12,7 @@
         {{!-- <a href="/fakeuser" class="btn btn-info text-light button cart productall">Mock Fakeuser</a> --}}           
         <a href="/rol" class="btn btn-primary text-light button cart productall">Asignar Rol</a> 
         {{/if}}
+        <a href="/api/users/premium/:uid" class="btn btn-primary text-light button cart productall">Premium</a>
         </div>     
         <div class="navbartotal">
         <div >
@@ -23,10 +24,11 @@
         <div class="btn-group">
       <img src={{avatar}} class="btn dropdown-toggle avatar" data-bs-toggle="dropdown" aria-expanded="false" />
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="/updateavatar">Cambiar Avatar</a></li>
+    <li><a class="dropdown-item" href="/updateavatar">Cambiar Avatar</a></li>    
     {{#if pass}}
     <li><a class="dropdown-item" href="/updatepass">Cambiar Contraseña</a></li>       
     {{/if}}
+    <li><a class="dropdown-item" href="/uploadDocuments">Pasar a Premium</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a href="{{baseUrl}}/logout" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>    
   </ul>

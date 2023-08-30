@@ -23,10 +23,11 @@ import methodOverride from 'method-override';
 import config from './config/config.env.js';
 import ticketRoutes from './router/ticket.router.js';
 import { addLogger } from './services/logger.services.js';
-import cluster from 'cluster';
-import { cpus } from 'os';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUiExpress from 'swagger-ui-express';
+import multer from 'multer';
+import path from "path"
+
 
 const PORT = config.PORT;
 const MONGOOSE_URL = config.MONGOOSE_URL;
@@ -37,14 +38,27 @@ const wspuerto = config.WSPORT;
 export const store = MongoStore.create({ mongoUrl: MONGOOSE_URL, mongoOptions: {}, ttl: 3600});
 const specs = swaggerJsdoc(swaggerOptions);
 
-/* if (cluster.isPrimary) {
-    for (let i = 0; i < cpus().length; i++) cluster.fork();
+// Configuración de Multer para guardar archivos en la carpeta 'uploads'
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {        
+        if (file.fieldname === 'avatarFile') {
+            cb(null, path.join(__dirname, 'public/profiles'));
+        } else if (file.fieldname === 'thumbnailFile') {
+            cb(null, path.join(__dirname, 'public/products'));
+        } else if (file.fieldname === 'documents') {
+            cb(null, path.join(__dirname, 'public/documents'));
+        } else {
+            cb(new Error('Tipo de archivo no válido'), null);
+        }
+    }, 
     
-    cluster.on('exit', (worker, code, signal) => {
-        console.log(`Se cerró el WORKER ${worker.process.pid}`);
-        cluster.fork();
-    });
-} else { */
+    filename: function (req, file, cb) {        
+      cb(null,file.originalname);
+    }
+  });
+
+export const upload = multer({ storage: storage });
+
     
     const app = express();
     createRol();
@@ -73,7 +87,9 @@ const specs = swaggerJsdoc(swaggerOptions);
         resave: false,
         saveUninitialized: false
     }))
-    
+
+    //multer
+
     //sessiones de passport
     initializePassport();
     initPassport();
@@ -170,6 +186,6 @@ const specs = swaggerJsdoc(swaggerOptions);
     } catch(err) {
         console.log('No se puede conectar con el servidor de bbdd');
     }
-//}
+
 
 

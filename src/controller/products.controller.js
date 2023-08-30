@@ -1,3 +1,4 @@
+import config from '../config/config.env.js';
 import userModel from "../model/user.model.js";
 import factoryProduct from "../services/factory.js";
 
@@ -52,7 +53,17 @@ export const getProducts = async (req, res) => {
     
 export const addProduct = async (req, res) => {
         try {
-            await manager.addProduct(req.body);                
+            const {title, owner, thumbnail, description, price, stock, category} = req.body            
+            if(thumbnail.length > 1){
+                let product = {title: title, owner: owner, thumbnail: thumbnail, description: description, price: price, stock: stock, category: category}
+                await manager.addProduct(product);                    
+            }else{
+                const procces = req.file            
+                const thumbnailFile = config.BASE_URL+"/public/products/"+procces.originalname
+                let product = {title: title, owner: owner, thumbnail: thumbnailFile, description: description, price: price, stock: stock, category: category}
+                await manager.addProduct(product);            
+            }
+           
             if (manager.checkStatus() === 1) {
                 res.redirect(`products_index`);
                

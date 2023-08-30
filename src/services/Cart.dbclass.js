@@ -155,7 +155,6 @@ export default class CartManager {
         }
     }
 
-
     getCartPopulated = async (id) => {
         try {
             // Se realiza el populate del array products en el carrito, en base al productModel

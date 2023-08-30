@@ -8,6 +8,7 @@ import config from '../config/config.env.js';
 import ticketModel from '../model/ticket.model.js';
 import { recoverPass, generateTokenpass } from '../utils.js';
 
+
 class Users {
     constructor() {
         this.users = [];
@@ -26,14 +27,14 @@ class Users {
         return this.statusMsg;
     }
 
-
     addUser = async (req, res) => {
         try{
             const name = req.body.name
             const apellido = req.body.apellido
             const user = req.body.user
             const pass = req.body.pass 
-            const avatar = req.body.avatar                                                        
+            const avatar = req.body.avatar  
+            const last_connection = new Date()              
             let passHash = await bcrypt.hash(pass, 8)
             const rol = await rolModel.findOne({name: "Usuario"})
             const cart = await cartModel.create({
@@ -46,7 +47,7 @@ class Users {
             })
             const verify = await userModel.findOne({user: user})
             if(!verify){
-                userModel.create({name: name, apellido: apellido, user: user, pass: passHash, rol: rol, cart: cart, avatar: avatar, ticket: ticket})     
+                userModel.create({name: name, apellido: apellido, user: user, pass: passHash, rol: rol, cart: cart, avatar: avatar, ticket: ticket, last_connection: last_connection})     
                 res.status(200).redirect('/')      
             }else{                 
                 res.send(`El usuario ya existe Por favor intente con otro nombre de usuario`)
@@ -157,23 +158,6 @@ class Users {
         }
     }
 
-    updateAvatarUser = async (req, res) => {
-        try {
-            const user = req.session.user.user                       
-            const userObjet = await userModel.findOne({user: user})            
-            const uid = userObjet._id            
-            const avatar = req.body.avatar
-            console.log(avatar)                               
-            const process = await userModel.updateOne({ '_id': new mongoose.Types.ObjectId(uid)}, {avatar: avatar});                
-                this.status = 1;
-                process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Avatar actualizada";           
-
-        } catch (err) {
-            this.status = -1;
-            this.statusMsg = `updateUser: ${err}`;
-        }
-    }
-
     getMessages = async (req, res) => {
         res.render(`messages`)
     }
@@ -203,6 +187,39 @@ class Users {
         }
     } 
 
+    updatePremium = async (req, res) => {
+        try {
+            const user = req.body.user                       
+            const userObjet = await userModel.findOne({user: user})
+            const rolID = userObjet.rol[0]           
+            const roles = await rolModel.findById({ '_id': new mongoose.Types.ObjectId(rolID)})
+            if(roles.name === "Premium"){
+                const uid = userObjet._id            
+                const rol = req.body.rol                                           
+                const process = await userModel.updateOne({ '_id': new mongoose.Types.ObjectId(uid)}, {rol: rol});                
+                    this.status = 1;
+                    process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Actualizado a Usuario";
+                    res.redirect(`/`)
+            }else{
+                const documents = userObjet.documents                
+                if(documents.length === 3){
+                    const uid = userObjet._id            
+                const rol = req.body.rol                                           
+                const process = await userModel.updateOne({ '_id': new mongoose.Types.ObjectId(uid)}, {rol: rol});                
+                    this.status = 1;
+                    process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Actualizado a Premium";
+                    res.redirect(`/`)
+                }else{
+                    res.redirect(`/loadDocuments`)
+                }
+            } 
+
+        } catch (err) {
+            this.status = -1;
+            this.statusMsg = `updateUser: ${err}`;
+        }
+    } 
+
     deleteUser = async (id) => {
         try {
             const process = await userModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id) });
@@ -213,6 +230,71 @@ class Users {
             this.statusMsg = `deleteUser: ${err}`;
         }
     }
+
+    uploadDocuments = async (req, res) => {
+        try{
+            const userId = req.params.uid;          
+            const uploadedDocuments = req.files            
+            const elementos = []
+            uploadedDocuments.forEach(element => {
+                const document ={name: element.originalname, reference: element.fieldname}
+                elementos.push(document)
+            });
+            
+            setTimeout(async () => {                
+                const user = await userModel.findOneAndUpdate(
+                    { _id: userId },
+                    { $set: { documents: elementos}},
+                    { new: true }
+                    );                             
+                    if (!user) {
+                        return res.status(404).json({ message: 'Usuario no encontrado' });
+                    }                    
+                }, 1500);        
+                
+                res.redirect(`/`)
+        }catch(error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error al subir los documentos' });
+          }        
+    }
+
+    uploadAvatar = async (req, res) => {
+        try {            
+            const userId = req.params.uid;
+            const uploadedDocuments = req.file
+            const avatar = req.body.avatar   
+            console.log("upload", uploadedDocuments)
+            if(avatar){
+            const user = req.session.user.user                       
+            const userObjet = await userModel.findOne({user: user})            
+            const uid = userObjet._id            
+            const avatar = req.body.avatar                                          
+            const process = await userModel.updateOne({ '_id': new mongoose.Types.ObjectId(uid)}, {avatar: avatar});                
+                this.status = 1;
+                process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Avatar actualizada";   
+                res.redirect(`/`)        
+
+        } else {
+            const user = await userModel.findOneAndUpdate(
+                { _id: userId },
+                { $set: { documents: {name: uploadedDocuments.originalname, reference: uploadedDocuments.fieldname}, avatar: config.BASE_URL+"/public/profiles/"+uploadedDocuments.originalname}},
+                { new: true }
+              );
+        
+              if (!user) {
+                return res.status(404).json({ message: 'Usuario no encontrado' });
+              }      
+              // Envía una respuesta adecuada
+              res.redirect(`/`)
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error al subir los documentos' });
+          }
+    }       
+           
+      
 
     validateUser = async (req, res, next) => {
         const { user, pass } = req.body; // Desestructuramos el req.body
@@ -225,11 +307,12 @@ class Users {
             if (passHash === false) {                
                     req.sessionStore.errorMessage = 'Clave incorrecta'; 
                     res.redirect(config.BASE_URL);  
-                } else{
+                } else{  
+                    await userModel.updateOne({user:user}, {last_connection: new Date()})                           
                     req.session.userValidated = req.sessionStore.userValidated = true;
                     req.session.errorMessage = req.sessionStore.errorMessage = '';
                     req.session.user = req.sessionStore.user = {user: user, name: findUser.name, apellido: findUser.apellido, rol: findUser.rol, cart: findUser.cart, avatar: findUser.avatar, ticket: findUser.ticket};                    
-                    const date = new Date();                
+                    const date = new Date();                                                  
                     const token = generateToken({ user: user, name : findUser.name, apellido: findUser.apellido, rol: findUser.rol, avatar: findUser.avatar})                           
                     res.cookie('token', token, {
                         maxAge: date.setDate(date.getDate() + 1),
@@ -241,7 +324,6 @@ class Users {
             }
         } 
     }        
-
 
 
 export default Users;

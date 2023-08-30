@@ -47,10 +47,11 @@ export default class TicketManager {
         try {                                        
             const cid = req.body.cid 
             const tid = req.session.user.ticket[0]
-            const tickets = await ticketModel.findOne({ '_id': new mongoose.Types.ObjectId(tid)})                                                                           
+            const tickets = await ticketModel.findOne({ '_id': new mongoose.Types.ObjectId(tid)})
+            if(!tickets) return "Ticket no encontrado"                                                                           
             const process = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}).populate(`products.prods`)
-            let products = []                   
             if(!process) return "Carrito no encontrado"                      
+            let products = []                   
             if(process.products.length >= 1){           
                 process.products.forEach(element => {                 
                     element.prods.forEach(async (e) => {

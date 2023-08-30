@@ -3,17 +3,13 @@
     <div class="navbar-nav">
       <div class="header2">
         <div class="title">
-        <img class="avatar" src="https://i.postimg.cc/65D2wVCC/imagen.png" alt="">
+          <img class="avatar" src="https://i.postimg.cc/65D2wVCC/imagen.png" alt="">
         <h1>FUNKOPOPS</h1>
         <a href="/api/carts" class="btn btn-warning cart productall">Mi Carrito Funko 🛒</a>
-        <a href="/" class="btn btn-primary cart productall" style="margin-left: 10px;">Inicio</a>
         <button type="submit" class="btn btn-success button cart productall"><a class="page-link" href="/api/products_index">Todos los Productos</a></button>
         <a href="/api/tickets" class="btn btn-danger button cart productall">Mis Compras  📃</a>
-        {{#if isAdmin}}
-        {{!-- <a href="/fakeuser" class="btn btn-info text-light button cart productall">Mock Fakeuser</a> --}}           
-        <a href="/rol" class="btn btn-primary text-light button cart productall">Asignar Rol</a> 
-        {{/if}}
-        <a href="/api/users/premium/:uid" class="btn btn-primary text-light button cart productall">Premium</a>
+        {{!-- <a href="/fakeuser" class="btn btn-info text-light button cart productall">Mock Fakeuser</a> --}}
+        <a href="/" class="btn btn-primary cart productall" style="margin-left: 10px;">Inicio</a>
         </div>  
         <div class="navbartotal">
         <div >
@@ -36,30 +32,30 @@
     </div>
   </header>
 
-  <div class="container">
+
+<div class="container">
     <div class="row">
         <div class="col-lg-12 shadow-lg p-3 mb-5">
             <div class="card border-primary">
-                <div class="card-header bg-primary tect-white">Cambiar contraseña</div>
+                <div class="card-header bg-primary tect-white">Asignar Rol</div>
                 <div class="card-body text-primary">
-                    <form action="/updatepass" method="post">                     
+                    <form action="/api/users/premium/{{uid}}" method="post">                     
                     <div class="mb-3">
-                        <label for="password" class="form-label">Contraseña Anterior</label>
-                        <input type="password" id="pass" name="pass" class="form-control">
+                        <input type="hidden" id="user" name="user" class="form-control" value="{{user}}">
                     </div>
                     <div class="mb-3">
-                        <label for="password" class="form-label">Contraseña Nueva</label>
-                        <input type="password" id="newpass" name="newpass" class="form-control">
+                        <div class="container5">
+                            <label for="rol" class="form-label">Asignar Rol</label> 
+                            <select id="rol" name="rol">
+                            <option value="64763072a12b834dd6259fc4">Usuario</option>
+                            <option value="64763072a12b834dd6259fc5">Premium</option>                            
+                            </select>
+                        </div>                          
                     </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Repetir Contraseña</label>
-                        <input type="password" id="newpass2" name="newpass2" class="form-control">
-                    </div>
-                </div>
-                <div class="card-footer bg-transparent border-primary">
+                    <div class="card-footer bg-transparent border-primary">
                     <a href="/" type="button" class="btn btn-secondary">Cancelar</a>
-                    <button type="submit" class="btn btn-primary">Actualizar</button>
-                </div>                
+                    <button type="submit" class="btn btn-primary">Asignar Rol</button>
+                    </div>                
                 </form>
             </div>
         </div>

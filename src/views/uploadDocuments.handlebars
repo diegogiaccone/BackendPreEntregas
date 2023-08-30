@@ -11,7 +11,7 @@
         <a href="/api/tickets" class="btn btn-danger button cart productall">Mis Compras  📃</a>
         {{#if isAdmin}}
         {{!-- <a href="/fakeuser" class="btn btn-info text-light button cart productall">Mock Fakeuser</a> --}}           
-        <a href="/rol" class="btn btn-primary text-light button cart productall">Asignar Rol</a> 
+        <a href="/rol" class="btn btn-primary text-light button cart productall">Asignar Rol</a>         
         {{/if}}
         <a href="/api/users/premium/:uid" class="btn btn-primary text-light button cart productall">Premium</a>
         </div>  
@@ -23,7 +23,7 @@
           <h4 class="card-title pt-2 text-center text-success">Rol:({{rol}})</h4>         
         </div>
         <div class="btn-group">
-      <img src={{avatar}} class="btn dropdown-toggle avatar" data-bs-toggle="dropdown" aria-expanded="false" />
+      <img src="{{avatar}}" class="btn dropdown-toggle avatar" data-bs-toggle="dropdown" aria-expanded="false" />
   <ul class="dropdown-menu">
     <li><a class="dropdown-item" href="/updateavatar">Cambiar Avatar</a></li>
     {{#if pass}}
@@ -36,29 +36,32 @@
     </div>
   </header>
 
-  <div class="container">
+<div class="container">
     <div class="row">
         <div class="col-lg-12 shadow-lg p-3 mb-5">
             <div class="card border-primary">
-                <div class="card-header bg-primary tect-white">Cambiar contraseña</div>
+                <div class="card-header bg-primary text-white">PREMIUM</div>
                 <div class="card-body text-primary">
-                    <form action="/updatepass" method="post">                     
+                    <form action="/api/users/{{uid}}/documents" method="post" enctype="multipart/form-data">                                    
+                    <div class="post" id="addpost">
+                        <h2 class="d-flex justify-content-center text-dark">PARA PASAR A USUARIO PREMIUM DEBE SUBIR LA SIGUIENTE DOCUMENTACIÓN</h2>                        
+                    </div>                       
                     <div class="mb-3">
-                        <label for="password" class="form-label">Contraseña Anterior</label>
-                        <input type="password" id="pass" name="pass" class="form-control">
-                    </div>
+                        <label for="imagen" class="form-label"> IDENTIFICACIÓN</label>
+                        <input name="documents" type="file" class="form-control" id="imagen">
+                    </div>        
                     <div class="mb-3">
-                        <label for="password" class="form-label">Contraseña Nueva</label>
-                        <input type="password" id="newpass" name="newpass" class="form-control">
-                    </div>
+                        <label for="imagen" class="form-label"> COMPROBANTE DE DOMICILIO</label>
+                        <input name="documents" type="file" class="form-control" id="imagen">
+                    </div>  
                     <div class="mb-3">
-                        <label for="password" class="form-label">Repetir Contraseña</label>
-                        <input type="password" id="newpass2" name="newpass2" class="form-control">
-                    </div>
+                        <label for="imagen" class="form-label"> COMPROBANTE DE ESTADO DE CUENTA</label>
+                        <input name="documents" type="file" class="form-control" id="imagen">
+                    </div>          
                 </div>
                 <div class="card-footer bg-transparent border-primary">
                     <a href="/" type="button" class="btn btn-secondary">Cancelar</a>
-                    <button type="submit" class="btn btn-primary">Actualizar</button>
+                    <button type="submit" class="btn btn-primary">Solicitar Premium</button>
                 </div>                
                 </form>
             </div>

@@ -49,6 +49,8 @@ export const getProductsPaginated = async (req, res) => {
     };
     
 export const logout = async (req, res) => {
+    const user = req.session.user.user
+    await userModel.updateOne({user:user}, {last_connection: new Date()})
     req.session.userValidated = req.sessionStore.userValidated = false;
     res.clearCookie('connect.sid',{domain:".localhost"});
     res.clearCookie('token', {domain: ".localhost"}) 

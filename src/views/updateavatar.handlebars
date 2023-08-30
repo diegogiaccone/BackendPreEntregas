@@ -13,6 +13,7 @@
         {{!-- <a href="/fakeuser" class="btn btn-info text-light button cart productall">Mock Fakeuser</a> --}}           
         <a href="/rol" class="btn btn-primary text-light button cart productall">Asignar Rol</a> 
         {{/if}}
+        <a href="/api/users/premium/:uid" class="btn btn-primary text-light button cart productall">Premium</a>
         </div>  
         <div class="navbartotal">
         <div >
@@ -22,12 +23,13 @@
           <h4 class="card-title pt-2 text-center text-success">Rol:({{rol}})</h4>         
         </div>
         <div class="btn-group">
-      <img src={{avatar}} class="btn dropdown-toggle avatar" data-bs-toggle="dropdown" aria-expanded="false" />
+      <img src="{{avatar}}" class="btn dropdown-toggle avatar" data-bs-toggle="dropdown" aria-expanded="false" />
   <ul class="dropdown-menu">
     <li><a class="dropdown-item" href="/updateavatar">Cambiar Avatar</a></li>
     {{#if pass}}
     <li><a class="dropdown-item" href="/updatepass">Cambiar Contraseña</a></li>       
     {{/if}}
+    <li><a class="dropdown-item" href="/uploadDocuments">Pasar a Premium</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a href="{{baseUrl}}/logout" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>    
   </ul>
@@ -40,7 +42,7 @@
             <div class="card border-primary">
                 <div class="card-header bg-primary text-white">CAMBIAR AVATAR</div>
                 <div class="card-body text-primary">
-                    <form action="/updateavatar" method="post">                    
+                    <form action="/{{uid}}/uploadAvatar" method="post" enctype="multipart/form-data">                                    
                     <div class="post" id="addpost">
                         <h2 class="d-flex justify-content-center text-dark">AVATAR</h2>
                         <img src={{avatar}} class="rounded mx-auto d-block"/>
@@ -48,7 +50,11 @@
                       <div class="mb-3">
                         <label for="imagen" class="form-label"> DESDE URL</label>
                         <input name="avatar" type="url" class="form-control" id="imagen">
-                    </div>                    
+                    </div>       
+                    <div class="mb-3">
+                        <label for="imagen" class="form-label"> DESDE ARCHIVO</label>
+                        <input name="avatarFile" type="file" class="form-control" id="imagen">
+                    </div>                
                 </div>
                 <div class="card-footer bg-transparent border-primary">
                     <a href="/" type="button" class="btn btn-secondary">Cancelar</a>

@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 mongoose.pluralize(null);
 
-const collection = 'users_test';
+const collection = 'users';
 
 const schema = new mongoose.Schema({        
     name: String,
@@ -10,7 +10,8 @@ const schema = new mongoose.Schema({
     user: {type: String, unique: true},
     pass: String,
     avatar: String,
-    token: String, 
+    token: String,
+    last_connection: String, 
     rol: [{
         ref:"rol",
         type: Schema.Types.ObjectId
@@ -22,7 +23,11 @@ const schema = new mongoose.Schema({
     ticket: [{
         ref:"tickets",
         type: Schema.Types.ObjectId
-    }] 
+    }],
+    documents: [{   
+        name: String,
+        reference: String       
+    }]
 });
 
 const userModel = mongoose.model(collection, schema);

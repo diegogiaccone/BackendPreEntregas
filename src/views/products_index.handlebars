@@ -12,6 +12,7 @@
         {{!-- <a href="/fakeuser" class="btn btn-info text-light button cart productall">Mock Fakeuser</a> --}}           
         <a href="/rol" class="btn btn-primary text-light button cart productall">Asignar Rol</a> 
         {{/if}}
+        <a href="/api/users/premium/:uid" class="btn btn-primary text-light button cart productall">Premium</a>
         </div>  
         <div class="navbartotal">
         <div >
@@ -26,7 +27,8 @@
     <li><a class="dropdown-item" href="/updateavatar">Cambiar Avatar</a></li>
     {{#if pass}}
     <li><a class="dropdown-item" href="/updatepass">Cambiar Contraseña</a></li>       
-    {{/if}}    
+    {{/if}}
+    <li><a class="dropdown-item" href="/uploadDocuments">Pasar a Premium</a></li>    
     <li><hr class="dropdown-divider"></li>
     <li><a href="{{baseUrl}}/logout" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>    
   </ul>
@@ -86,7 +88,7 @@
       </div>
 
     {{#or isAdmin isPremium}}       
-      <form action="/api/products_index" method="post" id="formulario">
+      <form action="/api/products_index" method="post" id="formulario" enctype="multipart/form-data">
         <div class="d-flex justify-content-center post" id="addpost">
           <h2>Agregar Nuevo Producto</h2>
         </div>
@@ -98,8 +100,12 @@
           <input name="owner" type="hidden" class="form-control" id="owner" value="{{user}}">
         </div>
         <div class="mb-3">
-          <label for="imagen" class="form-label">Imagen</label>
-          <input name="thumbnail" type="url" class="form-control" id="imagen" required>
+          <label for="imagen" class="form-label">Imagen desde URL</label>
+          <input name="thumbnail" type="url" class="form-control" id="imagen" onchange="toggleFields()">
+        </div>       
+        <div class="mb-3">
+          <label for="imagen" class="form-label">ó Imagen desde FILE</label>
+          <input name="thumbnailFile" type="file" class="form-control" id="imagenFile" onchange="toggleFields()">
         </div>
         <div class="mb-3">
           <label for="descripcion" class="form-label">Description</label>
@@ -186,3 +192,19 @@
    
 
 
+<script>
+  function toggleFields() {
+    const urlInput = document.getElementById('imagen');
+    const fileInput = document.getElementById('imagenFile');
+
+    if (urlInput.value) {
+        fileInput.disabled = true;
+        fileInput.required = false;
+        urlInput.required = true;
+    } else {
+        fileInput.disabled = false;
+        fileInput.required = true;
+        urlInput.required = false;
+    }
+}
+</script>
