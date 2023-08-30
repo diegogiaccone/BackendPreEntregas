@@ -75,6 +75,10 @@ export const addProduct = async (req, res) => {
             res.status(500).send({ status: 'ERR', error: err });
         }
     };
+
+export const getErrAddOwner = manager.getErrAddOwner
+
+export const getErrOwner = manager.getErrOwner
     
 export const updateProduct = manager.updateProduct
 

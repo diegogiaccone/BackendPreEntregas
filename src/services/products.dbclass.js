@@ -120,7 +120,7 @@ export default class Products {
                             await productModel.updateOne({ '_id': new mongoose.Types.ObjectId(pid) }, data);
                             res.redirect(`products_index`)
                         }else{
-                            res.send("Debe ser Admin o Propietario del Articulo para Borrarlo o modificarlo")
+                            res.redirect(`errorOwner`)
                         }                   
                     }    
                 }else{
@@ -158,6 +158,14 @@ export default class Products {
         } catch (err) {
             console.log(err)
         }        
+    }
+
+    getErrOwner = async (req, res) => {
+        res.render(`errorOwner`)
+    }
+
+    getErrAddOwner = async (req, res) => {
+        res.render(`errAddOwner`)
     }
 }
 

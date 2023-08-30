@@ -164,7 +164,7 @@ class Users {
 
     getErrMessages = async (req, res) => {
         res.render(`errmessages`)
-    }
+    }   
 
     updateRol = async (req, res) => {
         try {

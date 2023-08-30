@@ -79,7 +79,7 @@ export default class CartManager {
                 )                
                 res.redirect(`/api/carts`)            
             }else{
-                res.send(`No puede agregar al carrito un producto propio`)
+                res.redirect(`/api/errAddOwner`)
             }                         
         
         } catch (error) {
