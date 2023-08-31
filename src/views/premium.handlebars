@@ -5,11 +5,14 @@
         <div class="title">
           <img class="avatar" src="https://i.postimg.cc/65D2wVCC/imagen.png" alt="">
         <h1>FUNKOPOPS</h1>
-        <a href="/api/carts" class="btn btn-warning cart productall">Mi Carrito Funko 🛒</a>
-        <button type="submit" class="btn btn-success button cart productall"><a class="page-link" href="/api/products_index">Todos los Productos</a></button>
-        <a href="/api/tickets" class="btn btn-danger button cart productall">Mis Compras  📃</a>
+        <a href="/api/carts" class="btn btn-outline-warning cart productall">Mi Carrito Funko 🛒</a>
+        <button type="submit" class="btn btn-outline-success button cart productall"><a class="page-link" href="/api/products_index">Todos los Productos</a></button>
+        <a href="/api/tickets" class="btn btn-outline-danger button cart productall">Mis Compras  📃</a>
         {{!-- <a href="/fakeuser" class="btn btn-info text-light button cart productall">Mock Fakeuser</a> --}}
-        <a href="/" class="btn btn-primary cart productall" style="margin-left: 10px;">Inicio</a>
+        <a href="/" class="btn btn-outline-primary cart productall" style="margin-left: 10px;">Inicio</a>
+        {{#or isAdmin isPremium}}
+        <a href="/api/addProduct" class="btn btn-orange text-light button cart productall">Agregar Productos</a>           
+        {{/or}}
         </div>  
         <div class="navbartotal">
         <div >

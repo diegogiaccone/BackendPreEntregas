@@ -43,6 +43,22 @@ export const getProductsIndex = async (req, res) => {
             products: products, name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, user: user, isPremium: isPremium, isUsuario: isUsuario});
     };
 
+export const getAddProduct = async (req, res) => {
+        const products = await manager.getProducts();
+        const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)
+        const user = req.session.user.user
+        const name = userObjet.name 
+        const pass = userObjet.pass        
+        const rol = userObjet.rol[0].name
+        const isAdmin = rol === "Admin" ? true : false; 
+        const isPremium = rol === "Premium" ? true : false;
+        const isUsuario = rol === "Usuario" ? true : false;
+        const avatar = userObjet.avatar
+        const existPass = pass === undefined ? false : true                          
+        res.render('addProduct', {
+            products: products, name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, user: user, isPremium: isPremium, isUsuario: isUsuario});
+    };
+
 export const getProducts = async (req, res) => {          
         try {                 
             const products = await manager.getProducts(); 

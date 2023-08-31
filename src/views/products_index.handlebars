@@ -5,15 +5,18 @@
         <div class="title">
           <img class="avatar" src="https://i.postimg.cc/65D2wVCC/imagen.png" alt="">
         <h1>FUNKOPOPS</h1>
-        <a href="/api/carts" class="btn btn-warning cart productall">Mi Carrito Funko 🛒</a>
-        <a href="/" class="btn btn-success cart productall" style="margin-left: 10px;">Inicio</a>
-        <a href="/api/tickets" class="btn btn-danger button cart productall">Mis Compras  📃</a>
+        <a href="/api/carts" class="btn btn-outline-warning cart productall">Mi Carrito Funko 🛒</a>
+        <a href="/" class="btn btn-outline-success cart productall" style="margin-left: 10px;">Inicio</a>
+        <a href="/api/tickets" class="btn btn-outline-danger button cart productall">Mis Compras  📃</a>
         {{#if isAdmin}}
         {{!-- <a href="/fakeuser" class="btn btn-info text-light button cart productall">Mock Fakeuser</a> --}}           
-        <a href="/rol" class="btn btn-primary text-light button cart productall">Asignar Rol</a> 
+        <a href="/rol" class="btn btn-outline-primary text-light button cart productall">Asignar Rol</a> 
         {{/if}}
         {{#or isPremium isUsuario}}
-        <a href="/api/users/premium/:uid" class="btn btn-primary text-light button cart productall">Premium</a>          
+        <a href="/api/users/premium/:uid" class="btn btn-outline-primary text-light button cart productall">Premium</a>          
+        {{/or}}
+        {{#or isAdmin isPremium}}
+        <a href="/api/addProduct" class="btn btn-orange text-light button cart productall">Agregar Productos</a>           
         {{/or}}
         </div>  
         <div class="navbartotal">
@@ -89,49 +92,8 @@
           </div>
         </div>
         {{/each}}
-      </div>
-
-    {{#or isAdmin isPremium}}       
-      <form action="/api/products_index" method="post" id="formulario" enctype="multipart/form-data">
-        <div class="d-flex justify-content-center post" id="addpost">
-          <h2>Agregar Nuevo Producto</h2>
-        </div>
-        <div class="mb-3">
-          <label for="title" class="form-label">Title</label>
-          <input name="title" type="text" class="form-control" id="title" required>
-        </div>
-        <div class="mb-3">          
-          <input name="owner" type="hidden" class="form-control" id="owner" value="{{user}}">
-        </div>
-        <div class="mb-3">
-          <label for="imagen" class="form-label">Imagen desde URL</label>
-          <input name="thumbnail" type="url" class="form-control" id="imagen" onchange="toggleFields()">
-        </div>       
-        <div class="mb-3">
-          <label for="imagen" class="form-label">ó Imagen desde FILE</label>
-          <input name="thumbnailFile" type="file" class="form-control" id="imagenFile" onchange="toggleFields()">
-        </div>
-        <div class="mb-3">
-          <label for="descripcion" class="form-label">Description</label>
-          <input name="description" type="text" class="form-control" id="descripcion" required>
-        </div>
-        <div class="mb-3">
-          <label for="precio" class="form-label">Precio</label>
-          <input name="price" type="number" class="form-control" id="preico" required>
-        </div>
-        <div class="mb-3">
-          <label for="stock" class="form-label">Stock</label>
-          <input name="stock" type="number" class="form-control" id="stock" required>
-        </div>
-        <div class="mb-3">
-          <label for="categoria" class="form-label">Categoria</label>
-          <input name="category" type="text" class="form-control" id="categoria" required>
-        </div>
-        <div class="d-flex justify-content-center">
-          <button id="btn" type="submit" class="btn btn-primary">Agregar al stock</button>
-        </div>
-      </form> 
-    {{/or}}  
+      </div>        
+      
 
 <footer class="bg-transparent text-dark pt-5 pb-4">
   <div class="d-flex justify-content-between m-5">
@@ -194,21 +156,3 @@
   </div>
 </footer>
    
-
-
-<script>
-  function toggleFields() {
-    const urlInput = document.getElementById('imagen');
-    const fileInput = document.getElementById('imagenFile');
-
-    if (urlInput.value) {
-        fileInput.disabled = true;
-        fileInput.required = false;
-        urlInput.required = true;
-    } else {
-        fileInput.disabled = false;
-        fileInput.required = true;
-        urlInput.required = false;
-    }
-}
-</script>

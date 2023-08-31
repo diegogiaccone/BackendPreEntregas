@@ -55,7 +55,6 @@ export default class CartManager {
         return cartById 
     }  
 
-
     addProductInCart = async (req, res) => {
         try {                                        
             const cid = req.session.user.cart[0]                           

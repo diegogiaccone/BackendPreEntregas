@@ -2,7 +2,7 @@ import { Router } from "express";
 import Rol from "../services/isAdmin.dbclass.js";
 import { authentication } from "../auth/passport.jwt.js";
 import { authorization } from "../auth/passport.jwt.js";
-import { addProduct, deleteProduct, getProducts, getProductsIndex, getUpdate, updateProduct, validate, getErrOwner, getErrAddOwner } from "../controller/products.controller.js";
+import { addProduct, deleteProduct, getProducts, getProductsIndex, getUpdate, updateProduct, validate, getErrOwner, getErrAddOwner, getAddProduct } from "../controller/products.controller.js";
 import { upload } from "../app.js";
 
 const router = Router();
@@ -13,6 +13,8 @@ const productRoutes = (io) => {
     router.get(`/update`, getUpdate, [validate, authentication('jwtAuth'), rol.isAdmin ])
 
     router.get('/products_index', getProductsIndex, [validate, authentication('jwtAuth')]);
+
+    router.get('/addProduct', getAddProduct, [validate, authentication('jwtAuth')]);
 
     router.get('/products', getProducts, [validate, authentication('jwtAuth'), rol.isAdmin]);
     

@@ -299,3 +299,15 @@ h1{
     border-color: #555;
     outline: none;
   }
+
+  .btn-orange {
+    background-color: transparent;
+    border-color: #FF7300; /* Color del borde naranja */
+    color: #FF7300; /* Color de texto naranja */
+    border: 2px solid #FF7300; /* Borde naranja por defecto */
+    transition: border-color 0.3s; /* Transición suave para el cambio de color del borde */
+  }
+  
+  .btn-orange:hover {
+    background-color: #FF7300;    
+  }
