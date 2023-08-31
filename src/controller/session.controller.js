@@ -1,4 +1,5 @@
 import { generateToken } from '../auth/jwt.config.js'
+import userModel from '../model/user.model.js';
    
 export const login = async (req, res) => {
     if (req.user === undefined) {                       
@@ -7,7 +8,7 @@ export const login = async (req, res) => {
         req.session.user = req.sessionStore.user = req.user                       
         req.session.userValidated = req.sessionStore.userValidated = true;     
         const date = new Date();
-        const user = await (req.user).populate(`rol`)       
+        //const user = await (req.user).populate(`rol`)       
         const token = generateToken({ user: req.user.user, name: req.user.name, apellido: req.user.apellido, rol: req.user.rol})   
         res.cookie('token', token, {
             maxAge: date.setDate(date.getDate() + 1),
@@ -20,6 +21,7 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
     req.session.userValidated = req.sessionStore.userValidated = false;
+    await userModel.updateOne({user:user}, {last_connection: new Date()})
     res.clearCookie('connect.sid',{domain:".localhost"});
     res.clearCookie('token', {domain: ".localhost"})
     req.session.destroy((err) => {

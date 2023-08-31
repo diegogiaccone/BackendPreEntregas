@@ -291,10 +291,8 @@ class Users {
             console.error(error);
             res.status(500).json({ message: 'Error al subir los documentos' });
           }
-    }       
-           
-      
-
+    }           
+   
     validateUser = async (req, res, next) => {
         const { user, pass } = req.body; // Desestructuramos el req.body
         const findUser = await userModel.findOne({user:user}).populate(`rol`)       
