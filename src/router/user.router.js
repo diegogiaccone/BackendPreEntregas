@@ -9,7 +9,7 @@ const rol = new Rol();
 const router = Router();
 const userRoutes = (io) => {
        
-    router.get(`/users`, getUsers,[validate, authentication('jwtAuth')])
+    router.get(`/api/users`, getUsers,[validate, authentication('jwtAuth')])
 
     router.get('/users/:id?',getUserById, [validate, authentication('jwtAuth')]);
 
@@ -19,7 +19,7 @@ const userRoutes = (io) => {
 
     router.get(`/errmessages`, getErrMessages)
 
-    router.get(`/recovery`, getRecovery)   
+    router.get(`/recovery`, getRecovery)     
 
     router.get(`/api/users/premium/:uid`, getPremium, [validate, authentication('jwtAuth')])
     

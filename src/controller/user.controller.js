@@ -1,5 +1,7 @@
 import Users from "../services/user.dbclass.js";
 import userModel from "../model/user.model.js";
+import cartModel from "../model/Cart.model.js";
+import mongoose from "mongoose";
 import { __dirname, generateUser } from '../utils.js';
 
 const manager = new Users();
@@ -13,13 +15,34 @@ export const validate = async (req, res, next) => {
 }
 
 export const getUsers = async (req,res) => {
-    const users = await manager.getUsers()
-    res.status(200).send({status : "ok", payload: users})
-    console.log(users)
-}
+    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)
+    const cid = req.session.user.cart[0]
+    const cart = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}) 
+    const cartElements = cart.products.length
+    const cartExist = cartElements > 0 ? true : false;
+    const name = userObjet.name
+    const pass = userObjet.pass
+    const existPass = pass === undefined ? false : true 
+    const rol = userObjet.rol[0].name        
+    const isAdmin = rol === "Admin" ? true : false; 
+    const isPremium = rol === "Premium" ? true : false;
+    const isUsuario = rol === "Usuario" ? true : false;
+    const avatar = userObjet.avatar  
+    const users = await manager.getUsers()   
+    const payload = [] 
+    users.forEach(element => {
+        const object = {name: element.name, mail: element.user, rol: element.rol[0].name}
+        payload.push(object)
+    });    
+    res.status(200).render(`users`, {name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, isPremium: isPremium, isUsuario: isUsuario, user: payload, cart: cartExist, cartQty: cartElements});
+}    
     
 export const getUpdate = async (req, res) => {                  
-    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)      
+    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)    
+    const cid = req.session.user.cart[0]
+    const cart = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}) 
+    const cartElements = cart.products.length
+    const cartExist = cartElements > 0 ? true : false;  
     const name = userObjet.name
     const pass = userObjet.pass
     const existPass = pass === undefined ? false : true 
@@ -29,11 +52,15 @@ export const getUpdate = async (req, res) => {
     const isUsuario = rol === "Usuario" ? true : false;
     const avatar = userObjet.avatar                               
     res.render('updatepass', {
-        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, isPremium: isPremium, isUsuario: isUsuario});
+        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, isPremium: isPremium, isUsuario: isUsuario, cart: cartExist, cartQty: cartElements});
 }
 
 export const getRol = async (req, res) => {                  
-    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)            
+    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)    
+    const cid = req.session.user.cart[0]
+    const cart = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}) 
+    const cartElements = cart.products.length
+    const cartExist = cartElements > 0 ? true : false;        
     const name = userObjet.name
     const pass = userObjet.pass
     const existPass = pass === undefined ? false : true 
@@ -41,11 +68,15 @@ export const getRol = async (req, res) => {
     const isAdmin = rol === "Admin" ? true : false;    
     const avatar = userObjet.avatar                               
     res.render('rol', {
-        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass});
+        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, cart: cartExist, cartQty: cartElements});
 }
 
 export const getPremium = async (req, res) => {                  
-    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)            
+    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)   
+    const cid = req.session.user.cart[0]
+    const cart = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}) 
+    const cartElements = cart.products.length
+    const cartExist = cartElements > 0 ? true : false;         
     const name = userObjet.name
     const user = userObjet.user
     const pass = userObjet.pass
@@ -57,11 +88,15 @@ export const getPremium = async (req, res) => {
     const isUsuario = rol === "Usuario" ? true : false;
     const avatar = userObjet.avatar                               
     res.render('premium', {
-        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid, user: user, isPremium: isPremium, isUsuario: isUsuario});
+        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid, user: user, isPremium: isPremium, isUsuario: isUsuario, cart: cartExist, cartQty: cartElements});
 }
     
 export const getAvatarUpdate = async (req, res) => {                  
-    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)      
+    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)  
+    const cid = req.session.user.cart[0]
+    const cart = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}) 
+    const cartElements = cart.products.length
+    const cartExist = cartElements > 0 ? true : false;    
     const name = userObjet.name 
     const pass = userObjet.pass
     const existPass = pass === undefined ? false : true
@@ -72,7 +107,7 @@ export const getAvatarUpdate = async (req, res) => {
     const avatar = userObjet.avatar
     const uid = userObjet._id                           
     res.render('updateavatar', {
-        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid, isPremium: isPremium, isUsuario: isUsuario});
+        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid, isPremium: isPremium, isUsuario: isUsuario, cart: cartExist, cartQty: cartElements});
 }    
     
 export const getEqual = async (req, res) => {
@@ -144,7 +179,11 @@ export const deleteUser = async(req, res) => {
 };
 
 export const getUploadDocument = async(req, res) =>{
-    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)      
+    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)   
+    const cid = req.session.user.cart[0]
+    const cart = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}) 
+    const cartElements = cart.products.length
+    const cartExist = cartElements > 0 ? true : false;   
     const name = userObjet.name 
     const pass = userObjet.pass
     const existPass = pass === undefined ? false : true
@@ -155,12 +194,16 @@ export const getUploadDocument = async(req, res) =>{
     const avatar = userObjet.avatar
     const uid = userObjet._id                           
     res.render('uploadDocuments', {
-        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid, isPremium: isPremium, isUsuario: isUsuario});
+        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid, isPremium: isPremium, isUsuario: isUsuario, cart: cartExist, cartQty: cartElements});
     
 }
 
 export const getloadDocument = async(req, res) =>{
-    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)      
+    const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)    
+    const cid = req.session.user.cart[0]
+    const cart = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}) 
+    const cartElements = cart.products.length
+    const cartExist = cartElements > 0 ? true : false;  
     const name = userObjet.name 
     const pass = userObjet.pass
     const existPass = pass === undefined ? false : true
@@ -171,7 +214,7 @@ export const getloadDocument = async(req, res) =>{
     const avatar = userObjet.avatar
     const uid = userObjet._id                           
     res.render('loadDocuments', {
-        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid, isPremium: isPremium, isUsuario: isUsuario});
+        name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, uid: uid, isPremium: isPremium, isUsuario: isUsuario, cart: cartExist, cartQty: cartElements});
     
 }
 

@@ -1,5 +1,7 @@
 import Users from '../services/user.dbclass.js';
 import userModel from "../model/user.model.js";
+import cartModel from '../model/Cart.model.js';
+import mongoose from 'mongoose';
 import { store } from "../app.js";
 import config from '../config/config.env.js';
 import factoryProduct from '../services/factory.js';
@@ -29,7 +31,11 @@ export const getProductsPaginated = async (req, res) => {
                 pagesArray: pagesArray
             }     
               
-            const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)                
+            const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`) 
+            const cid = req.session.user.cart[0]
+            const cart = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}) 
+            const cartElements = cart.products.length
+            const cartExist = cartElements > 0 ? true : false;               
             const name = userObjet.name 
             const pass = userObjet.pass            
             const rol = userObjet.rol[0].name
@@ -38,7 +44,7 @@ export const getProductsPaginated = async (req, res) => {
             const isUser = rol === "Usuario" ? true : false
             const avatar = userObjet.avatar            
             const existPass = pass === undefined ? false : true     
-            res.render('products',{ products: result.docs, pagination: pagination, name:name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, isPremium: isPremium, isUser: isUser});
+            res.render('products',{ products: result.docs, pagination: pagination, name:name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, isPremium: isPremium, isUser: isUser, cart: cartExist, cartQty: cartElements});
         } else {            
             res.render('login', {
                 sessionInfo: req.session.userValidated !== undefined ? req.session : req.sessionStore,

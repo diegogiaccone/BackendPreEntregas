@@ -114,7 +114,11 @@ export default class TicketManager {
         try {           
                 const ticketUser = await (req.session.user.ticket)                                          
                 const process = await ticketModel.findOne({ '_id': new mongoose.Types.ObjectId(ticketUser[0])})                           
-                const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)                
+                const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`) 
+                const cid = req.session.user.cart[0]
+                const cart = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}) 
+                const cartElements = cart.products.length
+                const cartExist = cartElements > 0 ? true : false;               
                 const avatar= userObjet.avatar               
                 const name = userObjet.name
                 const pass = userObjet.pass
@@ -133,7 +137,9 @@ export default class TicketManager {
                     pass: existPass,
                     isAdmin: isAdmin,
                     isPremium: isPremium,
-                    isUsuario: isUsuario 
+                    isUsuario: isUsuario,
+                    cart: cartExist, 
+                    cartQty: cartElements 
                 })
             } catch (err) {
                 res.status(500).send({ status: 'ERR', error: err });            

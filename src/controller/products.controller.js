@@ -1,6 +1,8 @@
 import config from '../config/config.env.js';
 import userModel from "../model/user.model.js";
 import factoryProduct from "../services/factory.js";
+import cartModel from '../model/Cart.model.js';
+import mongoose from 'mongoose';
 
 const manager = new factoryProduct();
 
@@ -30,6 +32,10 @@ export const getUpdate = async (req, res) => {
 export const getProductsIndex = async (req, res) => {
         const products = await manager.getProducts();
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)
+        const cid = req.session.user.cart[0]
+        const cart = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}) 
+        const cartElements = cart.products.length
+        const cartExist = cartElements > 0 ? true : false;
         const user = req.session.user.user
         const name = userObjet.name 
         const pass = userObjet.pass        
@@ -40,12 +46,16 @@ export const getProductsIndex = async (req, res) => {
         const avatar = userObjet.avatar
         const existPass = pass === undefined ? false : true                          
         res.render('products_index', {
-            products: products, name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, user: user, isPremium: isPremium, isUsuario: isUsuario});
+            products: products, name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, user: user, isPremium: isPremium, isUsuario: isUsuario, cart: cartExist, cartQty: cartElements});
     };
 
 export const getAddProduct = async (req, res) => {
         const products = await manager.getProducts();
         const userObjet = await userModel.findOne({user: req.session.user.user}).populate(`rol`)
+        const cid = req.session.user.cart[0]
+        const cart = await cartModel.findOne({ '_id': new mongoose.Types.ObjectId(cid)}) 
+        const cartElements = cart.products.length
+        const cartExist = cartElements > 0 ? true : false;
         const user = req.session.user.user
         const name = userObjet.name 
         const pass = userObjet.pass        
@@ -56,7 +66,7 @@ export const getAddProduct = async (req, res) => {
         const avatar = userObjet.avatar
         const existPass = pass === undefined ? false : true                          
         res.render('addProduct', {
-            products: products, name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, user: user, isPremium: isPremium, isUsuario: isUsuario});
+            products: products, name: name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, user: user, isPremium: isPremium, isUsuario: isUsuario, cart: cartExist, cartQty: cartElements});
     };
 
 export const getProducts = async (req, res) => {          
