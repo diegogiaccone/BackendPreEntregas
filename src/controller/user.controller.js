@@ -2,7 +2,8 @@ import Users from "../services/user.dbclass.js";
 import userModel from "../model/user.model.js";
 import cartModel from "../model/Cart.model.js";
 import mongoose from "mongoose";
-import { __dirname, generateUser } from '../utils.js';
+import { InactiveMail, __dirname, generateUser } from '../utils.js';
+import cron from "node-cron"
 
 const manager = new Users();
     
@@ -150,6 +151,10 @@ export const getRegister = async (req, res) => {
     res.render('registrar');
 };   
 
+export const getUserDelete = async (req, res) => {        
+    res.render('userDelete');
+};  
+
 export const updateUser = async (uid, res) => {
     try {            
         await manager.updateUser(uid);
@@ -165,17 +170,56 @@ export const updateUser = async (uid, res) => {
     }
 };
 
-export const deleteUser = async(req, res) => {
-    try {
-        await manager.deleteUser(req.params.id);        
+export const deleteInactiveUser = async(req, res) => {      
+
+        try {
+            const users = await manager.getUsers()
+            const date = new Date()      
+           
+            users.forEach(async (element) => {
+                const last_connection = element.last_connection
+                const last_connection_date = new Date(last_connection)
+                const timeDifference = date - last_connection_date
+                const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                if(daysDifference >= 1){      
+                    const id = element._id    
+                    const user = element.user      
+                    await manager.deleteUser(id)
+                    InactiveMail(user)                          
+                }else {
+                    console.log(`estos usuarios son activos ${element.name}`)
+                }            
+            });        
+                
+                    
+            if (manager.checkStatus() === 1) {
+                res.status(200).send({ status: 'OK', msg: manager.showStatusMsg() });
+            } else {
+                res.status(400).send({ status: 'ERR', error: manager.showStatusMsg() });
+            }
+        } catch (err) {
+            res.status(500).send({ status: 'ERR', error: err });
+        }
+     
+};
+
+export const deleteUser = async(req, res) => {      
+
+    try { 
+        const user = req.body.user
+        const process = await userModel.findOne({user: user}) 
+        console.log(process)
+        const id = process._id         
+        await manager.deleteUser(id)             
         if (manager.checkStatus() === 1) {
-            res.status(200).send({ status: 'OK', msg: manager.showStatusMsg() });
+            res.redirect(`/userDelete`)
         } else {
             res.status(400).send({ status: 'ERR', error: manager.showStatusMsg() });
         }
     } catch (err) {
         res.status(500).send({ status: 'ERR', error: err });
     }
+ 
 };
 
 export const getUploadDocument = async(req, res) =>{

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { __dirname } from '../utils.js';
 import { authentication } from "../auth/passport.jwt.js";
-import { addUser, deleteUser, getRegister, getUserById, updateUser, validate, getUpdate, getAvatarUpdate, getUsers, fakeUser, getRecovery, getRecoveryPass, mailPassRecovery, passRecovery, getRol, updateRol, getMessages, getErrMessages, getEqual, getSuccess, getPassEqual, uploadAvatar, getUploadDocument, uploadDocuments, getPremium, updatePremium, getloadDocument} from "../controller/user.controller.js";
+import { addUser, deleteUser, getRegister, getUserById, updateUser, validate, getUpdate, getAvatarUpdate, getUsers, fakeUser, getRecovery, getRecoveryPass, mailPassRecovery, passRecovery, getRol, updateRol, getMessages, getErrMessages, getEqual, getSuccess, getPassEqual, uploadAvatar, getUploadDocument, uploadDocuments, getPremium, updatePremium, getloadDocument, deleteInactiveUser, getUserDelete} from "../controller/user.controller.js";
 import Rol from "../services/isAdmin.dbclass.js";
 import { upload } from "../app.js";
 
@@ -40,6 +40,8 @@ const userRoutes = (io) => {
     router.get(`/updateavatar`, getAvatarUpdate,[validate, authentication('jwtAuth')])
 
     router.get('/registrar', getRegister); 
+
+    router.get('/userDelete', getUserDelete); 
     
     router.get('/rol', getRol, [validate, authentication('jwtAuth')], rol.isAdmin);
 
@@ -61,7 +63,9 @@ const userRoutes = (io) => {
 
     router.put('/users/:id', updateUser, [validate, authentication('jwtAuth')]);
     
-    router.delete('/users/:id', deleteUser, [validate, authentication('jwtAuth')]);
+    router.delete('/api/users/delete', deleteInactiveUser, [validate, authentication('jwtAuth')]);
+
+    router.delete('/api/users/delete/user', deleteUser, [validate, authentication('jwtAuth')], rol.isAdmin);
 
     return router;
 }

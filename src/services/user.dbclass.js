@@ -222,7 +222,7 @@ class Users {
 
     deleteUser = async (id) => {
         try {
-            const process = await userModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id) });
+            const process = await userModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id)});
             this.status = 1;
             process.deletedCount === 0 ? this.statusMsg = "El ID no existe": this.statusMsg = "Usuario borrado";
         } catch (err) {

@@ -27,6 +27,10 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUiExpress from 'swagger-ui-express';
 import multer from 'multer';
 import path from "path"
+import cron from 'node-cron';
+import fetch from 'node-fetch';
+
+// Programa la tarea cron para que se ejecute cada 1 minuto
 
 
 const PORT = config.PORT;
@@ -37,6 +41,7 @@ const PRODUCTS_PER_PAGE = config.PRODUCTS_PER_PAGE;
 const wspuerto = config.WSPORT;
 export const store = MongoStore.create({ mongoUrl: MONGOOSE_URL, mongoOptions: {}, ttl: 3600});
 const specs = swaggerJsdoc(swaggerOptions);
+
 
 // Configuración de Multer para guardar archivos en la carpeta 'public'
 const storage = multer.diskStorage({
@@ -56,11 +61,28 @@ const storage = multer.diskStorage({
       cb(null,file.originalname);
     }
   });
-
-export const upload = multer({ storage: storage });
-
-    
-    const app = express();
+  
+  export const upload = multer({ storage: storage });
+  
+  cron.schedule('0 0 * * *', async () => {
+    try {
+      // Realiza una solicitud HTTP a la ruta deseada
+      const response = await fetch(`${BASE_URL}/api/users/delete`, {
+        method: 'DELETE', // O el método HTTP que corresponda
+        // Puedes agregar encabezados, cuerpo de solicitud, etc., si es necesario
+      });
+  
+      if (response.ok) {
+        console.log('Tarea cron ejecutada con éxito.');
+      } else {
+        console.error('Error al ejecutar la tarea cron:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Error al ejecutar la tarea cron:', error.message);
+    }
+  });
+  
+  const app = express();
     createRol();
     
     const httpServer = app.listen(wspuerto, () =>{

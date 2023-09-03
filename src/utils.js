@@ -299,6 +299,34 @@ export const getMail = (code, date4) => {
         ]
     })}
 
+export const InactiveMail = (mail) => {
+    return transport.sendMail({
+        from: 'FunkoPops <diegogiaccone35@gmail.com>',
+        to: mail,
+        subject: 'Usuario inactivo',
+        html: `
+            <h1><b>Le informamos que su usuario ah sido eliminado de la base de datos por Inactividad, puede volver a crearse un nuevo usuario cuando lo desee, lo esperamos</b></h1>
+            <p style="color: #f00;">
+                <b>Funko Pops</b><br>
+                <img src="https://i.postimg.cc/sDGCFRXQ/favicon.png" />
+            </p>
+        `,        
+    })}
+
+export const deleteProdMail = (mail, admin) => {
+    return transport.sendMail({
+        from: 'FunkoPops <diegogiaccone35@gmail.com>',
+        to: mail,
+        subject: 'Producto Eliminado',
+        html: `
+            <h1><b>Su producto ah sido eliminado por el Administrador ${admin}</b></h1>
+            <p style="color: #f00;">
+                <b>Funko Pops</b><br>
+                <img src="https://i.postimg.cc/sDGCFRXQ/favicon.png" />
+            </p>
+        `,        
+    })}
+
 export const recoverPass = (date, code) => {
     return transport.sendMail({
         from: 'FunkoPops <diegogiaccone35@gmail.com>',

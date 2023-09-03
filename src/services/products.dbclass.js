@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import productModel from '../model/products.model.js';
+import rolModel from '../model/rol.model.js';
+import { deleteProdMail } from '../utils.js';
+import userModel from '../model/user.model.js';
 
 
 export default class Products {
@@ -138,13 +141,20 @@ export default class Products {
             const id = req.body
             const product = await productModel.findOne({ '_id': new mongoose.Types.ObjectId(id.id)});          
             const user = req.session.user
-            if(user.rol[0].name === "Admin" || user.rol[0].name === "Premium"){
-                if(user.rol[0].name === "Admin"){
+            const rol = await rolModel.findOne({ '_id': new mongoose.Types.ObjectId(user.rol[0])});             
+            const owner = product.owner
+            const userOwner = await userModel.findOne({user: owner})
+            const ownerRol = await rolModel.findOne({ '_id': new mongoose.Types.ObjectId(userOwner.rol[0])})
+            if(rol.name === "Admin" || rol.name === "Premium"){
+                if(rol.name === "Admin"){
                     const deleteProd = await productModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id.id)});
+                    if(ownerRol.name === "Premium"){
+                        deleteProdMail(owner, user.name)
+                    }
                     res.redirect(`products_index`)
                     return deleteProd
                 }else{
-                    if(user.rol[0].name === "Premium" && product.owner == user.user){
+                    if(rol.name === "Premium" && owner == user.user){
                         const deleteProd = await productModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id.id)});
                         res.redirect(`products_index`)
                         return deleteProd
