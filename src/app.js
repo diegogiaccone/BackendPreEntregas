@@ -29,6 +29,7 @@ import multer from 'multer';
 import path from "path"
 import cron from 'node-cron';
 import fetch from 'node-fetch';
+import cors from "cors"
 
 // Programa la tarea cron para que se ejecute cada 1 minuto
 
