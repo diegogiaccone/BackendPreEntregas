@@ -82,6 +82,15 @@ const storage = multer.diskStorage({
       console.error('Error al ejecutar la tarea cron:', error.message);
     }
   });
+
+  const corsOptions = {
+    origin: '*', // Reemplaza con el dominio de tu aplicación
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, 
+    optionsSuccessStatus: 204, 
+    allowedHeaders: 'Content-Type,Authorization' 
+  };
+  
   
   const app = express();
     createRol();
@@ -96,7 +105,10 @@ const storage = multer.diskStorage({
     // Parseo correcto de urls
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
-    
+
+    //cors
+    app.use(cors(corsOptions))
+
     //metodo overRide
     app.use(methodOverride('_method'))
     

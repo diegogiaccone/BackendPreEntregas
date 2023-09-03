@@ -27,7 +27,7 @@ JWT_COOKIE_EXPIRES: process.env.JWT_COOKIE_EXPIRES,
 GITHUB_SECRET: process.env.GITHUB_SECRET,
 CLIENT_ID: process.env.CLIENT_ID,
 PRODUCTS_PER_PAGE: parseInt(process.env.PRODUCTS_PER_PAGE),
-BASE_URL: `http://localhost:${args.p}`,
+BASE_URL: process.env.BASE_URL,
 PERSISTENCE: process.env.PERSISTENCE,
 GOOGLE_ID: process.env.GOOGLE_ID,
 GOOGLE_SECRET: process.env.GOOGLE_SECRET,
@@ -37,5 +37,6 @@ PASS_GMAIL: process.env.PASS_GMAIL,
 UPLOAD_DIR: process.env.UPLOAD_DIR
 }
 
+console.log(config.BASE_URL)
 
 export default config

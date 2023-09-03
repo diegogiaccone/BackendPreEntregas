@@ -1,3 +1,4 @@
+import config from '../config/config.env.js';
 import { generateToken } from '../auth/jwt.config.js'
 import userModel from '../model/user.model.js';
    
@@ -15,7 +16,7 @@ export const login = async (req, res) => {
             secure: false, // true para operar solo sobre HTTPS
             httpOnly: true
         }) 
-        res.redirect(`/`)
+        res.redirect(config.BASE_URL)
     }
     };
 
@@ -28,7 +29,7 @@ export const logout = async (req, res) => {
         req.sessionStore.destroy(req.sessionID, (err) => {
             if (err) console.log(`Error al destruir sesión (${err})`);
             console.log('Sesión destruída');
-            res.redirect(`/`);
+            res.redirect(config.BASE_URL) 
         });
     })
     };
