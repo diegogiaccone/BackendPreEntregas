@@ -18,7 +18,7 @@ export const getProductsPaginated = async (req, res) => {
             const pagesArray = [];
             for (let i = 0; i < result.totalPages; i++) pagesArray.push({ index: i, indexPgBar: i});                
             const pagination = {                    
-                baseUrl: config.BASE_URL,
+                baseUrl: `/`,
                 limit: result.limit,
                 offset: result.offset,
                 totalPages: result.totalPages,
@@ -47,8 +47,7 @@ export const getProductsPaginated = async (req, res) => {
             res.render('products',{ products: result.docs, pagination: pagination, name:name, rol: rol, isAdmin: isAdmin, avatar: avatar, pass: existPass, isPremium: isPremium, isUser: isUser, cart: cartExist, cartQty: cartElements});
         } else {            
             res.render('login', {
-                sessionInfo: req.session.userValidated !== undefined ? req.session : req.sessionStore,
-                baseUrl: config.BASE_URL
+                sessionInfo: req.session.userValidated !== undefined ? req.session : req.sessionStore                
             });
         }                    
     }); 

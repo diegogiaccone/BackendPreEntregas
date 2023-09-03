@@ -84,7 +84,7 @@ const storage = multer.diskStorage({
   });
 
   const corsOptions = {
-    origin: '*', // Reemplaza con el dominio de tu aplicación
+    origin: '*', 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, 
     optionsSuccessStatus: 204, 

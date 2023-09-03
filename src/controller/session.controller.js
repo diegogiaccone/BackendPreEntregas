@@ -2,10 +2,9 @@ import config from '../config/config.env.js';
 import { generateToken } from '../auth/jwt.config.js'
 import userModel from '../model/user.model.js';
    
-export const login = async (req, res) => {
-    const baseUrl = config.BASE_URL
+export const login = async (req, res) => {  
     if (req.user === undefined) {                       
-        res.render('login', { sessionInfo: req.session, baseUrl: baseUrl });
+        res.render('login', { sessionInfo: req.session});
     } else {
         req.session.user = req.sessionStore.user = req.user                       
         req.session.userValidated = req.sessionStore.userValidated = true;     

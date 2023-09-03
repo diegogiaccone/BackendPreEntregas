@@ -298,12 +298,12 @@ class Users {
         const findUser = await userModel.findOne({user:user}).populate(`rol`)       
         if (!findUser) {
             req.sessionStore.errorMessage = 'No se encuentra el usuario';
-            res.redirect(config.BASE_URL);           
+            res.redirect(`/`);           
         }else{
             const passHash = await bcrypt.compareSync(pass, findUser.pass)               
             if (passHash === false) {                
                     req.sessionStore.errorMessage = 'Clave incorrecta'; 
-                    res.redirect(config.BASE_URL);  
+                    res.redirect(`/`);  
                 } else{  
                     await userModel.updateOne({user:user}, {last_connection: new Date()})                           
                     req.session.userValidated = req.sessionStore.userValidated = true;
