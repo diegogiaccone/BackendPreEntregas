@@ -24,8 +24,8 @@ export const getProductsPaginated = async (req, res) => {
                 totalPages: result.totalPages,
                 totalDocs: result.totalDocs,
                 page: result.page - 1,
-                nextPageUrl: `${config.BASE_URL}?page=${result.nextPage - 1}`,
-                prevPageUrl: `${config.BASE_URL}?page=${result.prevPage - 1}`,
+                nextPageUrl: `/?page=${result.nextPage - 1}`,
+                prevPageUrl: `/?page=${result.prevPage - 1}`,
                 hasPrevPage: result.hasPrevPage,
                 hasNextPage: result.hasNextPage,
                 pagesArray: pagesArray
