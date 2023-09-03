@@ -17,7 +17,7 @@ export const login = async (req, res) => {
             secure: false, // true para operar solo sobre HTTPS
             httpOnly: true
         }) 
-        res.redirect(config.BASE_URL)
+        res.redirect(`/`)
     }
     };
 
@@ -30,7 +30,7 @@ export const logout = async (req, res) => {
         req.sessionStore.destroy(req.sessionID, (err) => {
             if (err) console.log(`Error al destruir sesión (${err})`);
             console.log('Sesión destruída');
-            res.redirect(config.BASE_URL) 
+            res.redirect(`/`) 
         });
     })
     };

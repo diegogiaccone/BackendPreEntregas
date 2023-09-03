@@ -64,7 +64,7 @@ export const logout = async (req, res) => {
         req.sessionStore.destroy(req.sessionID, (err) => {
             if (err) console.log(`Error al destruir sesión (${err})`);
             console.log('Sesión destruída');
-            res.redirect(config.BASE_URL);
+            res.redirect(`/`);
         });
     })
     };

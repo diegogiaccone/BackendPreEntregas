@@ -316,7 +316,7 @@ class Users {
                         secure: false, // true para operar solo sobre HTTPS
                         httpOnly: true
                     })                    
-                    res.redirect(config.BASE_URL) 
+                    res.redirect(`/`) 
                 }      
             }
         } 
