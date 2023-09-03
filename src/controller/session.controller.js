@@ -3,8 +3,9 @@ import { generateToken } from '../auth/jwt.config.js'
 import userModel from '../model/user.model.js';
    
 export const login = async (req, res) => {
+    const baseUrl = config.BASE_URL
     if (req.user === undefined) {                       
-        res.render('login', { sessionInfo: req.session });
+        res.render('login', { sessionInfo: req.session, baseUrl: baseUrl });
     } else {
         req.session.user = req.sessionStore.user = req.user                       
         req.session.userValidated = req.sessionStore.userValidated = true;     
