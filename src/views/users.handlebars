@@ -16,7 +16,7 @@
         {{!-- <a href="/fakeuser" class="btn btn-info text-light button cart productall">Mock Fakeuser</a> --}}           
         <a href="/rol" class="btn btn-outline-primary button cart productall">Editar Usuario</a> 
         {{/if}}   
-        {{#or isPremium isUser}}
+        {{#or isPremium isUsuario}}
         <a href="/api/users/premium/:uid" class="btn btn-outline-primary button cart productall">Premium</a>          
         {{/or}}
         {{#or isAdmin isPremium}}
@@ -37,7 +37,7 @@
     {{#if pass}}
     <li><a class="dropdown-item" href="/updatepass">Cambiar Contraseña</a></li>       
     {{/if}}
-    {{#or isPremium isUser}}
+    {{#or isPremium isUsuario}}
     <li><a class="dropdown-item" href="/uploadDocuments">Pasar a Premium</a></li>
     {{/or}}
     <li><a class="dropdown-item" href="/api/users">Todos los usuarios</a></li>

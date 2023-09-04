@@ -132,7 +132,7 @@ const storage = multer.diskStorage({
     app.use(passport.session());
     
     // end points    
-    app.use('/', mainRoutes(io, store, BASE_URL, PRODUCTS_PER_PAGE));
+    app.use('/', mainRoutes(io, store, PRODUCTS_PER_PAGE));
     app.use('/', UserRoutes(io));
     app.use('/api', productRoutes(io));
     app.use(`/api`, cartRoutes(io));

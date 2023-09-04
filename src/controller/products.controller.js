@@ -86,7 +86,7 @@ export const addProduct = async (req, res) => {
                 await manager.addProduct(product);                    
             }else{
                 const procces = req.file            
-                const thumbnailFile = config.BASE_URL+"/public/products/"+procces.originalname
+                const thumbnailFile = "/public/products/"+procces.originalname
                 let product = {title: title, owner: owner, thumbnail: thumbnailFile, description: description, price: price, stock: stock, category: category}
                 await manager.addProduct(product);            
             }

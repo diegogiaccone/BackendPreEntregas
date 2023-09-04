@@ -277,7 +277,7 @@ class Users {
         } else {
             const user = await userModel.findOneAndUpdate(
                 { _id: userId },
-                { $set: { documents: {name: uploadedDocuments.originalname, reference: uploadedDocuments.fieldname}, avatar: config.BASE_URL+"/public/profiles/"+uploadedDocuments.originalname}},
+                { $set: { documents: {name: uploadedDocuments.originalname, reference: uploadedDocuments.fieldname}, avatar: "/public/profiles/"+uploadedDocuments.originalname}},
                 { new: true }
               );
         
