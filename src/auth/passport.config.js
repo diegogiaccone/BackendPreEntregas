@@ -14,7 +14,7 @@ const initializePassport = () => {
     passport.use('github', new GithubStrategy({
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.GITHUB_SECRET,
-        callbackUrl: `/githubcallback`,  
+        callbackUrl: `githubcallback`,  
     }, async (accessToken, refreshToken, profile, done) => {        
         try{
             let users = await userModel.findOne({user: profile._json.email})            
@@ -50,7 +50,7 @@ const initializePassport = () => {
     passport.use(`google`, new GoogleStrategy({
         clientID: config.GOOGLE_ID,
         clientSecret: config.GOOGLE_SECRET,
-        callbackURL: `/auth/google/callback`
+        callbackURL: `auth/google/callback`
       },
       async(accessToken, refreshToken, profile, cb) => {        
         try{
@@ -88,7 +88,7 @@ const initializePassport = () => {
     passport.use('facebook', new FacebookStrategy({
         clientID: config.FACEBOOK_ID,
         clientSecret: config.FACEBOOK_SECRET,
-        callbackURL: `/auth/facebook/callback`
+        callbackURL: `auth/facebook/callback`
       },
       async(accessToken, refreshToken, profile, cb) => {        
         try{
