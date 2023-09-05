@@ -4,7 +4,6 @@ import rolModel from '../model/rol.model.js';
 import bcrypt from 'bcryptjs'
 import { generateToken, authToken } from '../auth/jwt.config.js'
 import cartModel from '../model/Cart.model.js';
-import config from '../config/config.env.js';
 import ticketModel from '../model/ticket.model.js';
 import { recoverPass, generateTokenpass } from '../utils.js';
 

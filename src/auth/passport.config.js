@@ -9,6 +9,7 @@ import GoogleStrategy from "passport-google-oauth20"
 import FacebookStrategy from "passport-facebook"
 import ticketModel from "../model/ticket.model.js";
 
+
 const initializePassport = () => {
     // Estrategia Github
     passport.use('github', new GithubStrategy({
@@ -92,7 +93,7 @@ const initializePassport = () => {
       },
       async(accessToken, refreshToken, profile, cb) => {        
         try{
-            let users = await userModel.findOne({ user: profile.id })           
+            let users = await userModel.findOne({ user: profile.id })                    
             if(!users){
                 const rol = await rolModel.findOne({name: "Usuario"})
                 const cart = await cartModel.create({
