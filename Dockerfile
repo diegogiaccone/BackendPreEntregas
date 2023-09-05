@@ -6,12 +6,26 @@
 # COPY . .: copia el resto de los archivos fuente de nuestra app a la imagen
 # EXPOSE 3000: al correr la app, será expuesta en el puerto 3000
 # CMD ["npm", "start"]: ejecuta finalmente un npm start para iniciar la app
+# Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
+# Note: this installs the necessary libs to make the bundled version of Chrome that Puppeteer
+# installs, work.
+# Install @puppeteer/browsers, puppeteer and puppeteer-core into /home/pptruser/node_modules.
+
 
 FROM ghcr.io/puppeteer/puppeteer:20.9.0
 FROM node
-WORKDIR /app
+WORKDIR /
+WORKDIR /home/pptruser
+
+USER pptruser
+
 COPY package*.json ./
-RUN npm install
+
+
+RUN npm i ./puppeteer-browsers-latest.tgz ./puppeteer-core-latest.tgz ./puppeteer-latest.tgz \
+    && rm ./puppeteer-browsers-latest.tgz ./puppeteer-core-latest.tgz ./puppeteer-latest.tgz \
+    && (node -e "require('child_process').execSync(require('puppeteer').executablePath() + ' --credits', {stdio: 'inherit'})" > THIRD_PARTY_NOTICES)
+
 RUN apt-get update && apt-get install -yq \
     gconf-service \
     libasound2 \
@@ -52,7 +66,20 @@ RUN apt-get update && apt-get install -yq \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update \
+    && apt-get install -y wget gnupg \
+    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg \
+    && sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-khmeros fonts-kacst fonts-freefont-ttf libxss1 \
+      --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd -r pptruser && useradd -rm -g pptruser -G audio,video pptruser
+
 COPY . .
+COPY puppeteer-browsers-latest.tgz puppeteer-latest.tgz puppeteer-core-latest.tgz ./
 EXPOSE 3030
-CMD ["npm", "start"]
+CMD ["npm", "start", "google-chrome-stable"]
+
+
 
