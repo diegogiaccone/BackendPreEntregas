@@ -6,6 +6,7 @@ import ticketModel from '../model/ticket.model.js';
 import { nanoid } from 'nanoid';
 import puppeteer from 'puppeteer';
 import { __dirname, pdf, getMail } from '../utils.js';
+import config from '../config/config.env.js';
 
 
 
@@ -77,7 +78,14 @@ export default class TicketManager {
                        const date2 = new Intl.DateTimeFormat('es', { dateStyle: 'full', timeStyle: 'long'}).format(date);
                        const name = req.session.user.name
                        const code = nanoid()                       
-                       const browser = await puppeteer.launch({headless: 'new'});
+                       const browser = await puppeteer.launch({headless: 'new', 
+                       args: [
+                        "--disable-setuid-sandbox",
+                        "--no-sandbox",
+                        "--single-process",
+                        "--no-zygote",
+                       ],
+                       executablePath: config.PUPPETEER});
                        const page = await browser.newPage();                       
                        const htmlContent = pdf(name, req.session.user.user, code, date2, products, Total)                      
                        await page.setContent(htmlContent)
