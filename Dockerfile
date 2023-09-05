@@ -13,7 +13,7 @@
 
 
 
-FROM node:14
+FROM node
 WORKDIR / 
 
 COPY package*.json ./
