@@ -60,7 +60,7 @@
               <th scope="col">Fecha de Compra</th>
               <th scope="col">Total</th>
               <th scope="col">Detalles</th>
-              <th scope="col">Descarga</th>
+              <th scope="col">Estado</th>
             </tr>
           </thead>                      
           {{#each ticket}} 
@@ -76,10 +76,7 @@
       <td>{{purchase_datetime}}</td>
       <td>$ {{total}}</td>
       <td>Compra aprobada</td>     
-      <td class="pl-4"><form action="/api/download?_method=GET" method="post">
-        <input type="hidden" name="code" value="{{code}}">                         
-        <button class="btn btn-sm btn-outline-danger border-0 pdf" type="submit" href="/api/download"><i class="fa fa-file-pdf"></i></button>        
-        </form></td>
+      <td class="pl-4">Success</td>
     </tr>  
   </tbody>       
           {{/each}}       

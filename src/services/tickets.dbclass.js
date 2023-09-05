@@ -4,9 +4,8 @@ import productModel from '../model/products.model.js';
 import userModel from '../model/user.model.js';
 import ticketModel from '../model/ticket.model.js';
 import { nanoid } from 'nanoid';
-import puppeteer from 'puppeteer';
 import { __dirname, pdf, getMail } from '../utils.js';
-import config from '../config/config.env.js';
+
 
 
 
@@ -78,19 +77,7 @@ export default class TicketManager {
                        const date2 = new Intl.DateTimeFormat('es', { dateStyle: 'full', timeStyle: 'long'}).format(date);
                        const name = req.session.user.name
                        const code = nanoid()                       
-                       const browser = await puppeteer.launch({headless: 'new', 
-                        ignoreDefaultArgs: ['--disable-extensions'],                        
-                       executablePath: config.PUPPETEER});
-                       const page = await browser.newPage();                       
-                       const htmlContent = pdf(name, req.session.user.user, code, date2, products, Total)                      
-                       await page.setContent(htmlContent)
-                       await page.emulateMediaFeatures(`screen`);        
-                       await page.pdf({
-                        path: `src/public/tickets/${code}.pdf`,
-                        format: `A4`,
-                        printBackground: true
-                       });                   
-                       await browser.close();  
+                      
                        getMail(code, req.session.user.user)                 
                     
                         setTimeout(async ()=>{

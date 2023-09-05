@@ -289,14 +289,12 @@ export const getMail = (code, date4) => {
         subject: 'Ticket de Compra',
         html: `
             <h1><b>Muchas Gracias por su compra</b></h1>
+            <p>Este es su N° de Ticket : ${code}</p>
             <p style="color: #f00;">
                 <b>Funko Pops</b><br>
                 <img src="https://i.postimg.cc/sDGCFRXQ/favicon.png" />
             </p>
-        `,
-        attachments: [
-            { filename: 'ticket.pdf', path: `${__dirname}/public/tickets/${code}.pdf`, cid: 'ticket.pdf' },            
-        ]
+        `        
     })}
 
 export const InactiveMail = (mail) => {
