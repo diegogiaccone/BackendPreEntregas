@@ -17,7 +17,7 @@
         <a href="/rol" class="btn btn-outline-primary button cart productall">Editar Usuario</a> 
         {{/if}}
         {{#or isPremium isUsuario}}
-        <a href="/api/users/premium/:uid" class="btn btn-outline-primary text-light button cart productall">Premium</a>          
+        <a href="/api/users/premium/:uid" class="btn btn-outline-primary button cart productall">Premium</a>          
         {{/or}}
         {{#or isAdmin isPremium}}
         <a href="/api/addProduct" class="btn btn-orange button cart productall">Agregar Productos</a>           
