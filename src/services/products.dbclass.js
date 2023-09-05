@@ -138,10 +138,10 @@ export default class Products {
 
     deleteProduct = async (req, res) => {
         try {
-            const id = req.body
-            const product = await productModel.findOne({ '_id': new mongoose.Types.ObjectId(id.id)});          
+            const id = req.body            
+            const product = await productModel.findOne({ '_id': new mongoose.Types.ObjectId(id.id)});            
             const user = req.session.user
-            const rol = await rolModel.findOne({ '_id': new mongoose.Types.ObjectId(user.rol[0])});             
+            const rol = await rolModel.findOne({ '_id': new mongoose.Types.ObjectId(user.rol[0]._id)});                    
             const owner = product.owner
             const userOwner = await userModel.findOne({user: owner})
             const ownerRol = await rolModel.findOne({ '_id': new mongoose.Types.ObjectId(userOwner.rol[0])})
@@ -154,16 +154,16 @@ export default class Products {
                     res.redirect(`products_index`)
                     return deleteProd
                 }else{
-                    if(rol.name === "Premium" && owner == user.user){
+                    if(rol.name === "Premium" && owner === user.user){
                         const deleteProd = await productModel.deleteOne({ '_id': new mongoose.Types.ObjectId(id.id)});
                         res.redirect(`products_index`)
                         return deleteProd
                     }else{
-                        res.send("Debe ser Admin o Propietario del Articulo para Borrarlo o modificarlo")
+                        res.redirect(`errorOwner`)
                     }                   
                 }    
             }else{
-                res.send("Ud no tiene autorizacion para realizar esta acción")
+                res.redirect(`errorOwner`)
             }                                                    
         } catch (err) {
             console.log(err)
