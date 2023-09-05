@@ -51,7 +51,7 @@ const initializePassport = () => {
     passport.use(`google`, new GoogleStrategy({
         clientID: config.GOOGLE_ID,
         clientSecret: config.GOOGLE_SECRET,
-        callbackURL: `/auth/google/callback`
+        callbackURL: `${config.BASE_URL}/auth/google/callback`
       },
       async(accessToken, refreshToken, profile, cb) => {        
         try{
@@ -89,7 +89,7 @@ const initializePassport = () => {
     passport.use('facebook', new FacebookStrategy({
         clientID: config.FACEBOOK_ID,
         clientSecret: config.FACEBOOK_SECRET,
-        callbackURL: `/auth/facebook/callback`
+        callbackURL: `${config.BASE_URL}/auth/facebook/callback`
       },
       async(accessToken, refreshToken, profile, cb) => {        
         try{
