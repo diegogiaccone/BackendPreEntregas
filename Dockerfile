@@ -8,8 +8,6 @@
 # CMD ["npm", "start"]: ejecuta finalmente un npm start para iniciar la app
 
 FROM ghcr.io/puppeteer/puppeteer:20.9.0
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 FROM node
 WORKDIR /app
 COPY package*.json ./

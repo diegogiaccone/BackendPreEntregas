@@ -79,6 +79,7 @@ export default class TicketManager {
                        const name = req.session.user.name
                        const code = nanoid()                       
                        const browser = await puppeteer.launch({headless: 'new', 
+                       ignoreDefaultArgs: ['--disable-extensions'],
                        args: [
                         "--disable-setuid-sandbox",
                         "--no-sandbox",
