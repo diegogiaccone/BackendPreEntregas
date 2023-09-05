@@ -113,7 +113,7 @@ export default class Products {
                 const pid = req.params.pid 
                 const product = await productModel.findOne({ '_id': new mongoose.Types.ObjectId(pid)});
                 const user = req.session.user              
-                const data = req.body
+                const data = req.body                
                 if(user.rol[0].name === "Admin" || user.rol[0].name === "Premium"){
                     if(user.rol[0].name === "Admin"){
                         await productModel.updateOne({ '_id': new mongoose.Types.ObjectId(pid) }, data);
@@ -127,7 +127,7 @@ export default class Products {
                         }                   
                     }    
                 }else{
-                    res.send("Ud no tiene autorizacion para realizar esta acción")
+                    res.redirect("errorOwner")
                 }                      
             }            
         catch (err) {

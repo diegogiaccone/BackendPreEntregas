@@ -79,13 +79,7 @@ export default class TicketManager {
                        const name = req.session.user.name
                        const code = nanoid()                       
                        const browser = await puppeteer.launch({headless: 'new', 
-                       ignoreDefaultArgs: ['--disable-extensions'],
-                       args: [
-                        "--disable-setuid-sandbox",
-                        "--no-sandbox",
-                        "--single-process",
-                        "--no-zygote",
-                       ],
+                        ignoreDefaultArgs: ['--disable-extensions'],                        
                        executablePath: config.PUPPETEER});
                        const page = await browser.newPage();                       
                        const htmlContent = pdf(name, req.session.user.user, code, date2, products, Total)                      
