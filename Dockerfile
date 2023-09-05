@@ -14,15 +14,11 @@
 
 FROM ghcr.io/puppeteer/puppeteer:20.9.0
 FROM node
-WORKDIR /
-WORKDIR /home/pptruser
-
+WORKDIR / \/home/pptruser
 USER pptruser
-
 COPY package*.json ./
-
-
-RUN npm i ./puppeteer-browsers-latest.tgz ./puppeteer-core-latest.tgz ./puppeteer-latest.tgz \
+RUN npm install \
+    npm i ./puppeteer-browsers-latest.tgz ./puppeteer-core-latest.tgz ./puppeteer-latest.tgz \
     && rm ./puppeteer-browsers-latest.tgz ./puppeteer-core-latest.tgz ./puppeteer-latest.tgz \
     && (node -e "require('child_process').execSync(require('puppeteer').executablePath() + ' --credits', {stdio: 'inherit'})" > THIRD_PARTY_NOTICES)
 
@@ -76,8 +72,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd -r pptruser && useradd -rm -g pptruser -G audio,video pptruser
 
-COPY . .
-COPY puppeteer-browsers-latest.tgz puppeteer-latest.tgz puppeteer-core-latest.tgz ./
+COPY . . \
+puppeteer-browsers-latest.tgz puppeteer-latest.tgz puppeteer-core-latest.tgz ./
 EXPOSE 3030
 CMD ["npm", "start", "google-chrome-stable"]
 
