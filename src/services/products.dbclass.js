@@ -141,7 +141,7 @@ export default class Products {
             const id = req.body
             const product = await productModel.findOne({ '_id': new mongoose.Types.ObjectId(id.id)});          
             const user = req.session.user
-            const rol = await rolModel.findOne({ '_id': new mongoose.Types.ObjectId(user.rol[0])});             
+            const rol = await rolModel.findOne({ '_id': new mongoose.Types.ObjectId(user.rol[0]._id)});             
             const owner = product.owner
             const userOwner = await userModel.findOne({user: owner})
             const ownerRol = await rolModel.findOne({ '_id': new mongoose.Types.ObjectId(userOwner.rol[0])})
