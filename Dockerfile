@@ -72,8 +72,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd -r pptruser && useradd -rm -g pptruser -G audio,video pptruser
 
-COPY . . \
-puppeteer-browsers-latest.tgz puppeteer-latest.tgz puppeteer-core-latest.tgz ./
+COPY . . 
 EXPOSE 3030
 CMD ["npm", "start", "google-chrome-stable"]
 
