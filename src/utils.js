@@ -333,7 +333,7 @@ export const recoverPass = (date, code) => {
         html: `
             <h1><b>Si ud no ha solicitado el reestablecimiento de su contraseña ignore este mail</b></h1>
             <h1><b>Click en el siguiente enlace para reestablecer la contraseña</b></h1>
-            <a href="http://localhost:3030/recoverypass/${code}" class="btn btn-primary git">http://localhost:3030/recoverypass/${code}</a>
+            <a href="https://funko.onrender.com/recoverypass/${code}" class="btn btn-primary git">https://funko.onrender.com/recoverypass/${code}</a>
             <p style="color: #f00;">
                 <b>Funko Pops</b><br>
                 <img src="https://i.postimg.cc/sDGCFRXQ/favicon.png" />
