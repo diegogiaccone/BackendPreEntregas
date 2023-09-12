@@ -237,23 +237,17 @@ class Users {
     uploadDocuments = async (req, res) => {
         try{
             const userId = req.params.uid;          
-            const uploadedDocuments = req.files            
-            const elementos = []
-            uploadedDocuments.forEach(element => {
-                const document ={name: element.originalname, reference: element.fieldname}
-                elementos.push(document)
-            });
-            
-            setTimeout(async () => {                
+            const uploadedDocuments = req.files          
+           
                 const user = await userModel.findOneAndUpdate(
                     { _id: userId },
-                    { $set: { documents: elementos}},
+                    { $set: { documents: uploadedDocuments}},
                     { new: true }
                     );                             
                     if (!user) {
                         return res.status(404).json({ message: 'Usuario no encontrado' });
                     }                    
-                }, 1500);        
+                    
                 
                 res.redirect(`/`)
         }catch(error) {
