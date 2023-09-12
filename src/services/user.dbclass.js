@@ -27,11 +27,11 @@ class Users {
     }
 
     addUser = async (req, res) => {
-        try{
+        try{            
             const name = req.body.name
             const apellido = req.body.apellido
             const user = req.body.user
-            const pass = req.body.pass 
+            const pass = req.body.pass           
             const avatar = req.body.avatar  
             const last_connection = new Date()              
             let passHash = await bcrypt.hash(pass, 8)
@@ -45,11 +45,15 @@ class Users {
                 purchase: []
             })
             const verify = await userModel.findOne({user: user})
-            if(!verify){
-                userModel.create({name: name, apellido: apellido, user: user, pass: passHash, rol: rol, cart: cart, avatar: avatar, ticket: ticket, last_connection: last_connection})     
-                res.status(200).redirect('/')      
-            }else{                 
-                res.send(`El usuario ya existe Por favor intente con otro nombre de usuario`)
+            if(!name || !apellido || !user || !pass){
+                res.send(`debe completar todos los campos`)
+            }else{
+                if(!verify){
+                    userModel.create({name: name, apellido: apellido, user: user, pass: passHash, rol: rol, cart: cart, avatar: avatar, ticket: ticket, last_connection: last_connection})     
+                    res.status(200).redirect('/')      
+                }else{                 
+                    res.send(`El usuario ya existe Por favor intente con otro nombre de usuario`)
+                }
             }
         } catch (error) {
             console.log(error)
