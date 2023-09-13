@@ -72,8 +72,9 @@
               </h5>
               <form action="/api/carts/:cid/products/:pid" method="post">
               <div class="d-grid gap-2 eliminar">
-                <input type="hidden" name="id" value="{{this.id}}">                
+                <input type="hidden" name="id" value="{{this.id}}">    
                 <button type="submit" class="btn btn-primary button">
+                <input type="number" min="1" max={{this.stock}} class="">            
                   Añadir al Carrito
                 </button>
               </div>             

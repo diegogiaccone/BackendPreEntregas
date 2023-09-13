@@ -46,13 +46,13 @@ const specs = swaggerJsdoc(swaggerOptions);
 
 // Configuración de Multer para guardar archivos en la carpeta 'public'
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {        
+    destination: function (req, file, cb) {
         if (file.fieldname === 'avatarFile') {
             cb(null, path.join(__dirname, 'public/profiles'));
         } else if (file.fieldname === 'thumbnailFile') {
             cb(null, path.join(__dirname, 'public/products'));
         } else if (file.fieldname === 'documents') {
-            cb(null, path.join(__dirname, 'public/documents'));
+            cb(null, path.join(__dirname, 'public/documents'));            
         } else {
             cb(new Error('Tipo de archivo no válido'), null);
         }

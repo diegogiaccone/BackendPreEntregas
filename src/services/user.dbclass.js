@@ -27,11 +27,11 @@ class Users {
     }
 
     addUser = async (req, res) => {
-        try{
+        try{            
             const name = req.body.name
             const apellido = req.body.apellido
             const user = req.body.user
-            const pass = req.body.pass 
+            const pass = req.body.pass           
             const avatar = req.body.avatar  
             const last_connection = new Date()              
             let passHash = await bcrypt.hash(pass, 8)
@@ -45,11 +45,15 @@ class Users {
                 purchase: []
             })
             const verify = await userModel.findOne({user: user})
-            if(!verify){
-                userModel.create({name: name, apellido: apellido, user: user, pass: passHash, rol: rol, cart: cart, avatar: avatar, ticket: ticket, last_connection: last_connection})     
-                res.status(200).redirect('/')      
-            }else{                 
-                res.send(`El usuario ya existe Por favor intente con otro nombre de usuario`)
+            if(!name || !apellido || !user || !pass){
+                res.send(`debe completar todos los campos`)
+            }else{
+                if(!verify){
+                    userModel.create({name: name, apellido: apellido, user: user, pass: passHash, rol: rol, cart: cart, avatar: avatar, ticket: ticket, last_connection: last_connection})     
+                    res.status(200).redirect('/')      
+                }else{                 
+                    res.send(`El usuario ya existe Por favor intente con otro nombre de usuario`)
+                }
             }
         } catch (error) {
             console.log(error)
@@ -203,8 +207,8 @@ class Users {
                 const documents = userObjet.documents                
                 if(documents.length === 3){
                     const uid = userObjet._id            
-                const rol = req.body.rol                                           
-                const process = await userModel.updateOne({ '_id': new mongoose.Types.ObjectId(uid)}, {rol: rol});                
+                    const rol = req.body.rol                                           
+                    const process = await userModel.updateOne({ '_id': new mongoose.Types.ObjectId(uid)}, {rol: rol});                
                     this.status = 1;
                     process.modifiedCount === 0 ? this.statusMsg = "El ID no existe o no hay cambios por realizar": this.statusMsg = "Actualizado a Premium";
                     res.redirect(`/`)
@@ -233,23 +237,17 @@ class Users {
     uploadDocuments = async (req, res) => {
         try{
             const userId = req.params.uid;          
-            const uploadedDocuments = req.files            
-            const elementos = []
-            uploadedDocuments.forEach(element => {
-                const document ={name: element.originalname, reference: element.fieldname}
-                elementos.push(document)
-            });
-            
-            setTimeout(async () => {                
+            const uploadedDocuments = req.files           
+           
                 const user = await userModel.findOneAndUpdate(
                     { _id: userId },
-                    { $set: { documents: elementos}},
+                    { $set: { documents: uploadedDocuments}},
                     { new: true }
                     );                             
                     if (!user) {
                         return res.status(404).json({ message: 'Usuario no encontrado' });
                     }                    
-                }, 1500);        
+                    
                 
                 res.redirect(`/`)
         }catch(error) {
